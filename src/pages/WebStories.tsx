@@ -1,0 +1,109 @@
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Play } from "lucide-react";
+import Layout from "@/components/layout/Layout";
+import { Button } from "@/components/ui/button";
+import { webStories } from "@/data/webStories";
+
+const WebStories = () => {
+  useEffect(() => {
+    document.title = "Web Stories | Generative SEO & AI Visibility | LLMClicks.ai";
+    const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+    const desc =
+      "Bite-sized strategic teardowns. Learn how to optimize your SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.";
+    setMeta("description", desc);
+    setMeta("og:title", "Generative SEO & AI Visibility Stories", "property");
+    setMeta("og:description", desc, "property");
+    setMeta("og:type", "website", "property");
+
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", "https://llmclicks.ai/web-stories/");
+  }, []);
+
+  return (
+    <Layout>
+      <section className="section-padding pt-28 md:pt-36 relative">
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] accent-mesh opacity-30 pointer-events-none -z-10" />
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-3xl mx-auto mb-14"
+          >
+            <h1 className="font-display text-4xl md:text-6xl font-bold leading-tight mb-5">
+              Generative SEO & AI Visibility Stories
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Swipe through our bite-sized strategic teardowns. Learn how to optimize your
+              SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+            {webStories.map((story, i) => (
+              <motion.div
+                key={story.slug}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+              >
+                <Link
+                  to={`/web-stories/${story.slug}`}
+                  className="group block relative aspect-[3/5] rounded-2xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  <img
+                    src={story.poster}
+                    alt={story.posterAlt}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
+
+                  {/* Play badge */}
+                  <div className="absolute top-3 right-3 h-8 w-8 rounded-full bg-background/80 backdrop-blur flex items-center justify-center border border-border/60">
+                    <Play className="h-3.5 w-3.5 text-foreground fill-foreground ml-0.5" />
+                  </div>
+
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <h2 className="font-display text-sm md:text-base font-bold leading-tight text-background">
+                      {story.title}
+                    </h2>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-16 rounded-3xl border border-accent/30 bg-accent/5 p-8 md:p-10 text-center">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">
+              Stop losing deals to AI blind spots.
+            </h2>
+            <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+              Run a comprehensive audit and uncover your exact citation gaps today.
+            </p>
+            <Button asChild size="lg">
+              <Link to="/ai-visibility-checker">Run Free AI Visibility Audit</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </Layout>
+  );
+};
+
+export default WebStories;

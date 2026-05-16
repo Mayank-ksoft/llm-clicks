@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  :root {
+    --background: 40 20% 97%;
+    --foreground: 220 25% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+
+    --primary: 220 25% 12%;
+    --primary-foreground: 40 20% 97%;
+
+    --secondary: 40 15% 93%;
+    --secondary-foreground: 220 25% 12%;
+
+    --muted: 40 12% 94%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 168 80% 42%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 12% 89%;
+    --input: 40 12% 86%;
+    --ring: 168 80% 42%;
+
+    --radius: 0.75rem;
+
+    --teal: 168 80% 42%;
+    --teal-soft: 168 50% 85%;
+    --coral: 12 90% 62%;
+    --coral-soft: 12 70% 90%;
+    --navy: 220 25% 12%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 12%;
+    --sidebar-primary: 220 25% 12%;
+    --sidebar-primary-foreground: 40 20% 97%;
+    --sidebar-accent: 40 15% 93%;
+    --sidebar-accent-foreground: 220 25% 12%;
+    --sidebar-border: 40 12% 89%;
+    --sidebar-ring: 168 80% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    @apply py-20 md:py-28 px-4;
+  }
+
+  /* Replaced Scrunch-like blob with geometric mesh gradient */
+  .accent-mesh {
+    background: 
+      radial-gradient(ellipse at 20% 50%, hsl(var(--teal) / 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, hsl(var(--coral) / 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, hsl(var(--teal) / 0.08) 0%, transparent 50%);
+  }
+
+  .tag-pill {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-accent/20 bg-accent/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-accent;
+  }
+
+  .grain-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px;
+  }
+
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--teal) / 0.3), hsl(var(--coral) / 0.2), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Shimmer effect for cards */
+  .shimmer-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      hsl(var(--accent) / 0.04) 45%,
+      hsl(var(--accent) / 0.08) 50%,
+      hsl(var(--accent) / 0.04) 55%,
+      transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: none;
+    pointer-events: none;
+  }
+  .shimmer-card:hover::after {
+    animation: shimmer 0.8s ease-out forwards;
+  }
+
+  /* Marquee animation */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Glow pulse on hover */
+  .glow-hover {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .glow-hover:hover {
+    box-shadow: 0 0 30px -5px hsl(var(--accent) / 0.25);
+    transform: translateY(-2px);
+  }
+
+  /* Animated gradient blob */
+  .animated-blob {
+    animation: blob-morph 8s ease-in-out infinite;
+  }
+
+  /* Typing cursor */
+  .typing-cursor::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: hsl(var(--accent));
+    font-weight: 300;
+  }
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes blob-morph {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
+  25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  50% { border-radius: 50% 60% 30% 60% / 30% 50% 70% 60%; transform: rotate(180deg) scale(1.05); }
+  75% { border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%; }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
