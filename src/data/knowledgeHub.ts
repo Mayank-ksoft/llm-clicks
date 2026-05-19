@@ -63,7 +63,7 @@ export const knowledgeHubCategories: KHCategory[] = [
           },
           {
             type: "p",
-            text: "This guide covers the technical facts behind that decision. It explains what each major AI crawler does, how blocking affects AI citation rates and search visibility, which site types have legitimate reasons to block, and how to write a precise robots.txt configuration that protects private paths without removing public commercial content from AI discovery.",
+            text: "This guide covers the technical facts behind that decision. It explains what each major AI crawler does, how blocking affects AI citation rates and search visibility, which site types have legitimate reasons to block, and how to write a precise robots.txt configuration that protects private paths without removing public commercial content from AI discovery. If you are also looking to <a href=\"/knowledge-hub/ai-overviews/google-ai-overviews-optimization\">optimize for Google AI Overviews</a>, the retrieval architecture behind those citations requires a separate content strategy.",
           },
           {
             type: "p",
@@ -502,7 +502,234 @@ export const knowledgeHubCategories: KHCategory[] = [
     name: "AI Overviews",
     description:
       "Tactics and research on Google AI Overviews — surfacing in generative summaries and protecting organic visibility.",
-    articles: [],
+    articles: [
+      {
+        slug: "google-ai-overviews-optimization",
+        title:
+          "Google AI Overviews vs. Traditional SERPs: How to Optimize for the AI Overviews",
+        excerpt:
+          "Learn how to optimize for Google AI Overviews by rebuilding your content structure around Retrieval-Augmented Generation (RAG), the system that decides what gets cited inside an AI snapshot.",
+        date: "May 13, 2026",
+        updated: "May 14, 2026",
+        readTime: "10 min read",
+        image:
+          "/wp-content/uploads/2026/05/google-ai-overview--1024x572.webp",
+        imageAlt:
+          "A technical SEO manager analyzing a monitor showing a Google AI Overview replacing traditional search engine results.",
+        content: [
+          {
+            type: "p",
+            text: "Your site ranks in positions one through five. Your clicks are down 30 percent year over year. Google AI Overviews are absorbing the answer before users reach your link, and your on-page architecture was never built to compete in that layer.",
+          },
+          {
+            type: "p",
+            text: "This guide explains how to optimize for Google AI Overviews by rebuilding your content structure around Retrieval-Augmented Generation (RAG), the system that actually decides what gets cited inside an AI snapshot. You will leave with a concrete six-step execution framework, a real SaaS example, and a clear picture of what to monitor once the changes are live.",
+          },
+
+          {
+            type: "h2",
+            text: "Why RAG Makes Your Current On-Page Strategy Obsolete",
+            id: "why-rag-makes-your-current-on-page-strategy-obsolete",
+          },
+          {
+            type: "p",
+            text: "Traditional PageRank evaluated pages as whole documents. It asked: \"Does this URL have enough keyword relevance and link authority to rank for this query?\" The algorithm rewarded pages that accumulated signals over time.",
+          },
+          {
+            type: "p",
+            text: "RAG-based systems work at a sub-document level. Google's AI Overviews, Perplexity, and ChatGPT Search use retrieval pipelines. These systems break pages into discrete text chunks. They score each chunk for semantic relevance and pull the highest-scoring text into a synthesized answer. Your page is not ranked. Individual sections of your page are retrieved or discarded.",
+          },
+          {
+            type: "p",
+            text: "This is a fundamental architectural change. A page optimized for PageRank tends to use thematic H2 sections that introduce ideas progressively. A page optimized for RAG retrieval needs every H2 section to function as a self-contained answer unit. The retrieval system does not read your introduction to understand your body paragraphs. Each chunk is scored independently.",
+          },
+          {
+            type: "p",
+            text: "Four signals that determine chunk-level retrieval quality:",
+          },
+          {
+            type: "ul",
+            items: [
+              "Entity specificity: Claims anchored to named organizations, products, dates, and statistics score higher than generic assertions.",
+              "Semantic completeness: Each section must fully resolve a sub-intent within 150 to 300 words. Incomplete answers are skipped.",
+              "Structured markup: FAQ schema, HowTo schema, and Speakable schema tell crawlers which blocks are designed to be cited.",
+              "Query-to-content alignment: The opening sentence of each section should mirror the phrasing of the sub-query it answers.",
+            ],
+          },
+          {
+            type: "p",
+            text: "Research published by Pinecone and Cohere on dense passage retrieval scoring confirms that factual specificity (named entities plus numeric data) is among the strongest predictors of chunk relevance score in production RAG pipelines. Vague, attributive language (\"industry experts suggest\") produces near-zero retrieval weight. Of course, none of this matters if <a href=\"/knowledge-hub/chatgpt-seo/blocking-gptbot-seo\">AI crawlers are blocked by your robots.txt</a> — retrieval pipelines can only cite content they can access.",
+          },
+
+          {
+            type: "h2",
+            text: "The Zero-Click SERP Exposes a Tracking Gap Your Current Tools Cannot Fill",
+            id: "the-zero-click-serp-exposes-a-tracking-gap",
+          },
+          {
+            type: "p",
+            text: "An Ahrefs study published in April 2025, conducted by Ryan Law and data scientist Xibeijia Guan, analyzed 300,000 keywords and found that the presence of an AI Overview correlated with a 34.5 percent lower click-through rate for the top-ranking page, compared to equivalent informational queries without an AI Overview. For SaaS sites targeting middle-funnel informational queries like \"how to reduce customer churn\" or \"best CRM for B2B SaaS,\" this is not a marginal effect. It is the primary organic traffic compression mechanism operating right now.",
+          },
+          {
+            type: "p",
+            text: "The deeper problem is not the click loss. It is the attribution gap. Google Search Console shows impressions for a query. It does not show whether your brand entity was cited inside the AI snapshot, whether a competitor's product name appeared instead, or whether the generated answer included any source attribution at all. You are tracking reach without tracking influence.",
+          },
+          {
+            type: "p",
+            text: "Consider how this plays out for a mid-market SaaS company. Notion, for example, regularly appears as a named entity inside AI Overviews for queries like \"how to build a project management wiki\" because their Help Center and template pages use discrete, fully resolved FAQ blocks with specific feature names and use cases anchored to named entity types. A competing tool with stronger domain authority but vague, thematic content architecture gets retrieved less frequently, regardless of rank position. The AI citation layer is a separate competition from the traditional SERP, and most teams have no visibility into their standing on it.",
+          },
+          {
+            type: "p",
+            text: "LLMClicks.ai monitors entity-level citation share across Google AI Overviews, Perplexity, and ChatGPT Search. It tracks which brand and product entities appear inside generated answers for your target queries, so you can see where competitors are being cited and where your own entities are absent. This is the monitoring layer that Google Search Console does not provide.",
+          },
+
+          {
+            type: "h2",
+            text: "How to Optimize for Google AI Overviews: Six Execution Steps",
+            id: "how-to-optimize-for-google-ai-overviews",
+          },
+          {
+            type: "p",
+            text: "The following steps apply to any SaaS site targeting informational, comparison, or feature-level queries. Execute them in order.",
+          },
+          {
+            type: "h3",
+            text: "Step 1: Audit your content for semantic chunk integrity.",
+          },
+          {
+            type: "p",
+            text: "Open each target page and evaluate every H2 section against one standard: can this section stand alone as a complete, cited answer to a specific sub-question? If the section introduces a concept without resolving it, it will not be retrieved. Restructure until every block resolves one intent completely within 300 words. This is the single highest-impact change you can make.",
+          },
+          {
+            type: "h3",
+            text: "Step 2: Anchor every claim to a named entity.",
+          },
+          {
+            type: "p",
+            text: "Remove vague attributions and replace them with specific ones. The sentence \"studies show that churn rates increase when onboarding fails\" has near-zero retrieval value. Replace it with: \"Paddle's 2024 SaaS Metrics Report found that SaaS products with structured 30-day onboarding sequences reduced 90-day churn by 22 percent compared to products with no formal onboarding flow.\" Named organization, named report, named year, specific number. That structure is what dense passage retrieval pipelines weight most heavily, based on how embedding models score factual specificity during chunk ranking.",
+          },
+          {
+            type: "h3",
+            text: "Step 3: Prioritize HowTo and Article schema. Retain FAQPage markup for AI retrieval, not for rich results.",
+          },
+          {
+            type: "p",
+            text: "FAQ rich results were deprecated by Google on May 7, 2026. They no longer appear in Google Search for any site, including government and health sites that had retained eligibility since the 2023 restriction. If your current SEO workflow or Search Console reporting was built around FAQ rich result performance, those tracking mechanisms need to be updated before June 2026 for the UI and before August 2026 for any API-dependent pipelines.",
+          },
+          {
+            type: "p",
+            text: "What did not change: Google explicitly confirmed it will continue reading FAQPage structured data to understand page content. The rich result display feature was retired. The schema type was not. For the purposes of AI retrieval, this distinction matters. A RAG pipeline does not care whether your markup produces a visual SERP treatment. It cares whether your content is clearly structured into discrete, machine-readable question-and-answer blocks.",
+          },
+          {
+            type: "p",
+            text: "The practical guidance is therefore split into two actions:",
+          },
+          {
+            type: "ul",
+            items: [
+              "For traditional SERP visibility: Shift schema investment to types that still produce rich results in 2026: HowTo, Article, Product, Review, AggregateRating, and BreadcrumbList. These remain supported and actively render enhanced results.",
+              "For AI retrieval: Keep existing FAQPage markup in place where it accurately describes the content. Do not strip it. The markup signals to crawlers which text blocks are questions and which are answers, and that structural signal remains relevant for AI Overview, Perplexity, and ChatGPT Search retrieval pipelines. Add new FAQPage markup selectively, on pages where the content genuinely follows a question-and-answer format, not as a template applied across every page.",
+            ],
+          },
+          {
+            type: "p",
+            text: "Keep individual FAQ answer blocks between 40 and 120 words. That constraint applies regardless of the rich result deprecation. It is a RAG chunk-size recommendation, not a SERP formatting rule.",
+          },
+          {
+            type: "h3",
+            text: "Step 4: Add a direct-answer block immediately below the H1.",
+          },
+          {
+            type: "p",
+            text: "Place an 80 to 150 word direct-response block at the top of the page, before your main body content. This block should answer the primary query in plain, complete sentences. Use no preamble. Start with the answer. Format the surrounding page with Article, FAQPage, or HowTo schema depending on intent. This mirrors the structural pattern AI systems prioritize when assembling a featured snippet or AI Overview source citation.",
+          },
+          {
+            type: "h3",
+            text: "Step 5: Build a citation monitoring baseline before you measure results.",
+          },
+          {
+            type: "p",
+            text: "Once your architecture changes are live, you need a measurement layer that goes beyond rank tracking. Set up query-level tracking for your 20 highest-priority informational keywords. For each query, record which brand entities appear inside the AI-generated answer across Google AI Overviews, Perplexity, and ChatGPT Search. Track this weekly. Your goal is to increase citation frequency for your own brand entities and reduce gaps where competitors are cited and you are not. This monitoring is separate from rank position and requires tools built specifically for AI answer layer tracking, not standard rank checkers.",
+          },
+          {
+            type: "h3",
+            text: "Step 6: Build topical entity clusters to increase retrieval frequency.",
+          },
+          {
+            type: "p",
+            text: "RAG systems favor sources with dense, consistent coverage of a related entity set. A single optimized page will lose citation share to a site with ten tightly interlinked pages covering every sub-entity in the same topic cluster. This happens because the retrieval pipeline scores source consistency: if your domain repeatedly produces high-relevance chunks for a set of related queries, your content earns higher prior probability of retrieval on new queries in the same cluster. Map the entity set around your core topic, identify coverage gaps, and build supporting pages that interlink with explicit anchor text tied to those entities.",
+          },
+
+          {
+            type: "h2",
+            text: "Conclusion: Rank Position Is a Lagging Indicator. Citation Share Is the Leading One",
+            id: "conclusion-rank-position-is-a-lagging-indicator",
+          },
+          {
+            type: "p",
+            text: "The Google AI Overview operates on a retrieval architecture that PageRank optimization cannot address. Semantic chunk integrity, entity specificity, and structured markup are now the primary variables that determine whether your content gets cited inside an AI-generated answer or gets skipped entirely.",
+          },
+          {
+            type: "p",
+            text: "The six steps above are not theoretical. They are the architectural changes that separate brands with growing AI citation share from those watching their organic traffic compress despite stable rankings. The technical SEO managers who act on this now will hold ground as AI Overview penetration increases across query types. Those who do not will face a sustained click deficit with no clear cause visible in their current dashboards.",
+          },
+          {
+            type: "p",
+            text: "The first step is knowing where you actually stand in the AI answer layer.",
+          },
+          {
+            type: "p",
+            text: "Run a free 120-point Technical AI Visibility Audit on LLMClicks.ai. The audit scores your entity architecture, schema coverage, semantic chunk integrity, and citation share across Google AI Overviews, Perplexity, and ChatGPT Search. You receive a prioritized fix list specific to your site, not a category-level summary.",
+          },
+
+          {
+            type: "h2",
+            text: "Frequently Asked Questions",
+            id: "frequently-asked-questions",
+          },
+          {
+            type: "h3",
+            text: "Q1. Can I ignore AI Overviews and focus strictly on traditional keyword ranking?",
+          },
+          {
+            type: "p",
+            text: "No. Traditional PageRank and AI Overviews operate on entirely different architectures. Ranking number one on a traditional SERP does not guarantee an AI citation. If you ignore Generative Engine Optimization, you will lose organic pipeline to competitors who structure their data for machine readability.",
+          },
+          {
+            type: "h3",
+            text: "Q2. Does FAQ schema still matter for AI retrieval since Google deprecated rich results?",
+          },
+          {
+            type: "p",
+            text: "Yes. Google deprecated the visual SERP display, not the schema itself. AI retrieval pipelines still read FAQPage markup to identify discrete question-and-answer blocks. Retain your existing FAQ schema to signal semantic chunk integrity directly to generative engines.",
+          },
+          {
+            type: "h3",
+            text: "Q3. What is the optimal text chunk size for Retrieval-Augmented Generation (RAG)?",
+          },
+          {
+            type: "p",
+            text: "Keep individual answer blocks between 150 and 300 words. For direct FAQ answers, aim for 40 to 120 words. If a text section exceeds 300 words, the retrieval system struggles to extract a concise answer and will often skip your content entirely.",
+          },
+          {
+            type: "h3",
+            text: "Q4. Will restructuring my pages for AI Overviews negatively impact my current SEO traffic?",
+          },
+          {
+            type: "p",
+            text: "No. Structuring your content with clear H2 headings, direct answers, and accurate JSON-LD schema benefits traditional crawlers and AI pipelines equally. Machine-readable entity architecture improves overall domain crawling efficiency while capturing citation share in the AI layer.",
+          },
+          {
+            type: "h3",
+            text: "Q5. How do I measure my exact visibility inside Google AI Overviews?",
+          },
+          {
+            type: "p",
+            text: "Google Search Console does not track AI citations. You must use a dedicated tracking platform. Run a 120-point technical AI Visibility Audit on LLMClicks.ai to track your entity-level citation share across Google AI Overviews, Perplexity, and ChatGPT Search.",
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "data-and-research",

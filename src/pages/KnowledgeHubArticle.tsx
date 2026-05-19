@@ -15,6 +15,33 @@ const slugify = (s: string) =>
     .replace(/\s+/g, "-")
     .slice(0, 80);
 
+function renderParagraphContent(text: string): React.ReactNode {
+  const linkRegex = /<a\s+href="([^"]+)">(.*?)<\/a>/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const href = match[1];
+    const anchorText = match[2];
+    parts.push(
+      <Link key={match.index} to={href} className="text-accent hover:underline font-medium">
+        {anchorText}
+      </Link>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 const renderSection = (s: KHSection, i: number) => {
   switch (s.type) {
     case "h2":
@@ -32,13 +59,13 @@ const renderSection = (s: KHSection, i: number) => {
     case "p":
       return (
         <p key={i} className="text-base leading-relaxed text-foreground/90 mb-4">
-          {s.text}
+          {renderParagraphContent(s.text)}
         </p>
       );
     case "ul":
       return (
         <ul key={i} className="list-disc pl-6 space-y-2 mb-5 text-foreground/90">
-          {s.items.map((it, j) => <li key={j} className="leading-relaxed">{it}</li>)}
+          {s.items.map((it, j) => <li key={j} className="leading-relaxed">{renderParagraphContent(it)}</li>)}
         </ul>
       );
     case "quote":

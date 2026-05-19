@@ -132,8 +132,58 @@ const KnowledgeHub = () => {
               </div>
             )
           ) : (
-            // Category cards
+            // Featured articles + Category cards
             <>
+              {/* Platform Playbooks — show all published articles */}
+              {(() => {
+                const allArticles = knowledgeHubCategories.flatMap((cat) =>
+                  cat.articles.map((a) => ({ category: cat, article: a }))
+                );
+                if (allArticles.length === 0) return null;
+                return (
+                  <div className="mb-16">
+                    <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-2">
+                      Platform Playbooks (ChatGPT, Perplexity, Gemini)
+                    </h2>
+                    <p className="text-center text-muted-foreground mb-8">
+                      Tactical, step-by-step guides to ranking your brand inside ChatGPT, Perplexity, and Google AI Overviews.
+                    </p>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {allArticles.map(({ category: cat, article: a }) => (
+                        <Link
+                          key={`${cat.slug}-${a.slug}`}
+                          to={`/knowledge-hub/${cat.slug}/${a.slug}`}
+                          className="rounded-2xl border border-border bg-card overflow-hidden group shimmer-card glow-hover block"
+                        >
+                          <div className="aspect-[16/10] overflow-hidden bg-secondary/40 relative">
+                            <img
+                              src={a.image}
+                              alt={a.imageAlt}
+                              loading="lazy"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <span className="absolute top-3 left-3 tag-pill text-xs">{cat.name}</span>
+                          </div>
+                          <div className="p-5">
+                            <h3 className="font-display font-bold mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                              {a.title}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{a.excerpt}</p>
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                              <span className="inline-flex items-center gap-1.5">
+                                <Calendar className="h-3 w-3" /> {a.date}
+                              </span>
+                              <span>·</span>
+                              <span>{a.readTime}</span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               <h2 className="font-display text-2xl font-bold mb-5">Browse by category</h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {knowledgeHubCategories.map((cat, i) => {
