@@ -19,6 +19,42 @@ import authorShripad from "@/assets/author-shripad.png";
 const slugifyHeading = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
 
+function renderTextWithLinks(text: string): React.ReactNode {
+  const linkRegex = /<a\s+href="([^"]+)">(.*?)<\/a>/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const href = match[1];
+    const anchorText = match[2];
+    // Use Link for internal routes, <a> for external
+    if (href.startsWith("/")) {
+      parts.push(
+        <Link key={match.index} to={href} className="text-accent hover:underline font-medium">
+          {anchorText}
+        </Link>
+      );
+    } else {
+      parts.push(
+        <a key={match.index} href={href} className="text-accent hover:underline font-medium" target="_blank" rel="noopener noreferrer">
+          {anchorText}
+        </a>
+      );
+    }
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
@@ -164,7 +200,7 @@ const BlogPost = () => {
                   if (block.type === "ul")
                     return (
                       <ul key={i} className="space-y-2.5 pl-5 list-disc marker:text-accent">
-                        {block.items.map((it, j) => <li key={j} className="text-foreground/80 leading-[1.7]">{it}</li>)}
+                        {block.items.map((it, j) => <li key={j} className="text-foreground/80 leading-[1.7]">{renderTextWithLinks(it)}</li>)}
                       </ul>
                     );
                   if (block.type === "quote")
@@ -173,7 +209,7 @@ const BlogPost = () => {
                         "{block.text}"
                       </blockquote>
                     );
-                  return <p key={i} className="text-foreground/80">{block.text}</p>;
+                  return <p key={i} className="text-foreground/80">{renderTextWithLinks(block.text)}</p>;
                 })}
               </div>
 
