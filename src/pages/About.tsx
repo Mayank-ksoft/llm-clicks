@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Target, Lightbulb, Users, Heart, Linkedin, Facebook, Twitter, Award, Building2, Clock } from "lucide-react";
 import founderImg from "@/assets/founder-shripad.webp";
 
-const ABOUT_URL = "https://llmclicks.ai/about-us";
 const ABOUT_TITLE = "About LLMClicks.ai | Our Mission to Improve AI Visibility";
 const ABOUT_DESC = "We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.";
 const ABOUT_JSONLD = {"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://llmclicks.ai/about-us","url":"https://llmclicks.ai/about-us","name":ABOUT_TITLE,"isPartOf":{"@id":"https://llmclicks.ai/#website"},"description":ABOUT_DESC,"inLanguage":"en-US"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://llmclicks.ai/"},{"@type":"ListItem","position":2,"name":"About Us"}]}]};
@@ -13,19 +12,6 @@ const About = () => {
   return (
   <Layout>
     <Helmet>
-      <title>{ABOUT_TITLE}</title>
-      <meta name="description" content={ABOUT_DESC} />
-      <link rel="canonical" href={ABOUT_URL} />
-      <meta property="og:locale" content="en_US" />
-      <meta property="og:type" content="article" />
-      <meta property="og:title" content={ABOUT_TITLE} />
-      <meta property="og:description" content={ABOUT_DESC} />
-      <meta property="og:url" content={ABOUT_URL} />
-      <meta property="og:image" content="https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={ABOUT_TITLE} />
-      <meta name="twitter:description" content={ABOUT_DESC} />
-      <meta name="twitter:image" content="https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp" />
       <script type="application/ld+json">{JSON.stringify(ABOUT_JSONLD)}</script>
     </Helmet>
     <section className="section-padding pt-28 md:pt-36 relative overflow-hidden">
