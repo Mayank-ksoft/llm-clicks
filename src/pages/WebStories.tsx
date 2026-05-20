@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import Layout from "@/components/layout/Layout";
@@ -7,35 +7,19 @@ import { Button } from "@/components/ui/button";
 import { webStories } from "@/data/webStories";
 
 const WebStories = () => {
-  useEffect(() => {
-    document.title = "Web Stories | Generative SEO & AI Visibility | LLMClicks.ai";
-    const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute(attr, name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute("content", content);
-    };
-    const desc =
-      "Bite-sized strategic teardowns. Learn how to optimize your SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.";
-    setMeta("description", desc);
-    setMeta("og:title", "Generative SEO & AI Visibility Stories", "property");
-    setMeta("og:description", desc, "property");
-    setMeta("og:type", "website", "property");
-
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute("href", "https://llmclicks.ai/web-stories/");
-  }, []);
-
+  const title = "Web Stories | Generative SEO & AI Visibility | LLMClicks.ai";
+  const desc = "Bite-sized strategic teardowns. Learn how to optimize your SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.";
   return (
     <Layout>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={desc} />
+        <link rel="canonical" href="https://llmclicks.ai/web-stories" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Generative SEO & AI Visibility Stories" />
+        <meta property="og:description" content={desc} />
+        <meta property="og:url" content="https://llmclicks.ai/web-stories" />
+      </Helmet>
       <section className="section-padding pt-28 md:pt-36 relative">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] accent-mesh opacity-30 pointer-events-none -z-10" />
         <div className="container mx-auto max-w-6xl relative z-10">

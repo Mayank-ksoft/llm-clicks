@@ -1,73 +1,33 @@
-import { useEffect } from "react";
 import Layout from "@/components/layout/Layout";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Target, Lightbulb, Users, Heart, Linkedin, Facebook, Twitter, Award, Building2, Clock } from "lucide-react";
 import founderImg from "@/assets/founder-shripad.webp";
 
+const ABOUT_URL = "https://llmclicks.ai/about-us";
+const ABOUT_TITLE = "About LLMClicks.ai | Our Mission to Improve AI Visibility";
+const ABOUT_DESC = "We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.";
+const ABOUT_JSONLD = {"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://llmclicks.ai/about-us","url":"https://llmclicks.ai/about-us","name":ABOUT_TITLE,"isPartOf":{"@id":"https://llmclicks.ai/#website"},"description":ABOUT_DESC,"inLanguage":"en-US"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://llmclicks.ai/"},{"@type":"ListItem","position":2,"name":"About Us"}]}]};
+
 const About = () => {
-  useEffect(() => {
-    document.title = "About LLMClicks.ai | Our Mission to Improve AI Visibility";
-    
-    const metaTags: Record<string, string> = {
-      "description": "We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.",
-      "og:locale": "en_US",
-      "og:type": "article",
-      "og:title": "About LLMClicks.ai | Our Mission to Improve AI Visibility",
-      "og:description": "We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.",
-      "og:url": "https://llmclicks.ai/about-us/",
-      "og:image": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
-      "og:image:width": "500",
-      "og:image:height": "500",
-      "og:image:type": "image/webp",
-      "article:publisher": "https://www.facebook.com/llmclicksai",
-      "article:modified_time": "2026-01-05T08:43:40+00:00",
-      "twitter:card": "summary_large_image",
-      "twitter:title": "About LLMClicks.ai | Our Mission to Improve AI Visibility",
-      "twitter:description": "We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.",
-      "twitter:image": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
-      "twitter:label1": "Est. reading time",
-      "twitter:data1": "3 minutes",
-    };
-
-    const elements: HTMLMetaElement[] = [];
-    Object.entries(metaTags).forEach(([key, value]) => {
-      const isOgOrArticle = key.startsWith("og:") || key.startsWith("article:");
-      const attr = isOgOrArticle ? "property" : "name";
-      let el = document.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute(attr, key);
-        document.head.appendChild(el);
-        elements.push(el);
-      }
-      el.setAttribute("content", value);
-    });
-
-    // Set canonical
-    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    const createdCanonical = !canonical;
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute("href", "https://llmclicks.ai/about-us/");
-
-    // JSON-LD
-    const jsonLd = document.createElement("script");
-    jsonLd.type = "application/ld+json";
-    jsonLd.text = JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://llmclicks.ai/about-us/","url":"https://llmclicks.ai/about-us/","name":"About LLMClicks.ai | Our Mission to Improve AI Visibility","isPartOf":{"@id":"https://llmclicks.ai/#website"},"primaryImageOfPage":{"@id":"https://llmclicks.ai/about-us/#primaryimage"},"image":{"@id":"https://llmclicks.ai/about-us/#primaryimage"},"thumbnailUrl":"https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png","datePublished":"2025-09-03T03:50:33+00:00","dateModified":"2026-01-05T08:43:40+00:00","description":"We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.","breadcrumb":{"@id":"https://llmclicks.ai/about-us/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://llmclicks.ai/about-us/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https://llmclicks.ai/about-us/#primaryimage","url":"https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png","contentUrl":"https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png","width":231,"height":77,"caption":"LLMClicks.ai Logo"},{"@type":"BreadcrumbList","@id":"https://llmclicks.ai/about-us/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://llmclicks.ai/"},{"@type":"ListItem","position":2,"name":"About Us"}]},{"@type":"WebSite","@id":"https://llmclicks.ai/#website","url":"https://llmclicks.ai/","name":"LLMClicks.ai","description":"","publisher":{"@id":"https://llmclicks.ai/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://llmclicks.ai/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https://llmclicks.ai/#organization","name":"LLMClicks.ai","url":"https://llmclicks.ai/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https://llmclicks.ai/#/schema/logo/image/","url":"https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp","contentUrl":"https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp","width":500,"height":500,"caption":"LLMClicks.ai"},"image":{"@id":"https://llmclicks.ai/#/schema/logo/image/"},"sameAs":["https://www.facebook.com/llmclicksai","https://www.linkedin.com/company/llmclicks-ai/?viewAsMember=true"]}]});
-    document.head.appendChild(jsonLd);
-
-    return () => {
-      elements.forEach(el => el.remove());
-      jsonLd.remove();
-      if (createdCanonical && canonical) canonical.remove();
-    };
-  }, []);
-
   return (
   <Layout>
+    <Helmet>
+      <title>{ABOUT_TITLE}</title>
+      <meta name="description" content={ABOUT_DESC} />
+      <link rel="canonical" href={ABOUT_URL} />
+      <meta property="og:locale" content="en_US" />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content={ABOUT_TITLE} />
+      <meta property="og:description" content={ABOUT_DESC} />
+      <meta property="og:url" content={ABOUT_URL} />
+      <meta property="og:image" content="https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={ABOUT_TITLE} />
+      <meta name="twitter:description" content={ABOUT_DESC} />
+      <meta name="twitter:image" content="https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp" />
+      <script type="application/ld+json">{JSON.stringify(ABOUT_JSONLD)}</script>
+    </Helmet>
     <section className="section-padding pt-28 md:pt-36 relative overflow-hidden">
       <div className="absolute inset-0 accent-mesh pointer-events-none opacity-50" />
       <div className="absolute inset-0 grain-overlay pointer-events-none" />

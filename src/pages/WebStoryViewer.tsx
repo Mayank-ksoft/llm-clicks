@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,32 +50,22 @@ const WebStoryViewer = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
-  // SEO
-  useEffect(() => {
-    if (!story) return;
-    document.title = `${story.title} | LLMClicks.ai Web Stories`;
-    const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute(attr, name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", story.excerpt);
-    setMeta("og:title", story.title, "property");
-    setMeta("og:description", story.excerpt, "property");
-    setMeta("og:image", story.poster, "property");
-    setMeta("og:type", "article", "property");
-  }, [story]);
-
   if (!story) return <Navigate to="/web-stories" replace />;
 
   const slide = story.slides[index];
 
   return (
     <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4">
+      <Helmet>
+        <title>{`${story.title} | LLMClicks.ai Web Stories`}</title>
+        <meta name="description" content={story.excerpt} />
+        <link rel="canonical" href={`https://llmclicks.ai/web-stories/${slug}`} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={story.title} />
+        <meta property="og:description" content={story.excerpt} />
+        <meta property="og:image" content={story.poster} />
+        <meta property="og:url" content={`https://llmclicks.ai/web-stories/${slug}`} />
+      </Helmet>
       {/* Close */}
       <Link
         to="/web-stories"
