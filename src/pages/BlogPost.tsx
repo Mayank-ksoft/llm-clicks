@@ -294,7 +294,7 @@ const BlogPost = () => {
                       </a>
                     </Button>
                     <Button asChild variant="ghost" className="w-full mt-2 rounded-xl text-white hover:bg-white/10 hover:text-white">
-                      <a href="https://calendly.com/shripadclicks" target="_blank" rel="noopener noreferrer">Book a demo</a>
+                      <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">Book a demo</a>
                     </Button>
                   </div>
                 </div>

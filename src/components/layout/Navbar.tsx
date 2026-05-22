@@ -279,7 +279,7 @@ const Navbar = () => {
             className="rounded-xl px-5 border-border text-foreground hover:bg-accent/10 hover:text-foreground hover:border-accent/30"
             asChild
           >
-            <a href="https://calendly.com/shripadclicks" target="_blank" rel="noopener noreferrer">Book a demo</a>
+            <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">Book a demo</a>
           </Button>
         </div>
 
@@ -405,7 +405,7 @@ const Navbar = () => {
                   <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">Start free trial</a>
                 </Button>
                 <Button variant="outline" className="w-full rounded-xl border-border text-foreground hover:bg-accent/10 hover:text-foreground hover:border-accent/30" asChild>
-                  <a href="https://calendly.com/shripadclicks" target="_blank" rel="noopener noreferrer">Book a demo</a>
+                  <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">Book a demo</a>
                 </Button>
               </div>
             </div>

@@ -1220,8 +1220,8 @@ export const posts: BlogPost[] = [
     author: "Shripad Deshmukh",
     image: "https://llmclicks.ai/wp-content/uploads/2026/04/ai-listicle-marketplace.webp",
     content: [
-      { type: "p", text: "By Shripad Deskhmukh , Founder at LLMClicks.ai" },
-      { type: "p", text: "Published on: 04 March 2026 | 1070 words | 6-minutes read" },
+      // { type: "p", text: "By Shripad Deskhmukh , Founder at LLMClicks.ai" },
+      // { type: "p", text: "Published on: 04 March 2026 | 1070 words | 6-minutes read" },
       { type: "p", text: "It is a unified platform connecting site owners (Providers) with digital marketers (Buyers) to secure premium, AI-relevant backlinks." },
       { type: "p", text: "This guide covers everything you must know about navigating the new marketplace, divided into the Buyer Experience and the Provider Experience." },
       { type: "p", text: "As a Buyer, you can browse high-quality domains, evaluate their SEO metrics and AI relevance, and securely purchase backlink placements directly from the verified site owners." },
