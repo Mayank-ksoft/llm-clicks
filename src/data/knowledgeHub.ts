@@ -495,7 +495,364 @@ export const knowledgeHubCategories: KHCategory[] = [
     name: "Agentic Search (AEO)",
     description:
       "How autonomous AI agents discover, evaluate, and act on web content — and how to optimize for Answer Engine Optimization.",
-    articles: [],
+    articles: [
+      {
+        slug: "agentic-engine-optimization-b2b-saas-seo",
+        title:
+          "Agentic Engine Optimization (AEO): The Next Evolution of B2B SaaS SEO",
+        excerpt:
+          "AEO is how SaaS brands get recommended by autonomous AI agents. Learn how it differs from GEO, why it matters for enterprise pipeline, and how to build your strategy.",
+        date: "May 22, 2026",
+        readTime: "14 min read",
+        image: "/knowledge-hub/aeo-autonomous-agent-vendor-evaluation.jpg",
+        imageAlt:
+          "Autonomous AI agents from ChatGPT, Perplexity, and Claude evaluating and shortlisting SaaS vendors without human input, representing Agentic Engine Optimization",
+        content: [
+          { type: "h2", text: "Bottom Line Up Front", id: "bluf" },
+          {
+            type: "p",
+            text: "<strong>GEO is no longer enough.</strong> Optimizing for what LLMs say when a human asks a question solves yesterday's problem. The next wave is autonomous AI agents that research, evaluate, and shortlist SaaS tools on behalf of buyers, without a human typing a single prompt.",
+          },
+          {
+            type: "p",
+            text: "<strong>AEO is the discipline that closes this gap.</strong> Agentic Engine Optimization is the practice of structuring your product data, documentation, and trust signals so that AI agents can discover, evaluate, and recommend your brand without human intervention at any step.",
+          },
+          {
+            type: "p",
+            text: "<strong>Most SaaS brands are invisible to agents right now.</strong> Not because their product is weak, but because their data is unstructured, their documentation is unnavigable, and their trust signals are unverifiable by a machine running autonomously.",
+          },
+
+          {
+            type: "h2",
+            text: "Your GEO Strategy Has a Blind Spot the Size of Your Entire Enterprise Pipeline",
+            id: "geo-blind-spot",
+          },
+          {
+            type: "p",
+            text: "Autonomous AI agents are already making software shortlists for B2B buyers. Your GEO strategy was never built to address them.",
+          },
+          {
+            type: "p",
+            text: "OpenAI Operator, launched on January 23, 2025, automates web-based tasks on behalf of users without requiring a human to direct each step. Anthropic's Claude Computer Use, available to API developers since October 2024, allows agents to navigate interfaces, read documentation, and execute research tasks independently. Perplexity's agentic search mode conducts multi-step research and synthesizes recommendations across sources before surfacing a conclusion.",
+          },
+          {
+            type: "p",
+            text: "These are not future capabilities. They are live, deployed, and increasingly integrated into enterprise workflows. And the SaaS brands that show up in agent-driven research are not the ones with the best Google rankings or even the strongest GEO scores. They are the ones whose product data is machine-readable, verifiable, and structured for autonomous traversal, not just for human readers.",
+          },
+          {
+            type: "p",
+            text: "This is Agentic Engine Optimization (AEO). And it is the gap most B2B SaaS teams have not yet identified in their search strategy.",
+          },
+
+          { type: "h2", text: "What Is Agentic Engine Optimization (AEO)?", id: "what-is-aeo" },
+          {
+            type: "p",
+            text: "Agentic Engine Optimization is the practice of optimizing your brand, product data, content architecture, and technical infrastructure to be accurately discovered, evaluated, and recommended by autonomous AI agents operating without direct human guidance.",
+          },
+          {
+            type: "p",
+            text: "It is not a replacement for traditional SEO or GEO. It is the third layer of a complete AI search strategy:",
+          },
+          {
+            type: "p",
+            text: "<strong>Layer 1: Traditional SEO.</strong> A human searches on Google, your page ranks, they click through. Optimization target: crawlers, keyword algorithms, backlink authority.",
+          },
+          {
+            type: "p",
+            text: "<strong>Layer 2: Generative Engine Optimization (GEO).</strong> A human asks ChatGPT or Perplexity a question, the LLM generates an answer citing your brand. Optimization target: LLM training data, citation patterns, entity authority, content structure.",
+          },
+          {
+            type: "p",
+            text: "<strong>Layer 3: Agentic Engine Optimization (AEO).</strong> An autonomous AI agent is tasked with researching and shortlisting tools in your category. No human directs each step. The agent navigates your documentation, checks your pricing, verifies your integrations, reads third-party sources, and produces a structured recommendation. Optimization target: machine-readable product data, structured documentation, programmatic trust signals, agentic accessibility.",
+          },
+          {
+            type: "image",
+            src: "/knowledge-hub/aeo-three-layer-search-strategy-diagram.jpg",
+            alt: "Three-layer AI search strategy diagram showing Traditional SEO at the base, Generative Engine Optimization in the middle, and Agentic Engine Optimization as the top layer",
+          },
+          {
+            type: "p",
+            text: "The critical distinction: GEO asks \"what does AI say about you when a human asks?\" AEO asks \"can an AI agent understand, evaluate, and recommend you without any human in the loop?\"",
+          },
+          {
+            type: "p",
+            text: "For enterprise B2B SaaS, where buying committees are increasingly deploying AI research agents to conduct initial vendor evaluation, the answer to the second question is becoming a pipeline variable.",
+          },
+
+          {
+            type: "h2",
+            text: "How AI Agents Evaluate SaaS Tools: Where Most Brands Fail",
+            id: "how-agents-evaluate",
+          },
+          {
+            type: "p",
+            text: "An AI agent tasked with building a SaaS vendor shortlist does not read your homepage copy. It executes a structured evaluation process, checking specific data types in a specific sequence. Understanding that sequence is the foundation of an AEO strategy.",
+          },
+          {
+            type: "image",
+            src: "/knowledge-hub/aeo-agent-evaluation-four-step-process.jpg",
+            alt: "Four-step AI agent vendor evaluation process showing entity identification, structured data extraction, third-party trust verification, and agentic accessibility testing",
+          },
+
+          { type: "h3", text: "Step 1: Entity identification" },
+          {
+            type: "p",
+            text: "Before an agent can evaluate your product, it must unambiguously identify what your product is. This sounds basic. It is not.",
+          },
+          {
+            type: "p",
+            text: "Agents cross-reference multiple sources to confirm entity identity: your website, your G2 profile, your Crunchbase entry, your API documentation, third-party reviews, and any prior knowledge encoded in their base model. If these sources describe your product inconsistently, with different feature sets, different pricing structures, and conflicting positioning, the agent treats your brand as low-confidence and either skips it or assigns it lower weight in its recommendation.",
+          },
+          {
+            type: "p",
+            text: "<strong>The AEO fix:</strong> Establish consistent entity signals across every platform your product appears on. Your product category, core use case, primary integrations, and pricing model must be described in the same terms across your own content and every major third-party source.",
+          },
+
+          { type: "h3", text: "Step 2: Structured data extraction" },
+          {
+            type: "p",
+            text: "After identifying your entity, the agent attempts to extract structured product data: pricing tiers, feature availability, integration list, compliance certifications, API access, and supported platforms.",
+          },
+          {
+            type: "p",
+            text: "If this data is buried in marketing prose, locked in PDFs, or described in inconsistent formats across pages, the agent cannot extract it reliably. It either estimates (which introduces error) or discards your product from consideration because it cannot verify the data points its evaluation criteria requires.",
+          },
+          {
+            type: "p",
+            text: "Enterprise AI agents running vendor evaluation mirror human buying criteria, checking three data types above all others: integration compatibility with the buyer's existing stack, pricing structure at their team size, and security certification status. These are precisely the data types most SaaS landing pages describe in unstructured prose that agents cannot reliably parse.",
+          },
+          {
+            type: "p",
+            text: "<strong>The AEO fix:</strong> Implement SoftwareApplication schema with complete attributes: pricing, feature list, integration endpoints, compliance certifications, and supported platforms. Your pricing page must be structured enough that an agent can extract your current tier names and price points without reading between the lines.",
+          },
+
+          { type: "h3", text: "Step 3: Third-party trust verification" },
+          {
+            type: "p",
+            text: "Agents do not rely solely on your own content to evaluate your product. They cross-reference third-party sources: G2, Capterra, independent comparison blogs, industry analyst coverage, Reddit, and Hacker News, to verify your claims and assess credibility.",
+          },
+          {
+            type: "p",
+            text: "This is the step where most SaaS brands lose ground to competitors they consider inferior. A competitor with a well-maintained G2 and Capterra profile will score higher in agent evaluations. This happens even if your owned content is stronger.",
+          },
+          {
+            type: "p",
+            text: "<strong>The AEO fix:</strong> Treat your third-party profiles as primary product documentation, not secondary marketing assets. Your G2 profile, Capterra listing, and key integration marketplace entries must be current, complete, and consistent with your owned product documentation. These are the sources agents trust most.",
+          },
+
+          { type: "h3", text: "Step 4: Agentic accessibility testing" },
+          {
+            type: "p",
+            text: "This is the step unique to AEO and entirely absent from both traditional SEO and GEO frameworks. Advanced AI agents do not just read about your product. They test whether your product can be accessed and integrated programmatically.",
+          },
+          { type: "p", text: "Agents evaluating enterprise SaaS tools increasingly check for:" },
+          {
+            type: "ul",
+            items: [
+              "<strong>API documentation quality:</strong> Is your API documented in a machine-parseable format (OpenAPI/Swagger)? Can an agent understand your endpoints without human interpretation?",
+              "<strong>Authentication transparency:</strong> Is your authentication model clearly documented? Can an agent determine whether your product supports SSO, OAuth, or API key access without requesting a demo?",
+              "<strong>Integration discoverability:</strong> Are your integration capabilities listed in a format that allows an agent to match them against the buyer's existing stack?",
+              "<strong>Sandbox availability:</strong> Can an agent initiate a trial or sandbox environment programmatically, or does access require a human-gated sales conversation?",
+            ],
+          },
+          {
+            type: "p",
+            text: "SaaS brands optimized for AEO remove every friction point that requires human intervention in the agent's evaluation workflow.",
+          },
+
+          { type: "h2", text: "GEO vs AEO: Where Your Current Strategy Ends", id: "geo-vs-aeo" },
+          {
+            type: "p",
+            text: "If you have already invested in GEO, you have built the foundation for AEO. Several GEO practices carry over directly. But the gap between a complete GEO strategy and a complete AEO strategy is significant.",
+          },
+          {
+            type: "table",
+            headers: ["Dimension", "GEO", "AEO"],
+            rows: [
+              ["Optimization target", "LLM training data, citation patterns", "Autonomous agent evaluation workflows"],
+              ["Human involvement", "Human asks, AI responds", "Agent operates without human prompts"],
+              ["Content priority", "Authoritative answers, FAQ schema", "Machine-readable product specs, API docs"],
+              ["Trust signals", "E-E-A-T, verifiable claims, citations", "Third-party verification, compliance certs, live data"],
+              ["Technical priority", "llms.txt, structured schema, semantic clarity", "OpenAPI docs, integration manifests, sandbox access"],
+              ["Measurement", "Brand mentions, citation frequency, Share of Voice", "Agent evaluation outcomes, structured data completeness, accessibility score"],
+              ["Failure mode", "Not mentioned in AI responses", "Mentioned but excluded from shortlist due to unverifiable data"],
+            ],
+          },
+          {
+            type: "p",
+            text: "The most important row in that table is the failure mode. GEO failure is visibility failure. AEO failure is evaluation failure: your brand may be known to the agent, but excluded from the final shortlist because its data did not meet the agent's verification criteria.",
+          },
+          {
+            type: "p",
+            text: "Visibility failure is visible in your analytics. Evaluation failure is not. It happens before any session, click, or demo request that your tracking tools can record.",
+          },
+
+          {
+            type: "h2",
+            text: "How to Build an AEO Strategy: A Practical Framework for SaaS Teams",
+            id: "aeo-framework",
+          },
+          {
+            type: "p",
+            text: "AEO is not a one-time project. It is a technical discipline that runs alongside your existing SEO and GEO operations. Here is the foundational framework.",
+          },
+          {
+            type: "image",
+            src: "/knowledge-hub/aeo-five-phase-strategy-framework-roadmap.jpg",
+            alt: "Five-phase AEO strategy framework roadmap covering entity consistency, structured product data, agent-navigable documentation, third-party authority building, and ongoing exclusion monitoring",
+          },
+
+          { type: "h3", text: "Phase 1: Establish entity consistency" },
+          {
+            type: "p",
+            text: "Run a structured check of how your brand is described across every major platform agents cross-reference: your own site, G2, Capterra, Crunchbase, LinkedIn, integration marketplace listings, and the third-party comparison sites that AI engines cite most for your category.",
+          },
+          {
+            type: "p",
+            text: "Document every inconsistency in product category description, feature claims, pricing structure, and integration list. Resolve them. Your entity must be unambiguous across all sources before agents can evaluate it reliably.",
+          },
+          {
+            type: "p",
+            text: "LLMClicks.ai's 120-point AI accuracy audit checks entity consistency across ChatGPT, Perplexity, Gemini, Claude, and Copilot simultaneously, surfacing specific discrepancies between what each platform says about your brand and what your documentation actually states.",
+          },
+
+          { type: "h3", text: "Phase 2: Structure your product data for machine extraction" },
+          {
+            type: "p",
+            text: "Audit your pricing page, features page, integrations page, and security/compliance page with one question in mind: can an autonomous agent extract the specific data points it needs without reading prose?",
+          },
+          { type: "p", text: "For each page, add or improve:" },
+          {
+            type: "ul",
+            items: [
+              "SoftwareApplication or Product schema with complete attribute coverage",
+              "FAQ schema answering the exact questions agents use as evaluation criteria: \"Does [Product] integrate with Salesforce?\", \"What is the price per user per month?\", \"Is [Product] SOC 2 Type II certified?\"",
+              "Structured pricing tables with machine-readable tier names, price points, and included features, not prose descriptions",
+            ],
+          },
+
+          { type: "h3", text: "Phase 3: Make your documentation agent-navigable" },
+          {
+            type: "p",
+            text: "Your technical documentation is the highest-impact AEO asset most SaaS brands underinvest in. Structure it so an autonomous agent can traverse it without human guidance:",
+          },
+          {
+            type: "ul",
+            items: [
+              "Publish your API documentation in OpenAPI format",
+              "Add a clear, machine-readable integration index listing every supported platform, connection type, and authentication method",
+              "Structure your changelog so agents can identify when capabilities were added or removed (this directly addresses the training data lag problem)",
+              "Deploy <code>llms.txt</code> to signal which sections of your documentation are most relevant for AI consumption",
+            ],
+          },
+
+          { type: "h3", text: "Phase 4: Build verifiable third-party authority" },
+          {
+            type: "p",
+            text: "Identify the specific third-party sources that agents in your category cite most frequently during evaluation. Run your core evaluation queries through ChatGPT and Perplexity with agentic prompting: \"Research and compare the top five tools for [your category] including their pricing, key integrations, and security certifications.\"",
+          },
+          {
+            type: "p",
+            text: "Document which external sources appear in those responses. Those sources are your AEO citation targets. Ensure your brand is present on them, current, and consistent with your owned documentation.",
+          },
+
+          { type: "h3", text: "Phase 5: Monitor for evaluation exclusion" },
+          {
+            type: "p",
+            text: "Standard AI visibility tracking measures whether agents mention your brand. AEO monitoring adds a second layer: are agents that mention your brand including you in their final recommendations, or citing you and then excluding you?",
+          },
+          {
+            type: "p",
+            text: "This distinction appears in how agents frame your brand: \"Tool X was considered but excluded due to limited integration documentation\" versus \"Tool X is recommended for teams requiring Salesforce integration.\" The difference is an AEO problem, not a visibility problem, and it requires a different diagnostic.",
+          },
+          {
+            type: "p",
+            text: "LLMClicks.ai's AI Visibility Tracker monitors this pattern across platforms, flagging when your brand transitions from cited to excluded in agent-style evaluation prompts.",
+          },
+
+          { type: "h2", text: "What AEO Means for Your SEO and GEO Investment", id: "aeo-and-existing-investment" },
+          { type: "p", text: "AEO does not replace your existing strategy. It extends it." },
+          {
+            type: "p",
+            text: "Your technical SEO work (structured data, page speed, crawl health) feeds directly into AEO's structured data requirements. Your GEO work (entity authority, citation building, FAQ schema, third-party coverage) feeds directly into AEO's trust verification requirements.",
+          },
+          {
+            type: "p",
+            text: "The additional investment AEO requires is focused on two areas that SEO and GEO do not address: programmatic data accessibility (API documentation, integration manifests, machine-readable pricing) and evaluation-stage trust signals (compliance certifications, sandbox access, third-party verification for agent-specific criteria).",
+          },
+          {
+            type: "p",
+            text: "For most SaaS teams, this is a documentation and technical infrastructure problem more than a content problem. Your product likely already has the capabilities agents look for. The gap is in how those capabilities are documented and exposed in formats agents can evaluate without human assistance.",
+          },
+
+          { type: "h2", text: "The Window Is Open. It Closes Quickly.", id: "window-is-open" },
+          {
+            type: "p",
+            text: "Every major category of B2B software will have brands that establish AEO authority early and brands that arrive late. Brands must structure their product data and documentation for agent evaluation now. Doing so builds citation history and entity authority that compounds over time.",
+          },
+          {
+            type: "p",
+            text: "The brands that wait will face the same compounding disadvantage that characterises late GEO adoption. The agents will have formed preferences based on the brands they evaluated first. Evaluation history, like citation history, is hard to overcome retroactively.",
+          },
+          {
+            type: "p",
+            text: "Your pipeline already includes buyers who are using AI agents to conduct initial research. Right now, those agents are evaluating your product against structured data criteria you may not even know they are checking.",
+          },
+          {
+            type: "p",
+            text: "Find out where you stand before the next enterprise evaluation happens without you in the room.",
+          },
+
+          { type: "h2", text: "Run Your Free 120-Point AI Visibility Audit on LLMClicks.ai", id: "free-audit" },
+          {
+            type: "p",
+            text: "See exactly what ChatGPT, Perplexity, and Gemini are saying about your brand today, including accuracy issues on pricing, integrations, and use cases that directly affect how AI agents evaluate your product.",
+          },
+          {
+            type: "p",
+            text: "<a href=\"/ai-visibility-audit\">Run Your Free AI Visibility Audit →</a> No credit card required.",
+          },
+
+          { type: "h2", text: "Frequently Asked Questions About Agentic Engine Optimization", id: "faq" },
+
+          { type: "h3", text: "Q1. Is AEO just schema markup with a new name?" },
+          {
+            type: "p",
+            text: "No. Schema markup is one technical input into AEO, but it covers only the structured data layer. AEO is a broader discipline that includes API documentation quality, third-party entity consistency, programmatic sandbox access, and ongoing evaluation exclusion monitoring. A SaaS brand can have perfect schema markup and still be excluded from every agent-generated shortlist because its API documentation is unnavigable, its G2 profile is outdated, or its pricing page describes tiers in prose an agent cannot parse. Schema is a starting point for AEO, not the whole strategy.",
+          },
+
+          { type: "h3", text: "Q2. Which AI agents should SaaS teams prioritise first?" },
+          {
+            type: "p",
+            text: "Start with the agents your buyers are most likely using during vendor research. For B2B SaaS, the highest-priority targets are OpenAI Operator (enterprise workflow automation, active since January 2025), Perplexity's agentic search mode (multi-step research synthesis), and Claude's computer use capability (document and interface navigation for research tasks). If your buyers work in Microsoft 365 environments, add Microsoft Copilot to your list. Test each platform with agentic-style prompts: \"Research and shortlist the top five tools in [your category] including pricing, integrations, and security certifications.\" Document which data points each agent checks and whether your product passes or fails each one.",
+          },
+
+          { type: "h3", text: "Q3. How do I find out if an AI agent has already excluded my product from a shortlist?" },
+          {
+            type: "p",
+            text: "Run structured evaluation prompts across ChatGPT, Perplexity, and Claude. Use the exact phrasing an agent would use: \"Compare the top tools in [category] for a 50-person enterprise team. Include pricing, Salesforce integration, and SOC 2 status.\" Read the full response carefully. If your brand is mentioned in the research phase but absent from the final recommendation, that is an evaluation exclusion signal, not a visibility gap. Note the specific criteria cited for the brands that made the shortlist. Those criteria reveal exactly which data points your AEO strategy needs to address first. LLMClicks.ai's AI Visibility Tracker flags this cited-but-excluded pattern automatically across platforms.",
+          },
+
+          { type: "h3", text: "Q4. Does AEO apply to early-stage SaaS, or only enterprise products?" },
+          {
+            type: "p",
+            text: "AEO is relevant at any stage, but the priority areas shift based on your product's maturity. Early-stage SaaS teams should focus on the two highest-impact AEO actions: entity consistency (ensuring your brand is described the same way across your site, G2, Capterra, and Crunchbase) and structured pricing and feature data (making your key product claims machine-readable). These require no engineering resources and directly affect how agents evaluate you against established competitors. The more advanced AEO work, such as OpenAPI documentation, integration manifests, and sandbox accessibility, becomes critical when your buyers are enterprise teams with complex stack requirements and dedicated procurement workflows.",
+          },
+
+          { type: "h3", text: "Q5. Can AEO be implemented without engineering resources?" },
+          {
+            type: "p",
+            text: "The foundational phases can be. Entity consistency (aligning your brand description across third-party platforms), schema markup on your pricing and features pages, and FAQ schema on your integration and comparison pages all fall within the scope of a content or SEO team with basic technical knowledge. The advanced phases require engineering involvement: publishing API documentation in OpenAPI format, building a machine-readable integration index, and making sandbox environments programmatically accessible. A practical approach is to run the foundational phases first, demonstrate the impact through improved agent evaluation outcomes, and build the business case for engineering time on the advanced phases from there.",
+          },
+
+          { type: "h3", text: "Q6. How long does it take for AEO changes to influence agent evaluation outcomes?" },
+          {
+            type: "p",
+            text: "It depends on the change. Schema markup and structured data updates can influence agent evaluation within two to four weeks, since agents with real-time web access (Perplexity, Google AI Overviews) reflect content changes relatively quickly. Third-party profile corrections (G2, Capterra, integration marketplaces) take four to eight weeks to propagate into agent responses, as citation patterns update more slowly than owned content. Entity consistency improvements across multiple platforms typically require six to ten weeks before agents consistently reflect the corrected positioning. The slowest changes are base model knowledge updates in closed models like GPT-4o, which depend on OpenAI's retraining cycle. This is why ongoing monitoring via LLMClicks.ai matters: you need to know when changes register, not just when you made them.",
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "ai-overviews",

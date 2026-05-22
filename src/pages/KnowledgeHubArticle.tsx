@@ -16,29 +16,35 @@ const slugify = (s: string) =>
     .slice(0, 80);
 
 function renderParagraphContent(text: string): React.ReactNode {
-  const linkRegex = /<a\s+href="([^"]+)">(.*?)<\/a>/g;
+  // Supports <a href="...">, <strong>, <em>, <code>
+  const tokenRegex = /<a\s+href="([^"]+)">(.*?)<\/a>|<strong>(.*?)<\/strong>|<em>(.*?)<\/em>|<code>(.*?)<\/code>/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
+  let key = 0;
 
-  while ((match = linkRegex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
+  while ((match = tokenRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    if (match[1] !== undefined) {
+      parts.push(
+        <Link key={key++} to={match[1]} className="text-accent hover:underline font-medium">
+          {match[2]}
+        </Link>
+      );
+    } else if (match[3] !== undefined) {
+      parts.push(<strong key={key++} className="font-semibold text-foreground">{match[3]}</strong>);
+    } else if (match[4] !== undefined) {
+      parts.push(<em key={key++}>{match[4]}</em>);
+    } else if (match[5] !== undefined) {
+      parts.push(
+        <code key={key++} className="bg-secondary/60 border border-border rounded px-1.5 py-0.5 text-xs font-mono">
+          {match[5]}
+        </code>
+      );
     }
-    const href = match[1];
-    const anchorText = match[2];
-    parts.push(
-      <Link key={match.index} to={href} className="text-accent hover:underline font-medium">
-        {anchorText}
-      </Link>
-    );
     lastIndex = match.index + match[0].length;
   }
-
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
-  }
-
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
   return parts.length > 0 ? parts : text;
 }
 
