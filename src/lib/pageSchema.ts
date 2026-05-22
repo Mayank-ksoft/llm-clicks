@@ -16,6 +16,8 @@ const ROUTE_TO_KEY: Record<string, keyof typeof schemas> = {
   "/ai-readiness-analyzer": "ai-readiness-analyzer",
   "/ai-domain-profiler": "ai-domain-profiler",
   "/ai-visibility-checker": "ai-visibility-checker",
+  "/optimization-wizard": "optimization-wizard",
+  "/ai-listicle-marketplace": "ai-listicle-marketplace",
 };
 
 export function getPageSchema(pathname: string): string | null {

@@ -1204,5 +1204,133 @@
         "Brand Strategists"
       ]
     }
+  },
+  "optimization-wizard": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Optimization Wizard",
+    "url": "https://llmclicks.ai/optimization-wizard/",
+    "description": "The Optimization Wizard from LLMClicks.ai centralizes findings from On-Page Audits, Query Mappers, Fan-Out Coverage, and Content Comparisons into one prioritized, step-by-step AI SEO action plan for writers, SEOs, and developers.",
+    "applicationCategory": "MarketingSoftware, SEO Software, AI Visibility Tool, AI SEO Action Planner",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "Centralized Insights from All LLMClicks Tools",
+      "Auto-Prioritization by Visibility Impact and Effort",
+      "Page-Mapped Step-by-Step Optimization Plans",
+      "Task Assignment to Writers, SEOs, or Developers",
+      "Progress Tracking and Re-Analysis",
+      "Client-Ready Professional Roadmaps",
+      "Smart Difficulty and Urgency Scoring",
+      "Multi-Tool Data Aggregation"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/optimization_wizard.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "SEO Optimization Wizard",
+      "AI SEO Action Planner",
+      "SEO Task Prioritization",
+      "AI Visibility Optimization",
+      "SEO Roadmap Generator",
+      "Content Optimization Plan",
+      "AI Search Optimization Workflow",
+      "SEO Project Management",
+      "Automated SEO Recommendations",
+      "AI SEO Strategy Tool"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SEO Agencies",
+        "In-House SEO Teams",
+        "Content Teams",
+        "Developers",
+        "Marketing Teams",
+        "Growth Marketers"
+      ]
+    }
+  },
+  "ai-listicle-marketplace": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Listicle Marketplace",
+    "url": "https://llmclicks.ai/ai-listicle-marketplace/",
+    "description": "The AI Listicle Marketplace from LLMClicks.ai is the first GEO placement engine that connects SaaS brands with publishers who own AI-cited listicles. Buy placements in the Top 10 and Best of articles that train ChatGPT, Perplexity, and Gemini to recommend your brand.",
+    "applicationCategory": "MarketingSoftware, SEO Software, AI Visibility Tool, GEO Placement Engine",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "1200+ Vetted Publisher Domains with AI Citation Badges",
+      "Topical Alignment Scoring (High, Medium, Low)",
+      "AI Citation Presence Badges (ChatGPT, Claude, Perplexity)",
+      "AI Sources Integration from Audit to Placement",
+      "Manual LinkedIn-Verified Provider Vetting",
+      "Unified In-Platform Chat System",
+      "Order Status Tracking",
+      "Admin-Mediated Dispute Resolution",
+      "Bulk CSV Import for Agencies",
+      "Citation Lift Monitoring via AI Visibility Tracker"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2026/03/llmclicks-ai-listicle-marketplace-dashboard.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Listicle Marketplace",
+      "GEO Placement Engine",
+      "AI Citation Placements",
+      "LLM Training Signal Optimization",
+      "ChatGPT Brand Placement",
+      "Perplexity Citation Building",
+      "AI-Cited Listicle Placements",
+      "Generative Engine Optimization",
+      "SaaS Brand Visibility",
+      "AI Search Placement Platform"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SaaS Founders",
+        "Marketing Teams",
+        "SEO Agencies",
+        "Brand Managers",
+        "Publishers",
+        "Growth Marketers"
+      ]
+    }
   }
 }
