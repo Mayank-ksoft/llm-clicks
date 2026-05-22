@@ -1,0 +1,1208 @@
+{
+  "home": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://llmclicks.ai/#software",
+        "name": "LLMClicks.ai",
+        "alternateName": [
+          "LLM Clicks",
+          "LLMClicks",
+          "LLMClicks AI"
+        ],
+        "url": "https://llmclicks.ai",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "SEO & AI Visibility Software",
+        "operatingSystem": "Web, SaaS",
+        "runtimePlatform": "Web Browser. Requires JavaScript.",
+        "description": "LLMClicks.ai is an enterprise Generative Engine Optimization (GEO) platform designed to optimize brand visibility, entity density, and payload extraction parameters across AI agents and large language models. It enables SaaS teams and technical marketers to track, analyze, and secure machine-readable citations across ChatGPT, Perplexity, Gemini, and Google AI Overviews.",
+        "abstract": "#1 AI visibility tool and SEO audit platform for enterprise marketing teams. Monitor semantic entity clusters, track brand citations, and automate GEO workflows across all major LLMs.",
+        "keywords": "AI visibility tracker, generative engine optimization, GEO platform, LLM citation tracking, AI brand mentions, ChatGPT SEO, Perplexity SEO, AI search visibility, share of model, cloud entity booster, payload extraction, entity density",
+        "featureList": [
+          "120-Point AI Visibility Audit with automated semantic optimization tasks",
+          "Cloud Entity Booster orchestration engine for static cloud entity stacking",
+          "6-Month Local & On-Page SEO SOP engine with multi-agent automation logic",
+          "AI Mention Tracker across ChatGPT, Perplexity, Google AI Overviews, and Gemini",
+          "AI Query Mapper using Google Search Console payload data Extraction",
+          "Query Fan-Out Coverage Analyzer for tracking semantic coverage gaps",
+          "Content Embedding Analyzer for vector alignment with target LLM queries",
+          "AI Domain Profiler with real-time entity graph and AI Visibility Scores",
+          "LLM Traffic Tracker with per-bot request analytics (GPTBot, ClaudeBot, PerplexityBot)",
+          "White-label reporting dashboards for enterprise digital marketing agencies"
+        ],
+        "screenshot": [
+          {
+            "@type": "ImageObject",
+            "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+            "caption": "LLMClicks.ai AI Visibility and GEO Analytics Dashboard",
+            "width": 1280,
+            "height": 800
+          }
+        ],
+        "softwareVersion": "2.0",
+        "releaseNotes": "https://llmclicks.ai/changelog/",
+        "inLanguage": "en",
+        "availableOnDevice": "Desktop, Mobile, Tablet",
+        "isAccessibleForFree": false,
+        "offers": {
+          "@id": "https://llmclicks.ai/#offer"
+        },
+        "author": {
+          "@id": "https://llmclicks.ai/#person"
+        },
+        "publisher": {
+          "@id": "https://llmclicks.ai/#organization"
+        },
+        "creator": {
+          "@id": "https://llmclicks.ai/#person"
+        },
+        "maintainer": {
+          "@id": "https://llmclicks.ai/#organization"
+        },
+        "mainEntityOfPage": {
+          "@id": "https://llmclicks.ai/#webpage"
+        },
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "B2B SaaS Founders, Technical SEO Managers, Agency Operators, CMOs"
+        },
+        "sameAs": [
+          "https://www.g2.com/products/llmclicks-ai",
+          "https://www.linkedin.com/company/llmclicks-ai",
+          "https://twitter.com/llmclicksai"
+        ]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://llmclicks.ai/#organization",
+        "name": "LLMClicks.ai",
+        "legalName": "LLMClicks.ai",
+        "url": "https://llmclicks.ai",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+          "width": 192,
+          "height": 192,
+          "caption": "LLMClicks.ai Core Logo"
+        },
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+          "width": 1200,
+          "height": 630
+        },
+        "description": "LLMClicks.ai is an enterprise GEO (Generative Engine Optimization) platform specializing in cloud-based SEO stacking, multi-agent workflow systems, semantic HTML engineering, and machine-readable payload optimization.",
+        "foundingDate": "2024",
+        "founder": {
+          "@id": "https://llmclicks.ai/#person"
+        },
+        "numberOfEmployees": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 10
+        },
+        "slogan": "Your brand is invisible in ChatGPT. LLMClicks.ai fixes that.",
+        "knowsAbout": [
+          "Generative Engine Optimization",
+          "AI Visibility Tracking",
+          "LLM Citation Analysis",
+          "Share of Model Measurement",
+          "Semantic Entity Optimization",
+          "Technical SEO",
+          "B2B SaaS Marketing",
+          "Cloud Entity Stacking",
+          "Payload Extraction Automation"
+        ],
+        "sameAs": [
+          "https://www.linkedin.com/company/llmclicks-ai",
+          "https://twitter.com/llmclicksai",
+          "https://www.g2.com/products/llmclicks-ai"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "url": "https://llmclicks.ai/contact/",
+          "availableLanguage": "English"
+        },
+        "makesOffer": {
+          "@id": "https://llmclicks.ai/#offer"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://llmclicks.ai/#person",
+        "name": "Shripad Deshmukh",
+        "givenName": "Shripad",
+        "familyName": "Deshmukh",
+        "jobTitle": "Founder & CEO",
+        "description": "4x SaaS founder with 15 years of SEO expertise. Founder of LLMClicks.ai, GMB Briefcase, Citation Builder Pro, and Agency Simplifier. Pioneer of Generative Engine Optimization (GEO) for enterprise B2B SaaS brands.",
+        "url": "https://llmclicks.ai/about/",
+        "sameAs": [
+          "https://www.linkedin.com/in/shripaddeshmukh",
+          "https://twitter.com/shripaddeshmukh"
+        ],
+        "knowsAbout": [
+          "Generative Engine Optimization",
+          "Technical SEO Auditing",
+          "SaaS Growth and Positioning",
+          "AI Visibility Architecture",
+          "Local SEO Cloud Stacking",
+          "Semantic Entity Graph Optimization",
+          "Agentic Data Workflows"
+        ],
+        "worksFor": {
+          "@id": "https://llmclicks.ai/#organization"
+        },
+        "owns": {
+          "@id": "https://llmclicks.ai/#organization"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://llmclicks.ai/#website",
+        "url": "https://llmclicks.ai",
+        "name": "LLMClicks.ai",
+        "description": "Enterprise GEO platform for tracking AI citations, monitoring brand visibility in LLMs, and optimizing for generative search engines.",
+        "publisher": {
+          "@id": "https://llmclicks.ai/#organization"
+        },
+        "inLanguage": "en-US",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://llmclicks.ai/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://llmclicks.ai/#webpage",
+        "url": "https://llmclicks.ai/",
+        "name": "AI Visibility Tracker & Audit Platform: ChatGPT & Perplexity | LLMClicks.ai",
+        "headline": "Your brand is invisible in ChatGPT. LLMClicks.ai fixes that.",
+        "description": "#1 AI visibility tool & SEO audit engine for marketing teams. Monitor brand mentions, benchmark competitors, and optimize entity density across all major LLMs.",
+        "inLanguage": "en-US",
+        "isPartOf": {
+          "@id": "https://llmclicks.ai/#website"
+        },
+        "about": {
+          "@id": "https://llmclicks.ai/#software"
+        },
+        "usageInfo": "https://llmclicks.ai/privacy-policy/",
+        "relatedLink": "https://llmclicks.ai/terms-of-service/",
+        "mentions": [
+          {
+            "@id": "https://llmclicks.ai/#software"
+          },
+          {
+            "@id": "https://llmclicks.ai/#organization"
+          },
+          {
+            "@id": "https://llmclicks.ai/#person"
+          }
+        ],
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://llmclicks.ai/"
+            }
+          ]
+        },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+          "width": 1200,
+          "height": 630,
+          "caption": "LLMClicks.ai - Advanced AI Visibility Tracker and GEO Optimization Platform"
+        },
+        "datePublished": "2024-01-01",
+        "dateModified": "2026-05-22"
+      },
+      {
+        "@type": "Offer",
+        "@id": "https://llmclicks.ai/#offer",
+        "name": "LLMClicks.ai Subscription Plans",
+        "description": "Full enterprise AI visibility toolkit: automated AI citation tracking, cloud entity stacking setup, Share of Voice analytics dashboards, competitor embedding mapping, and white-label agency reporting engines.",
+        "url": "https://llmclicks.ai/pricing/",
+        "priceCurrency": "USD",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "priceType": "https://schema.org/RecurringCharge",
+          "billingDuration": "P1M"
+        },
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@id": "https://llmclicks.ai/#organization"
+        }
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://llmclicks.ai/#toollist",
+        "name": "LLMClicks.ai Optimization Suite",
+        "description": "Complete functional suite of AI visibility tracking, GEO optimization frameworks, and cloud-based architecture stacking modules.",
+        "numberOfItems": 9,
+        "itemListOrder": "https://schema.org/ItemListOrderAscending",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "120-Point AI Visibility Audit",
+              "url": "https://llmclicks.ai/ai-visibility-audit/",
+              "description": "Comprehensive technical evaluation analyzing crawlability bottlenecks, entity ambiguity parameters, and content structural deficits.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "AI Visibility Tracker",
+              "url": "https://llmclicks.ai/ai-visibility-tracker/",
+              "description": "Real-time engine executing daily tracking of brand Share of Voice across ChatGPT, Perplexity, and Google AI Overviews.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "AI Readiness Analyzer",
+              "url": "https://llmclicks.ai/ai-readiness-analyzer/",
+              "description": "Technical DOM-parsing assessment tool verifying automated agent crawlability, semantic HTML structuring, and schema payload density.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "AI Domain Profiler",
+              "url": "https://llmclicks.ai/ai-domain-profiler/",
+              "description": "Zero-login analysis application mapping how transformer models parse and contextually contextualize your explicit brand node.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Cloud Entity Booster Module",
+              "url": "https://llmclicks.ai/cloud-entity-booster/",
+              "description": "Advanced deployment console for cloud-based SEO entity stacking on high-trust network nodes.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Query Fan-Out Coverage Engine",
+              "url": "https://llmclicks.ai/query-fan-out-coverage/",
+              "description": "Algorithmic expansion engine expanding primary seeds into multi-variant queries to run comprehensive citation vulnerability tracking.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 7,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "LLM Traffic Tracker",
+              "url": "https://llmclicks.ai/llm-traffic-tracker/",
+              "description": "Log-level analysis application evaluating bot requests specifically from specialized crawlers like GPTBot and PerplexityBot.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 8,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "On-Page AI Structural Optimizer",
+              "url": "https://llmclicks.ai/on-page-optimiser/",
+              "description": "Real-time auditing interface benchmarking single-URL copy blocks against high-probability token extraction layouts.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 9,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Content Embedding Analyzer",
+              "url": "https://llmclicks.ai/content-embedding-analyzer/",
+              "description": "Vector-space semantic optimization tool evaluating proximity alignments between your landing copy and core neural network target nodes.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://llmclicks.ai/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does LLMClicks.ai actually do?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "LLMClicks.ai tracks how AI platforms like ChatGPT, Perplexity, Gemini, and Google AI Overviews contextually represent and cite your brand. It delivers a comprehensive GEO (Generative Engine Optimization) platform, giving technical teams and agencies the tracking metrics, entity density monitors, and code-level actionable playbooks required to capture zero-click generative visibility."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does the AI Visibility Audit function work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The engine processes a comprehensive 120-point analysis of your technical DOM architecture. It evaluates AI crawler bottlenecks, maps your semantic entity graph, flags gaps in structured JSON-LD payloads, and cross-checks vector alignment with target LLM retrieval patterns to deliver an immediate, prioritized dev task list."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does LLMClicks update citation visibility metrics daily?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The AI Visibility Tracker logs automated daily checks across major model configurations to measure exact citation counts, tracking fluctuations in brand share of model and entity graph prominence over time."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "ai-visibility-audit": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Visibility Audit",
+    "url": "https://llmclicks.ai/ai-visibility-audit/",
+    "description": "The AI Visibility Audit from LLMClicks.ai shows how AI assistants such as ChatGPT, Perplexity, Google AI, and Bing Copilot interpret, cite, and recommend your brand. The audit includes a visibility score, AI citation insights, competitor benchmarks, prompt coverage, missed opportunities, and clear improvements.",
+    "applicationCategory": "MarketingSoftware, SEO Software, AI Visibility Tool, AI Search Audit Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "AI Visibility Score",
+      "AI Citation Tracking",
+      "Competitor Benchmarking",
+      "Prompt and Query Coverage",
+      "Missed Query Opportunities",
+      "AI Search Intent Mapping",
+      "Service-Level Visibility Analysis",
+      "Semantic and Entity Alignment Insights",
+      "Schema and Structured Data Checks",
+      "Multi-Engine Testing across ChatGPT, Perplexity, Google AI, and Bing Copilot"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai_visibility_audit.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Visibility Audit",
+      "AI Search Audit",
+      "AI Brand Visibility",
+      "ChatGPT Brand Visibility",
+      "AI Citation Intelligence",
+      "AI Competitor Analysis",
+      "Generative AI Visibility",
+      "LLM Visibility Insights",
+      "Prompt Coverage Audit",
+      "AI Search Optimization"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "Marketing Teams",
+        "SEO Professionals",
+        "Agencies",
+        "CMOs",
+        "Founders",
+        "Growth Marketers"
+      ]
+    }
+  },
+  "ai-visibility-tracker": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Visibility Tracker",
+    "url": "https://llmclicks.ai/ai-visibility-tracker/",
+    "description": "The AI Visibility Tracker from LLMClicks.ai monitors brand mentions across ChatGPT, Perplexity, Google AI, and Copilot. Add or generate LLM queries, track your visibility over time, compare competitor presence, analyze citations, and measure share of voice inside AI-generated answers.",
+    "applicationCategory": "SEO Software, Marketing Software, AI Visibility Tool, AI Search Tracking Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "Real-time AI visibility tracking",
+      "Brand mention monitoring across ChatGPT, Perplexity, Google AI, and Copilot",
+      "Custom and AI-generated query tracking",
+      "Multi-engine LLM visibility testing",
+      "Citation Analysis",
+      "Competitor visibility comparison",
+      "Visibility rate and share of voice reports",
+      "Historical trend tracking",
+      "Business Analysis insights",
+      "Overview and Analytics dashboard"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-visibility-tracker-query-results.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Visibility Tracker",
+      "AI Brand Tracking",
+      "AI Search Visibility",
+      "ChatGPT Brand Monitoring",
+      "AI Citation Tracking",
+      "LLM Visibility Tracking",
+      "AI Competitor Visibility",
+      "Generative AI Visibility Insights",
+      "Brand Mention Tracking",
+      "AI Search Analytics"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "Marketing Teams",
+        "SEO Professionals",
+        "Agencies",
+        "CMOs",
+        "Founders",
+        "Growth Marketers"
+      ]
+    }
+  },
+  "on-page-optimiser": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "On Page Optimiser",
+    "url": "https://llmclicks.ai/on-page-optimiser/",
+    "description": "The On Page Optimiser from LLMClicks.ai runs a 120-point on-page audit focused on both Google and AI visibility. It checks Technical SEO, meta tags, schema, EEAT, content structure, media optimisation, internal links, and AI-specific signals. The tool auto-generates tasks, assigns them to team members, and lets you re-run scans to measure improvements.",
+    "applicationCategory": "SEO Software, AI SEO Tool, On-Page Optimisation Tool, AI Visibility Optimiser",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "120-point AI and SEO on-page audit",
+      "Technical SEO checks including metadata, canonical tags, robots settings, speed, mobile performance",
+      "Content structure analysis including headings, readability, Q&A format, and topic depth",
+      "Media optimisation checks including alt tags, WebP images, compression, and lazy loading",
+      "Schema and rich snippet validation including FAQ schema, breadcrumbs, author schema, and JSON-LD",
+      "EEAT evaluation including author bio, credentials, trust signals, citations, and business info",
+      "Content freshness checks including dates, external references, and citation-worthy stats",
+      "AI-specific signals including entity density, brand mentions, semantic clusters, and AI relevance",
+      "Auto-generated tasks for every issue with team assignment",
+      "Re-run audits and track improvements over time"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/on-page-optimiser-seo-audit-report.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "On Page Optimiser",
+      "AI SEO Optimiser",
+      "SEO On-Page Audit Tool",
+      "AI Visibility Optimiser",
+      "120 Point SEO Audit",
+      "Technical SEO Audit",
+      "EEAT Checker",
+      "Schema Audit Tool",
+      "AI SEO Optimisation",
+      "AI On-Page Analysis"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SEO Professionals",
+        "Marketing Teams",
+        "Content Teams",
+        "Agencies",
+        "Developers",
+        "CMOs",
+        "Founders"
+      ]
+    }
+  },
+  "query-fan-out-coverage": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Query Fan-Out Coverage",
+    "url": "https://llmclicks.ai/query-fan-out-coverage/",
+    "description": "Query Fan-Out Coverage by LLMClicks.ai expands a single seed query into 10\u201320 related, intent-diverse queries. It checks full, partial, and missing coverage using an LLM Judge, assigns a coverage score, and generates tasks to improve topical depth and AI visibility.",
+    "applicationCategory": "SEO Software, AI SEO Tool, Content Optimisation Tool, Query Expansion Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "Seed query expansion into 10\u201320 related queries",
+      "Multi-intent query generation: informational, transactional, comparison, how-to, brand",
+      "Coverage Analyzer powered by LLM Judge",
+      "Full, partial, and missing coverage detection",
+      "Coverage Score across all fan-out queries",
+      "Content gap detection",
+      "Task generation for missing or weak topics",
+      "Suggestions for new sections or new pages",
+      "Topical authority improvement workflow",
+      "LLM SEO support for AI visibility in ChatGPT, Perplexity, and Google AI"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/query-fan-out-coverage-dashboard.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "Query Fan-Out Coverage",
+      "Query Expansion Tool",
+      "AI SEO Optimisation",
+      "Topical Coverage Analysis",
+      "LLM SEO",
+      "AI Visibility Optimisation",
+      "Semantic Query Expansion",
+      "AI Query Clustering",
+      "Content Coverage Analyzer",
+      "LLM Judge Coverage Check"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SEO Professionals",
+        "Content Strategists",
+        "Marketing Teams",
+        "Agencies",
+        "Founders",
+        "AI SEO Specialists",
+        "Topical Authority Builders"
+      ]
+    }
+  },
+  "content-embedding-analyzer": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Content Embedding Analyzer",
+    "url": "https://llmclicks.ai/content-embedding-analyzer/",
+    "description": "The Content Embedding Analyzer from LLMClicks.ai uses semantic embeddings to measure how well each section of your content aligns with LLM queries and Google Search Console keywords. It breaks content into sections, scores semantic similarity, highlights weak areas, and generates actionable recommendations to improve AI and Google visibility.",
+    "applicationCategory": "SEO Software, AI SEO Tool, Content Optimisation Tool, Semantic Analysis Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "Semantic content analysis using AI embeddings",
+      "LLM query matching for intent-level alignment",
+      "Google Search Console keyword similarity scoring",
+      "Automatic content parsing into logical sections",
+      "Section-level performance scoring",
+      "Full, moderate, and weak content classification",
+      "Actionable recommendations based on semantic gaps",
+      "Entity and schema improvement suggestions",
+      "Before-after improvement tracking",
+      "Cross-platform optimisation for AI and Google visibility"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/content-embedding-analyzer-dashboard.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "Content Embedding Analyzer",
+      "Semantic Content Analysis",
+      "AI SEO Optimisation",
+      "LLM SEO Tool",
+      "Content Similarity Scoring",
+      "GSC Keyword Semantic Matching",
+      "AI Content Alignment",
+      "Section-Level Content Scoring",
+      "AI Visibility Optimisation",
+      "Semantic Embedding Analysis"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SEO Professionals",
+        "Content Strategists",
+        "Marketing Teams",
+        "Agencies",
+        "Founders",
+        "AI SEO Specialists",
+        "Enterprise SEO Teams"
+      ]
+    }
+  },
+  "ai-query-mapper": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Query Mapper",
+    "url": "https://llmclicks.ai/ai-query-mapper/",
+    "description": "AI Query Mapper from LLMClicks.ai turns AI-style queries into page-level actions using Google Search Console data. It classifies intent, maps queries to the right pages with confidence scoring, detects content gaps, and generates actionable tasks to improve AI visibility and organic performance.",
+    "applicationCategory": "SEO Software, AI SEO Tool, Query Mapping Tool, Content Optimisation Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "Import pages and keywords directly from Google Search Console",
+      "Classify AI queries by intent including informational, transactional, comparison, local, and brand",
+      "Map AI-style queries to the most relevant pages using CTR, impressions, ranking, and semantic matching",
+      "Confidence-based scoring for query-to-page mapping",
+      "Automatic task generation including schema improvements, content updates, entity optimisation, and new page creation",
+      "Quick Win labeling showing optimize, content gap, new page needed, or analyzing",
+      "Detect content gaps and missing intent coverage",
+      "Turn LLM-style queries into clear, actionable SEO workflows",
+      "Support for scaling teams and agencies managing multiple pages",
+      "Faster visibility gains through prioritized query insights"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-query-mapper-select-target-page.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Query Mapper",
+      "Query Mapping Tool",
+      "LLM Query Optimisation",
+      "Google Search Console Query Mapping",
+      "AI SEO Tool",
+      "Query-to-Page Mapping",
+      "AI Visibility Optimisation",
+      "Semantic Query Classification",
+      "LLM SEO Insights",
+      "Content Gap Detection"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SEO Professionals",
+        "Content Strategists",
+        "Marketing Teams",
+        "Agencies",
+        "Founders",
+        "Growth Marketers",
+        "AI SEO Specialists"
+      ]
+    }
+  },
+  "industry-benchmarks": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Industry Benchmarks",
+    "url": "https://llmclicks.ai/industry-benchmarks/",
+    "description": "Industry Benchmarks by LLMClicks.ai lets you compare your AI visibility against 600+ businesses across SaaS, local services, e-commerce, healthcare, legal, and more. Measure your success rate, analyze how often your brand is cited in AI answers, and see whether you are above, below, or on par with your industry's average visibility score.",
+    "applicationCategory": "SEO Software, AI Visibility Tool, Benchmarking Tool, Competitor Analysis Software",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "AI visibility benchmarking across 600+ projects",
+      "Niche selection including SaaS, local services, e-commerce, healthcare, legal, and more",
+      "Success rate calculation based on brand citations vs misses across AI platforms",
+      "Industry-level average visibility comparison",
+      "20+ query-based AI visibility scoring",
+      "Identify whether you are above, below, or at par with your niche",
+      "Visibility trend insights across industries",
+      "Reveal categories where competitors dominate AI answers",
+      "Goal and KPI setting with industry context",
+      "Support for agency, SMB, enterprise, and multi-location benchmarking"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/pricing/",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/elementor/thumbs/industry-benchmarks-dashboard-reoufhvl50gmcob91tx783t27d74k0l9dnckxmqh6w.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "Industry Benchmarks",
+      "AI Visibility Benchmarking",
+      "AI Search Benchmarking",
+      "Success Rate Benchmark",
+      "SaaS Industry Benchmark",
+      "Local Business Benchmarking",
+      "E-commerce Benchmarking",
+      "AI Competitor Benchmarking",
+      "AI Visibility Score",
+      "AI Citation Benchmark"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "SEO Professionals",
+        "Marketing Teams",
+        "Agencies",
+        "CMOs",
+        "Founders",
+        "AI SEO Specialists",
+        "Industry Analysts"
+      ]
+    }
+  },
+  "llm-traffic-tracker": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "LLM Traffic Tracker",
+    "url": "https://llmclicks.ai/llm-traffic-tracker/",
+    "description": "LLM Traffic Tracker is a free WordPress plugin by LLMClicks.ai that detects and logs visits from AI bots such as ChatGPT, Claude, Perplexity, and Gemini. The plugin tracks page-level LLM traffic, daily and weekly crawl patterns, geographic distribution, and syncs anonymized data to the LLMClicks dashboard for real-time analytics.",
+    "applicationCategory": "WordPressPlugin, SEO Software, AI Visibility Tool, Analytics Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web, WordPress",
+    "downloadUrl": "https://llmclicks.ai/llm-traffic-tracker/",
+    "installUrl": "https://wordpress.org/plugins/",
+    "softwareHelp": "https://llmclicks.ai/support/",
+    "provider": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/",
+      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "LLMClicks.ai",
+      "url": "https://llmclicks.ai/"
+    },
+    "featureList": [
+      "Detects AI bot visits from ChatGPT, Claude, Perplexity, Gemini, and other LLMs",
+      "Page-level AI traffic analytics",
+      "Daily, weekly, and monthly crawl trend tracking",
+      "Model-wise traffic breakdown",
+      "Geographic distribution of AI visits",
+      "Real-time logs and historical data",
+      "Dashboard sync with LLMClicks.ai account",
+      "Automatic AI bot identification using known user agents",
+      "Privacy-safe and GDPR compliant logging",
+      "One-click WordPress installation and setup"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/llm-traffic-tracker/",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/llm-traffic-tracker-chatgpt-perplexity-ai-assistants.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "LLM Traffic Tracker",
+      "AI Bot Traffic",
+      "AI Crawler Analytics",
+      "AI Scan Tracker",
+      "LLM Bot Detection",
+      "AI Visibility Tracking",
+      "WordPress AI Plugin",
+      "AI Search Discovery",
+      "ChatGPT Bot Crawling",
+      "Perplexity Bot Tracking"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "WordPress Users",
+        "SEO Professionals",
+        "Marketing Teams",
+        "Agencies",
+        "Founders",
+        "Product Teams",
+        "Analytics Professionals"
+      ]
+    }
+  },
+  "pricing": {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    "name": "LLMClicks.ai Pricing Plans",
+    "url": "https://llmclicks.ai/pricing/",
+    "description": "Simple AI Visibility plans for individuals, teams, and agencies. Compare Starter, Pro, and Agency plans with queries, audits, branding, and team features.",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "Starter Plan",
+        "url": "https://llmclicks.ai/pricing/",
+        "price": "49.00",
+        "priceCurrency": "USD",
+        "description": "Starter plan for individuals and small teams. Includes 500 queries per month, 20 page audits, no branding options, and 0 team members. Add-on: $20 monthly for 1000 extra queries.",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "LLMClicks.ai",
+          "url": "https://llmclicks.ai/"
+        },
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Starter AI Visibility Plan",
+          "serviceType": "AI Visibility Tools Subscription"
+        }
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro Plan",
+        "url": "https://llmclicks.ai/pricing/",
+        "price": "99.00",
+        "priceCurrency": "USD",
+        "description": "Pro plan for growing businesses. Includes 2000 queries per month, 50 page audits, no branding options, and 1 team member. Add-on: $20 monthly for 1000 extra queries.",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "LLMClicks.ai",
+          "url": "https://llmclicks.ai/"
+        },
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Pro AI Visibility Plan",
+          "serviceType": "AI Visibility Tools Subscription"
+        }
+      },
+      {
+        "@type": "Offer",
+        "name": "Agency Plan",
+        "url": "https://llmclicks.ai/pricing/",
+        "price": "199.00",
+        "priceCurrency": "USD",
+        "description": "Agency plan for large-scale operations. Includes 6000 queries per month, 100 page audits, white label branding, and up to 3 team members. Add-on: $20 monthly for 1000 extra queries.",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "LLMClicks.ai",
+          "url": "httpsllmclicks.ai/"
+        },
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Agency AI Visibility Plan",
+          "serviceType": "AI Visibility Tools Subscription"
+        }
+      }
+    ],
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Free Trial",
+        "value": "All plans include a free 14-day trial."
+      }
+    ]
+  },
+  "ai-readiness-analyzer": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Readiness Analyzer",
+    "url": "https://llmclicks.ai/ai-readiness-analyzer/",
+    "description": "The AI Readiness Analyzer by LLMClicks.ai evaluates how well a website is understood by AI-powered search engines such as ChatGPT, Perplexity, Claude, and Google AI Overviews. It performs a 9-page deep scan, checks metadata, schema, semantic structure, technical SEO, entity clarity, and provides an AI Coverage Score with actionable recommendations. The tool is 100% free.",
+    "applicationCategory": "SEO Software, AI Visibility Tool, Website Analyzer, AI SEO Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/ai-readiness-analyzer/",
+      "price": "0.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "9-page AI readiness scan",
+      "AI Coverage Score from 0 to 100",
+      "Metadata and schema validation",
+      "Semantic and entity structure analysis",
+      "Technical SEO and performance checks",
+      "Content clarity and contextual completeness checks",
+      "Gap and opportunity detection",
+      "Actionable recommendations for AI visibility improvement",
+      "PDF audit report generation",
+      "No signup or credit card required"
+    ],
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-readiness-analyzer-readiness-score.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Readiness Analyzer",
+      "AI Website Audit",
+      "AI Visibility Tool",
+      "AI Search Compatibility Checker",
+      "AI SEO Audit",
+      "AI Discovery Optimization",
+      "Semantic Website Analysis",
+      "AI Visibility Score",
+      "Structured Data Audit",
+      "Entity and Schema Checker"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "Marketing Teams",
+        "SEO Professionals",
+        "Agencies",
+        "Founders",
+        "CMOs",
+        "Growth Teams",
+        "Content Strategists"
+      ]
+    }
+  },
+  "ai-domain-profiler": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Domain Profiler",
+    "url": "https://llmclicks.ai/ai-domain-profiler/",
+    "description": "The AI Domain Profiler from LLMClicks.ai reveals how AI models such as ChatGPT, Claude, and Perplexity interpret your brand. It retrieves AI knowledge, performs semantic profiling, maps entities, evaluates trust signals, and generates a visual AI Domain Profile report. The tool is 100% free and requires no login.",
+    "applicationCategory": "SEO Software, AI Visibility Tool, Entity Analysis Tool, Brand Perception Analyzer",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/ai-domain-profiler/",
+      "price": "0.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "AI-generated brand summary from ChatGPT and Claude",
+      "Domain perception analysis using LLM knowledge retrieval",
+      "Semantic profiling using structured web and entity databases",
+      "Entity and category mapping",
+      "Citation and external source discovery",
+      "Trust and visibility signal evaluation",
+      "Perception strength scoring",
+      "Cross-model comparison between LLMs",
+      "AI Domain Profile report in a visual dashboard",
+      "Downloadable PDF AI brand summary",
+      "100% free tool with instant results"
+    ],
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-domain-profiler-chatgpt-perplexity-claude.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Domain Profiler",
+      "AI Brand Analysis",
+      "Entity Mapping Tool",
+      "AI Reputation Checker",
+      "Domain Perception Analyzer",
+      "LLM Brand Summary",
+      "AI Entity Profiling",
+      "AI Search Visibility",
+      "Semantic Brand Analysis",
+      "AI Visibility Optimization"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "Marketing Leaders",
+        "SEO Professionals",
+        "Founders",
+        "CMOs",
+        "Agencies",
+        "Content Strategists",
+        "AI SEO Specialists"
+      ]
+    }
+  },
+  "ai-visibility-checker": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Visibility Checker",
+    "url": "https://llmclicks.ai/ai-visibility-checker/",
+    "description": "The free AI Visibility Checker from LLMClicks.ai tests whether AI assistants like ChatGPT, Perplexity, and Claude mention or recommend your brand for buying-intent queries. Enter up to five custom queries and instantly discover your AI mentions, competitor visibility, recommendation strength, intent coverage, and gaps affecting your AI presence. No signup required.",
+    "applicationCategory": "SEO Software, AI Visibility Tool, Brand Monitoring Tool, Recommendation Analysis Tool",
+    "softwareVersion": "2025",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "url": "https://llmclicks.ai/ai-visibility-checker/",
+      "price": "0.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "Brand mention detection in ChatGPT, Perplexity, and Claude",
+      "AI recommendation strength scoring",
+      "Competitor inclusion analysis",
+      "Query intent coverage across awareness, comparison, and purchase queries",
+      "AI response mapping with inclusion and tone analysis",
+      "Visibility gap detection for missing authority or content signals",
+      "Platform-level visibility scoring",
+      "Instant AI visibility report with graphs and summaries",
+      "PDF export of AI Visibility Report",
+      "No login or signup required"
+    ],
+    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-visibility-checker-chatgpt-perplexity-claude.webp",
+    "applicationSuite": "LLMClicks AI Visibility Tools",
+    "keywords": [
+      "AI Visibility Checker",
+      "AI Brand Mention Checker",
+      "ChatGPT Brand Visibility",
+      "AI Recommendation Checker",
+      "AI Competitor Mapping",
+      "AI Mentions Tracker",
+      "Perplexity Brand Visibility",
+      "AI Search Visibility Tool",
+      "LLM Brand Monitoring",
+      "AI Inclusion Analysis"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": [
+        "Marketing Teams",
+        "SEO Professionals",
+        "Founders",
+        "Product Teams",
+        "Agencies",
+        "Growth Marketers",
+        "Brand Strategists"
+      ]
+    }
+  }
+}

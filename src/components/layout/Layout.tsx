@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { SITE_ORIGIN, getPageMeta } from "@/lib/pageMeta";
+import { getPageSchema } from "@/lib/pageSchema";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
@@ -11,6 +12,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
   const canonical = `${SITE_ORIGIN}${normalized}`;
   const { title, description } = getPageMeta(normalized);
+  const schemaJson = getPageSchema(normalized);
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Helmet>
@@ -22,6 +24,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <meta property="og:url" content={canonical} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        {schemaJson && (
+          <script type="application/ld+json">{schemaJson}</script>
+        )}
       </Helmet>
       <Navbar />
       <main className="pt-16">{children}</main>
