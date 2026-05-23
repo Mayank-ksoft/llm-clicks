@@ -1,6 +1,10 @@
 import "dotenv/config";
 import express from "express";
 import nodemailer from "nodemailer";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 if (!process.env.EMAIL || !process.env.PASS) {
   console.warn("WARNING: EMAIL and/or PASS environment variables are not set. Contact form emails will fail.");
@@ -88,14 +92,73 @@ app.post("/api/send-contact-email", async (req, res) => {
     </div>
   `;
 
+  const receiptHtml = `
+    <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background-color: #f4f6f9;">
+      <div style="background: linear-gradient(135deg, ${brandNavy} 0%, #242b3d 100%); padding: 32px 40px; border-radius: 12px 12px 0 0;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: ${brandTeal}; letter-spacing: -0.5px;">
+          LLMClicks.ai
+        </h1>
+        <p style="margin: 6px 0 0; font-size: 13px; color: #8b95a5;">We received your message</p>
+      </div>
+      <div style="background: #ffffff; padding: 36px 40px; border-left: 1px solid #e8eaed; border-right: 1px solid #e8eaed;">
+        <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 700; color: ${brandNavy};">Hi ${fName},</h2>
+        <p style="margin: 0 0 18px; font-size: 15px; color: ${brandNavy}; line-height: 1.6;">
+          Thank you for reaching out to <strong>LLMClicks.ai</strong>. We have received your inquiry, and our support team will review it and get back to you shortly — typically within 1 business day.
+        </p>
+        <p style="margin: 0 0 24px; font-size: 14px; color: #4b5563; line-height: 1.6;">
+          For your records, here's a copy of the message you submitted:
+        </p>
+        <div style="background: #f8fafb; border-left: 4px solid ${brandTeal}; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 28px;">
+          <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; margin: 0 0 8px; font-weight: 600;">Your message</p>
+          <div style="font-size: 14px; color: #374151; line-height: 1.7; white-space: pre-wrap;">${sMessage}</div>
+        </div>
+        <p style="margin: 0 0 6px; font-size: 14px; color: ${brandNavy};">Regards,</p>
+        <p style="margin: 0; font-size: 14px; font-weight: 600; color: ${brandNavy};">The LLMClicks.ai Team</p>
+      </div>
+      <div style="background: ${brandNavy}; padding: 20px 40px; border-radius: 0 0 12px 12px; text-align: center;">
+        <p style="margin: 0 0 4px; font-size: 12px; color: #8b95a5;">
+          <a href="https://llmclicks.ai" style="color: ${brandTeal}; text-decoration: none;">llmclicks.ai</a> &middot; AI Visibility Platform
+        </p>
+        <p style="margin: 0; font-size: 11px; color: #6b7280;">
+          This is an automated confirmation. Please do not reply to this email.
+        </p>
+      </div>
+    </div>
+  `;
+
+  const receiptText = `Hi ${fName},
+
+Thank you for reaching out to LLMClicks.ai. We have received your inquiry, and our support team will review it and get back to you shortly.
+
+Your message:
+${sMessage}
+
+Regards,
+The LLMClicks.ai Team
+https://llmclicks.ai`;
+
   try {
+    // 1. Internal notification to the LLMClicks team
     await transporter.sendMail({
-      from: process.env.EMAIL,
+      from: `"LLMClicks.ai" <${process.env.EMAIL}>`,
       to: process.env.EMAIL,
       replyTo: sEmail,
       subject: `Contact Form: ${fName} ${lName}`,
       html: htmlBody,
     });
+
+    // 2. Auto-reply receipt to the user (best-effort)
+    try {
+      await transporter.sendMail({
+        from: `"LLMClicks.ai" <${process.env.EMAIL}>`,
+        to: sEmail,
+        subject: "We received your message | LLMClicks.ai",
+        text: receiptText,
+        html: receiptHtml,
+      });
+    } catch (receiptErr) {
+      console.error("Auto-reply receipt failed:", receiptErr);
+    }
 
     return res.status(200).json({ success: true });
   } catch (err: any) {
@@ -104,7 +167,16 @@ app.post("/api/send-contact-email", async (req, res) => {
   }
 });
 
-const port = 3001;
+// Serve static files from the Vite build output
+const distPath = path.resolve(__dirname, "../dist");
+app.use(express.static(distPath));
+
+// SPA fallback: serve index.html for all non-API routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
+});
+
+const port = parseInt(process.env.PORT || "3001", 10);
 app.listen(port, "0.0.0.0", () => {
-  console.log(`API server running on port ${port}`);
+  console.log(`Server running on port ${port} (API + static files)`);
 });

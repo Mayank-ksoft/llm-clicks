@@ -6,12 +6,13 @@
   "scripts": {
     "predev": "tsx scripts/generate-sitemap.ts",
     "dev": "vite",
+    "dev:server": "tsx server/index.ts",
     "prebuild": "tsx scripts/generate-sitemap.ts",
     "build": "vite build",
     "build:dev": "tsx scripts/generate-sitemap.ts && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "vite preview --host 0.0.0.0 --port 3000",
+    "start": "PORT=3000 node --import tsx server/index.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
