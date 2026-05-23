@@ -12,7 +12,7 @@
     "build:dev": "tsx scripts/generate-sitemap.ts && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "PORT=3000 node --import tsx server/index.ts",
+    "start": "node --import tsx server/index.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
