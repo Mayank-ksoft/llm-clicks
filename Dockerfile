@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* bun.lock* ./
 
-# Install dependencies
+# Install ALL dependencies (need devDeps for build step)
 RUN npm install
 
 # Copy source code
@@ -13,6 +13,9 @@ COPY . .
 
 # Build the Vite frontend
 RUN npm run build
+
+# Remove devDependencies after build to slim the image
+RUN npm prune --omit=dev
 
 # Expose port
 EXPOSE 3000
