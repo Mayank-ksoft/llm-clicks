@@ -6,7 +6,8 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getWebStory } from "@/data/webStories";
-import { getPageMeta, SITE_ORIGIN } from "@/lib/pageMeta";
+import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
+import { syncRouteHeadTags } from "@/lib/headTags";
 
 const SLIDE_MS = 7000;
 
@@ -18,6 +19,9 @@ const WebStoryViewer = () => {
   const [progressKey, setProgressKey] = useState(0);
 
   const total = story?.slides.length ?? 0;
+  const storyPath = slug ? `/web-stories/${slug}` : "/web-stories";
+  const meta = getPageMeta(storyPath);
+  const canonical = getCanonicalUrl(storyPath);
 
   const next = useCallback(() => {
     setIndex((i) => (i + 1 < total ? i + 1 : i));
@@ -51,6 +55,14 @@ const WebStoryViewer = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
+  useEffect(() => {
+    syncRouteHeadTags(meta.title, meta.description, canonical);
+    const frame = window.requestAnimationFrame(() => {
+      syncRouteHeadTags(meta.title, meta.description, canonical);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [meta.title, meta.description, canonical]);
+
   if (!story) return <Navigate to="/web-stories" replace />;
 
   const slide = story.slides[index];
@@ -58,8 +70,6 @@ const WebStoryViewer = () => {
   return (
     <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4">
       {(() => {
-        const meta = getPageMeta(`/web-stories/${slug}`);
-        const canonical = `${SITE_ORIGIN}/web-stories/${slug}/`;
         return (
           <Helmet>
             <title>{meta.title}</title>

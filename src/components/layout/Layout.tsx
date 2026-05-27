@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { getPageSchema } from "@/lib/pageSchema";
+import { syncRouteHeadTags } from "@/lib/headTags";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
@@ -14,9 +15,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const canonical = getCanonicalUrl(pathname);
   const { title, description } = getPageMeta(normalized);
   const schemaJson = getPageSchema(normalized);
+
+  useEffect(() => {
+    syncRouteHeadTags(title, description, canonical);
+    const frame = window.requestAnimationFrame(() => {
+      syncRouteHeadTags(title, description, canonical);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [title, description, canonical]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Helmet>
+      <Helmet key={normalized}>
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={canonical} />
