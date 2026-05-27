@@ -3,14 +3,15 @@ import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { SITE_ORIGIN, getPageMeta } from "@/lib/pageMeta";
+import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { getPageSchema } from "@/lib/pageSchema";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
-  // Normalize: strip trailing slash except for root.
+  // Normalize: strip trailing slash except for root (used for meta/schema lookup).
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
-  const canonical = `${SITE_ORIGIN}${normalized}`;
+  // Canonical URL preserves the trailing slash to match the live site.
+  const canonical = getCanonicalUrl(pathname);
   const { title, description } = getPageMeta(normalized);
   const schemaJson = getPageSchema(normalized);
   return (

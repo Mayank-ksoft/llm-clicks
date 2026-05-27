@@ -59,7 +59,7 @@ const WebStoryViewer = () => {
     <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4">
       {(() => {
         const meta = getPageMeta(`/web-stories/${slug}`);
-        const canonical = `${SITE_ORIGIN}/web-stories/${slug}`;
+        const canonical = `${SITE_ORIGIN}/web-stories/${slug}/`;
         return (
           <Helmet>
             <title>{meta.title}</title>

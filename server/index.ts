@@ -3,6 +3,8 @@ import express from "express";
 import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
+import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -167,13 +169,147 @@ https://llmclicks.ai`;
   }
 });
 
-// Serve static files from the Vite build output
+// Serve static files from the Vite build output (skip the HTML so we can
+// rewrite per-route meta tags ourselves).
 const distPath = path.resolve(__dirname, "../dist");
-app.use(express.static(distPath));
+app.use(express.static(distPath, { index: false }));
 
-// SPA fallback: serve index.html for all non-API routes
+// ---- Per-route meta injection ----------------------------------------------
+// Crawlers and previewers that don't execute JS need the correct
+// <title>/<meta description>/<link canonical>/<og:*> in the served HTML.
+// We rewrite a small set of head tags based on the request path using the
+// shared pageMeta map (single source of truth with the client bundle).
+
+const SITE_ORIGIN = "https://llmclicks.ai";
+const META = pageMetaData as {
+  default: { title: string; description: string };
+  routes: Record<string, { title: string; description: string }>;
+};
+
+function titleCase(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function metaForPath(pathname: string): { title: string; description: string } {
+  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
+  if (normalized === "/") return META.default;
+  const exact = META.routes[normalized];
+  if (exact) return exact;
+
+  if (normalized.startsWith("/blog/")) {
+    const name = titleCase(normalized.replace("/blog/", ""));
+    return {
+      title: `${name} | LLMClicks.ai Blog`,
+      description: `${name} — insights on AI visibility and LLM SEO from LLMClicks.ai.`,
+    };
+  }
+  if (normalized.startsWith("/docs/")) {
+    const name = titleCase(normalized.replace("/docs/", ""));
+    return {
+      title: `${name} | LLMClicks.ai Docs`,
+      description: `Documentation: ${name}. Learn how to use LLMClicks.ai effectively.`,
+    };
+  }
+  if (normalized.startsWith("/knowledge-hub/")) {
+    const parts = normalized.split("/").filter(Boolean);
+    const name = titleCase(parts[parts.length - 1] ?? "");
+    return {
+      title: `${name} | LLMClicks.ai Knowledge Hub`,
+      description: `${name} — explore the LLMClicks.ai Knowledge Hub for AI visibility insights.`,
+    };
+  }
+  if (normalized.startsWith("/web-stories/")) {
+    const name = titleCase(normalized.replace("/web-stories/", ""));
+    return {
+      title: `${name} | LLMClicks.ai Web Stories`,
+      description: `${name} — a visual story on AI visibility from LLMClicks.ai.`,
+    };
+  }
+  return META.default;
+}
+
+function canonicalForPath(pathname: string): string {
+  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
+  return normalized === "/" ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${normalized}/`;
+}
+
+function escapeAttr(v: string): string {
+  return v
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+const indexHtmlPath = path.join(distPath, "index.html");
+let indexTemplate: string | null = null;
+function loadTemplate(): string {
+  if (!indexTemplate) indexTemplate = fs.readFileSync(indexHtmlPath, "utf8");
+  return indexTemplate;
+}
+
+function injectMeta(html: string, pathname: string): string {
+  const { title, description } = metaForPath(pathname);
+  const canonical = canonicalForPath(pathname);
+  const t = escapeAttr(title);
+  const d = escapeAttr(description);
+
+  let out = html
+    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${t}</title>`)
+    .replace(
+      /<meta\s+name="description"[^>]*>/i,
+      `<meta name="description" content="${d}" />`,
+    )
+    .replace(
+      /<meta\s+property="og:title"[^>]*>/i,
+      `<meta property="og:title" content="${t}" />`,
+    )
+    .replace(
+      /<meta\s+property="og:description"[^>]*>/i,
+      `<meta property="og:description" content="${d}" />`,
+    )
+    .replace(
+      /<meta\s+property="og:url"[^>]*>/i,
+      `<meta property="og:url" content="${canonical}" />`,
+    )
+    .replace(
+      /<meta\s+name="twitter:title"[^>]*>/i,
+      `<meta name="twitter:title" content="${t}" />`,
+    )
+    .replace(
+      /<meta\s+name="twitter:description"[^>]*>/i,
+      `<meta name="twitter:description" content="${d}" />`,
+    );
+
+  // Inject canonical (no existing tag in template) right after description.
+  if (!/<link\s+rel="canonical"/i.test(out)) {
+    out = out.replace(
+      /(<meta\s+name="description"[^>]*>)/i,
+      `$1\n    <link rel="canonical" href="${canonical}" />`,
+    );
+  } else {
+    out = out.replace(
+      /<link\s+rel="canonical"[^>]*>/i,
+      `<link rel="canonical" href="${canonical}" />`,
+    );
+  }
+  return out;
+}
+
+// SPA fallback: serve a per-route-rewritten index.html for non-API routes.
 app.use((req, res) => {
-  res.sendFile(path.join(distPath, "index.html"));
+  try {
+    const html = injectMeta(loadTemplate(), req.path);
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.status(200).send(html);
+  } catch (err) {
+    console.error("Failed to inject meta, falling back to raw index.html:", err);
+    res.sendFile(indexHtmlPath);
+  }
 });
 
 const port = parseInt(process.env.PORT || "3001", 10);
