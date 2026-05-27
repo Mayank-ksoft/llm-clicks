@@ -2,4 +2,8 @@ node_modules
 dist
 .git
 .kiro
+.env
+.env.local
 *.md
+.vscode
+.idea

@@ -1,28 +1,31 @@
-FROM node:22-alpine
+# Multi-stage build for smaller production image
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json* bun.lock* ./
-
-# Install ALL dependencies (need devDeps for build step)
-RUN npm install
-
-# Copy source code
-COPY . .
+# Install all deps (including dev) for the build
+COPY package.json package-lock.json* ./
+RUN npm install --no-audit --no-fund
 
 # Build the Vite frontend
+COPY . .
 RUN npm run build
 
-# Remove devDependencies after build to slim the image
-RUN npm prune --omit=dev
+# ---------------- Production stage ----------------
+FROM node:22-alpine AS runner
 
-# Expose port
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Install only production deps
+COPY package.json package-lock.json* ./
+RUN npm install --omit=dev --no-audit --no-fund
+
+# Copy built assets and server
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/server ./server
+
 EXPOSE 3000
 
-# Set environment variable for production port
-ENV PORT=3000
-ENV NODE_ENV=production
-
-# Start the Express server (serves API + static files)
-CMD ["node", "--import", "tsx", "server/index.ts"]
+CMD ["npm", "start"]
