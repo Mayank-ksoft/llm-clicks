@@ -1,4 +1,84 @@
+# ====================================================================
+# LLMClicks.ai Robots Protection Architecture
+# Optimized for Global Search & Generative Engine Optimization (GEO)
+# ====================================================================
+
+# Global Content Signals: Permit Search and Real-Time RAG Grounding
 User-agent: *
+Content-Signal: search=yes,ai-input=yes,ai-train=yes
 Allow: /
+
+# --------------------------------------------------------------------
+# 1. AI AGENTS, LLM BOT, & RETRIEVAL ENGINE ALLOWANCES
+# --------------------------------------------------------------------
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CohereBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+# --------------------------------------------------------------------
+# 2. STANDARD SEARCH CRAWLER ALLOWANCES
+# --------------------------------------------------------------------
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+# --------------------------------------------------------------------
+# 3. DISALLOW MALICIOUS SCRAPERS AND HIGH-COMPUTE AGENTS
+# --------------------------------------------------------------------
+
+# ByteDance/TikTok scraper (High volume, low commercial value for SaaS)
+User-agent: Bytespider
+Disallow: /
+
+# Common Crawl (Aggressive scraper, alternative to native engine bots)
+User-agent: CCBot
+Disallow: /
+
+# Aggressive content-scraping frameworks
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: ImageCrawl
+Disallow: /
+
+# --------------------------------------------------------------------
+# 4. SITEMAP ARCHITECTURE DIRECTIVES
+# --------------------------------------------------------------------
 
 Sitemap: https://llmclicks.ai/sitemap.xml
