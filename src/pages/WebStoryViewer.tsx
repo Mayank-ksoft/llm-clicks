@@ -6,6 +6,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getWebStory } from "@/data/webStories";
+import { getPageMeta, SITE_ORIGIN } from "@/lib/pageMeta";
 
 const SLIDE_MS = 7000;
 
@@ -56,16 +57,22 @@ const WebStoryViewer = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4">
-      <Helmet>
-        <title>{`${story.title} | LLMClicks.ai Web Stories`}</title>
-        <meta name="description" content={story.excerpt} />
-        <link rel="canonical" href={`https://llmclicks.ai/web-stories/${slug}`} />
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={story.title} />
-        <meta property="og:description" content={story.excerpt} />
-        <meta property="og:image" content={story.poster} />
-        <meta property="og:url" content={`https://llmclicks.ai/web-stories/${slug}`} />
-      </Helmet>
+      {(() => {
+        const meta = getPageMeta(`/web-stories/${slug}`);
+        const canonical = `${SITE_ORIGIN}/web-stories/${slug}`;
+        return (
+          <Helmet>
+            <title>{meta.title}</title>
+            <meta name="description" content={meta.description} />
+            <link rel="canonical" href={canonical} />
+            <meta property="og:type" content="article" />
+            <meta property="og:title" content={meta.title} />
+            <meta property="og:description" content={meta.description} />
+            <meta property="og:image" content={story.poster} />
+            <meta property="og:url" content={canonical} />
+          </Helmet>
+        );
+      })()}
       {/* Close */}
       <Link
         to="/web-stories"

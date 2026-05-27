@@ -1,5 +1,9 @@
 // Per-route SEO metadata. Layout reads from this map based on pathname
 // so every page ships its own title, description, canonical, and OG tags.
+//
+// Titles & descriptions in STATIC_META are sourced from the GSC-optimized
+// LLMClicks_Final_Meta_Tags spreadsheet. Keep this file as the single
+// source of truth and avoid hardcoding <title>/<description> in pages.
 
 export type PageMeta = {
   title: string;
@@ -8,26 +12,98 @@ export type PageMeta = {
 
 export const SITE_ORIGIN = "https://llmclicks.ai";
 
-const DEFAULT_DESCRIPTION =
-  "#1 AI visibility tool & SEO audit for marketing teams. Monitor brand mentions, benchmark competitors, and optimize citations across all major LLMs.";
-
 export const DEFAULT_META: PageMeta = {
-  title: "AI Visibility Tracker & Audit: ChatGPT & Perplexity | LLMClicks.ai",
-  description: DEFAULT_DESCRIPTION,
+  title: "AI Visibility Tracker & Audit | LLMClicks.ai",
+  description:
+    "Measure your brand's AI search visibility across LLMs. Track citations, analyze competitors, and optimize for generative engines with LLMClicks.ai.",
 };
 
 // Static, exact-path overrides. Keys are normalized (no trailing slash).
 const STATIC_META: Record<string, PageMeta> = {
   "/": DEFAULT_META,
+
+  // Core tool / feature pages
+  "/ai-visibility-audit": {
+    title: "Free 120-Point AI Visibility Audit | LLMClicks.ai",
+    description:
+      "Run a free 120-point AI Visibility Audit. Find why competitors get cited in ChatGPT & Perplexity and get a prioritized fix list in minutes.",
+  },
+  "/ai-visibility-tracker": {
+    title: "AI Visibility Tracker: Monitor LLM Mentions & Citations",
+    description:
+      "Track how often ChatGPT, Perplexity, Google AI, and Copilot mention your brand. Daily Share of Voice updates, competitor benchmarks, and citation alerts.",
+  },
+  "/on-page-optimiser": {
+    title: "On-Page AI Audit Tool | LLMClicks.ai",
+    description:
+      "Audit pages for AI retrieval readiness. Fix semantic structure, heading hierarchy, and schema gaps so LLMs read and cite your content accurately.",
+  },
+  "/query-fan-out-coverage": {
+    title: "Analyze Query Fan-Out Coverage for AI Search",
+    description:
+      "Expand any seed query into 10-20 semantic variations and measure your brand's citation coverage gaps across ChatGPT, Perplexity, and Google AI.",
+  },
+  "/content-embedding-analyzer": {
+    title: "Content Embedding Analyzer: Map Your Semantic Entities",
+    description:
+      "Check semantic alignment between your content and AI queries. Improve embedding relevance to increase citation probability in RAG-based LLM answers.",
+  },
+  "/ai-query-mapper": {
+    title: "AI Query Mapper: Track Generative Search Intent",
+    description:
+      "Connect Google Search Console queries to AI intent signals. Map what users search to what ChatGPT and Perplexity actually answer about your brand.",
+  },
+  "/industry-benchmarks": {
+    title: "SaaS Industry Benchmarks for AI Search Visibility",
+    description:
+      "See how your brand's AI citation rate compares across industries. LLMClicks.ai tracks Share of Voice benchmarks for SaaS, insurance, legal, and more.",
+  },
+  "/llm-traffic-tracker": {
+    title: "LLM Traffic Tracker: Measure AI Generated Search Clicks",
+    description:
+      "See which AI bots crawl your site and how often. Track GPTBot, ClaudeBot, PerplexityBot, and Googlebot per page. Free LLM traffic analytics tool.",
+  },
+  "/pricing": {
+    title: "LLMClicks.ai Pricing | AI Visibility Plans",
+    description:
+      "Choose the AI visibility plan that fits your team. From free tools to enterprise GEO tracking. 14-day free trial. No credit card required.",
+  },
+  "/ai-readiness-analyzer": {
+    title: "Free AI Readiness Checker & Analyzer for B2B SaaS",
+    description:
+      "Run a free 9-point AI readiness check in seconds. See if GPTBot, ClaudeBot, and PerplexityBot can crawl, parse, and cite your website. No login needed.",
+  },
+  "/ai-domain-profiler": {
+    title: "AI Domain Profiler: Analyze Your Generative Authority",
+    description:
+      "Discover how ChatGPT and Gemini perceive your brand. Get your AI Visibility Score, entity graph, and tailored optimization checklist. No login required.",
+  },
+  "/ai-visibility-checker": {
+    title: "Free AI Visibility Checker: Test Your Brand Mentions",
+    description:
+      "Check if your brand appears in ChatGPT, Perplexity, and Google AI answers. Free AI visibility checker, no login needed. Results in under 60 seconds.",
+  },
+  "/optimization-wizard": {
+    title: "GEO Optimization Wizard: Step-by-Step AI Search Setup",
+    description:
+      "Get a step-by-step AI optimization plan personalized to your domain. Fix entity gaps, schema issues, and content alignment to increase LLM citation rates.",
+  },
+  "/ai-listicle-marketplace": {
+    title: "AI Listicle Marketplace: Secure Third-Party Citations",
+    description:
+      "Get your SaaS product cited in AI-generated listicles on ChatGPT, Perplexity, and Google AI. LLMClicks.ai places your brand where B2B buyers research.",
+  },
+  "/affiliate-program": {
+    title: "Join the LLMClicks.ai Partner & Affiliate Program",
+    description:
+      "Earn up to 30% compounding recurring commission promoting the #1 AI visibility platform. Built for SEO agencies, consultants, and content creators.",
+  },
+
+  // About / Contact / Legal — not in spreadsheet, keep curated copy.
   "/about-us": {
     title: "About LLMClicks.ai | Our Mission to Improve AI Visibility",
     description:
       "We help brands appear in AI search results. LLMClicks.ai is trusted by agencies and marketers to track, analyze, and boost visibility across ChatGPT and beyond.",
-  },
-  "/pricing": {
-    title: "Pricing Plans | LLMClicks.ai AI Visibility Tracker",
-    description:
-      "Simple, transparent pricing for AI visibility tracking and audits. Choose the plan that fits your team and start optimizing for ChatGPT, Gemini, and Perplexity.",
   },
   "/contact": {
     title: "Contact LLMClicks.ai | Talk to Our AI Visibility Team",
@@ -36,31 +112,26 @@ const STATIC_META: Record<string, PageMeta> = {
   },
   "/thank-you": {
     title: "Thank You | LLMClicks.ai",
-    description: "Thanks for reaching out to LLMClicks.ai. Our team will get back to you shortly.",
-  },
-  "/affiliate-program": {
-    title: "Affiliate Program | Earn With LLMClicks.ai",
     description:
-      "Join the LLMClicks.ai affiliate program and earn recurring commissions by referring marketers and agencies to the leading AI visibility platform.",
+      "Thanks for reaching out to LLMClicks.ai. Our team will get back to you shortly.",
+  },
+  "/privacy-policy": {
+    title: "Privacy Policy | LLMClicks.ai",
+    description:
+      "Read the LLMClicks.ai privacy policy to learn how we collect, use, and protect your data.",
+  },
+  "/terms": {
+    title: "Terms of Service | LLMClicks.ai",
+    description:
+      "Read the LLMClicks.ai terms of service governing use of our AI visibility platform.",
   },
   "/ai-visibility-tool-comparison": {
     title: "AI Visibility Tool Comparison | LLMClicks.ai vs Alternatives",
     description:
       "Compare LLMClicks.ai with other AI visibility tools. See features, pricing, and accuracy across ChatGPT, Gemini, Claude, and Perplexity tracking.",
   },
-  "/industry-benchmarks": {
-    title: "Industry Benchmarks | AI Visibility Insights by LLMClicks.ai",
-    description:
-      "Explore AI visibility benchmarks across industries. See how brands rank inside ChatGPT, Perplexity, and other AI search engines.",
-  },
-  "/privacy-policy": {
-    title: "Privacy Policy | LLMClicks.ai",
-    description: "Read the LLMClicks.ai privacy policy to learn how we collect, use, and protect your data.",
-  },
-  "/terms": {
-    title: "Terms of Service | LLMClicks.ai",
-    description: "Read the LLMClicks.ai terms of service governing use of our AI visibility platform.",
-  },
+
+  // Section indexes
   "/blog": {
     title: "Blog | AI Search, LLM SEO & Visibility Insights | LLMClicks.ai",
     description:
@@ -77,73 +148,160 @@ const STATIC_META: Record<string, PageMeta> = {
       "The LLMClicks.ai Knowledge Hub: deep guides on AI visibility, generative search, and optimizing for LLM-powered discovery.",
   },
   "/web-stories": {
-    title: "Web Stories | LLMClicks.ai",
-    description: "Visual web stories on AI visibility, LLM SEO, and AI-powered search trends from LLMClicks.ai.",
-  },
-  "/ai-visibility-audit": {
-    title: "AI Visibility Audit | LLMClicks.ai",
+    title: "Web Stories | Generative SEO & AI Visibility | LLMClicks.ai",
     description:
-      "Run a deep AI visibility audit for your brand. Discover how ChatGPT, Gemini, and Perplexity describe and cite you — and what to fix.",
+      "Bite-sized strategic teardowns. Learn how to optimize your SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.",
   },
-  "/ai-visibility-tracker": {
-    title: "AI Visibility Tracker | LLMClicks.ai",
+
+  // Blog posts (GSC-optimized titles & descriptions)
+  "/blog/on-page-audit-120-point-guide": {
+    title: "120-Point On-Page Audit Guide for AI Search Readiness",
     description:
-      "Track your brand's visibility across ChatGPT, Gemini, Claude, and Perplexity over time with the LLMClicks.ai AI Visibility Tracker.",
+      "The complete 120-point on-page audit guide for AI search. Fix schema, semantic structure, and entity gaps to rank in ChatGPT and Perplexity.",
   },
-  "/ai-listicle-marketplace": {
-    title: "AI Listicle Marketplace | LLMClicks.ai",
+  "/blog/top-ai-visibility-tracker-tools": {
+    title: "11 Best AI Visibility Tracker Tools for B2B SaaS | Tested",
     description:
-      "Get featured in high-authority AI listicles that LLMs cite. Browse the LLMClicks.ai listicle marketplace and grow AI visibility.",
+      "We tested 11 AI visibility tracking tools. See which tracks citations across ChatGPT, Perplexity, and Google AI best. Full reviews and comparison table.",
   },
-  "/on-page-optimiser": {
-    title: "On-Page Optimiser | LLMClicks.ai",
+  "/blog/ai-visibility-guide-for-llms": {
+    title: "The Ultimate AI Visibility Guide for LLM Search",
     description:
-      "Optimize every page for AI search. The LLMClicks.ai on-page optimiser scores content and tells you exactly what to fix for LLM visibility.",
+      "Learn how to improve your brand's visibility in LLM-generated answers. The complete guide to GEO, entity optimization, and AI citation strategy for 2026.",
   },
-  "/ai-query-mapper": {
-    title: "AI Query Mapper | LLMClicks.ai",
+  "/blog/llm-visibility-vs-traditional-seo": {
+    title: "LLM Visibility vs. Traditional SEO: The Core Differences",
     description:
-      "Map the AI queries that matter for your brand. See which prompts trigger you in ChatGPT, Gemini, and Perplexity with the LLMClicks.ai Query Mapper.",
+      "Traditional SEO ranks pages. LLM SEO gets your brand cited in AI answers. Learn the core differences and how to optimize for both in 2026.",
   },
-  "/llm-traffic-tracker": {
-    title: "LLM Traffic Tracker | LLMClicks.ai",
+  "/blog/ai-visibility-measurement-guide": {
+    title: "How to Measure AI Visibility: A Complete Framework",
     description:
-      "Measure real traffic coming from LLMs. The LLMClicks.ai LLM traffic tracker attributes visits from ChatGPT, Gemini, Claude, and Perplexity.",
+      "The complete framework for measuring AI visibility. Track brand citations, Share of Voice, and GEO performance across ChatGPT and Perplexity.",
   },
-  "/optimization-wizard": {
-    title: "Optimization Wizard | LLMClicks.ai",
+  "/blog/perplexity-seo-reverse-engineering": {
+    title: "Reverse Engineering Perplexity SEO: How to Get Cited",
     description:
-      "A guided wizard that walks you through optimizing your site for AI visibility step by step. Built for marketers and SEO teams.",
+      "Reverse-engineered: how Perplexity AI selects sources and ranks answers. The exact tactics to get your content cited in Perplexity search results.",
   },
-  "/query-fan-out-coverage": {
-    title: "Query Fan-Out Coverage | LLMClicks.ai",
+  "/blog/generative-engine-optimization-geo-saas": {
+    title: "Generative Engine Optimization (GEO) Playbook for SaaS",
     description:
-      "See how well your content covers the fan-out queries LLMs generate. Close gaps and win more AI citations with LLMClicks.ai.",
+      "The complete GEO playbook for B2B SaaS. Optimize your brand for ChatGPT and Perplexity citations and stop losing buyers to AI-generated answers.",
   },
-  "/content-comparison": {
-    title: "Content Comparison | LLMClicks.ai",
+  "/blog/ai-brand-reputation-management-hallucinations": {
+    title: "Fix Hallucinations with AI Brand Reputation Management",
     description:
-      "Compare your content against the pages LLMs actually cite. Identify gaps and craft content that earns AI visibility.",
+      "AI platforms get your brand wrong. Learn how to detect, correct, and prevent LLM hallucinations using GEO and entity optimization techniques.",
   },
-  "/content-embedding-analyzer": {
-    title: "Content Embedding Analyzer | LLMClicks.ai",
+  "/blog/seo-trends-agency-ai-audits": {
+    title: "SEO Trends: Why Marketing Agencies Must Offer AI Audits",
     description:
-      "Analyze how LLMs embed and interpret your content. The LLMClicks.ai embedding analyzer surfaces semantic gaps and opportunities.",
+      "Top SEO agencies are adding AI audits to every client engagement. See the 2026 trends driving the shift from keyword rankings to LLM citation tracking.",
   },
-  "/ai-visibility-checker": {
-    title: "Free AI Visibility Checker | LLMClicks.ai",
+  "/blog/best-ai-seo-tools": {
+    title: "The 10 Best AI SEO Tools for 2026 (Ranked & Reviewed)",
     description:
-      "Free tool: check how visible your brand is across ChatGPT, Gemini, Claude, and Perplexity in seconds with LLMClicks.ai.",
+      "The 10 best AI SEO tools for 2026, ranked and reviewed. From LLM citation trackers to content analyzers, find which tools are worth your budget.",
   },
-  "/ai-readiness-analyzer": {
-    title: "Free AI Readiness Analyzer | LLMClicks.ai",
+  "/blog/ai-visibility-framework-intent-mapping": {
+    title: "AI Visibility Framework: Mastering Search Intent Mapping",
     description:
-      "Is your site ready for AI search? Run the free LLMClicks.ai AI Readiness Analyzer and get an instant readiness score.",
+      "Map user intent to AI answers. The AI visibility framework for aligning content with the queries ChatGPT and Perplexity surface to B2B buyers.",
   },
-  "/ai-domain-profiler": {
-    title: "Free AI Domain Profiler | LLMClicks.ai",
+  "/blog/ai-search-readiness-audit": {
+    title: "How to Conduct an AI Search Readiness Audit for SaaS",
     description:
-      "Profile any domain through the lens of AI search. See how LLMs describe a brand with the free LLMClicks.ai domain profiler.",
+      "Discover if your site is ready for AI search. This audit covers crawlability, JSON-LD schema, entity clarity, and content structure for LLM retrieval.",
+  },
+  "/blog/monitor-competitor-mentions-ai-search": {
+    title: "How to Monitor Competitor Mentions in AI Search Results",
+    description:
+      "Track when competitors get cited by ChatGPT, Perplexity, and Google AI and you don't. Benchmark AI Share of Voice and close citation gaps fast.",
+  },
+  "/blog/what-is-ai-search-visibility": {
+    title: "What is AI Search Visibility? A Guide for SaaS Founders",
+    description:
+      "AI search visibility measures how often your brand appears in LLM answers. Learn what it means, how it's measured, and how to improve it in 2026.",
+  },
+  "/blog/semrush-ahrefs-ai-alternatives": {
+    title: "Semrush & Ahrefs AI Alternatives for Visibility Tracking",
+    description:
+      "SEMrush and Ahrefs don't track LLM citations. Compare the best AI-native alternatives for monitoring brand visibility in ChatGPT and Perplexity.",
+  },
+  "/blog/otterly-vs-peec-ai-alternative-llmclicks": {
+    title: "Otterly vs Peec AI vs LLMClicks: Which is Best?",
+    description:
+      "We compared Otterly, Peec AI, and LLMClicks.ai for tracking AI brand visibility. See which delivers the best features and value for SEO teams.",
+  },
+  "/blog/how-llms-work": {
+    title: "How LLMs Work: The Technical SEO Architecture Guide",
+    description:
+      "Learn how large language models retrieve and generate answers and what that means for your SEO strategy and AI citation optimization approach.",
+  },
+  "/blog/future-of-ai-llm-visibility": {
+    title: "The Future of AI Search: LLM Visibility Predictions",
+    description:
+      "AI search is replacing keyword rankings. See where LLM visibility is heading in 2026 and what separates cited brands from invisible ones.",
+  },
+  "/blog/ai-visibility-tool-affiliate-program": {
+    title: "Earn Revenue with our AI Visibility Tool Affiliate Program",
+    description:
+      "Promote LLMClicks.ai and earn 30% recurring commission on every referral. Built for SEO bloggers, agency owners, and AI marketing consultants.",
+  },
+  "/blog/ai-search-visibility-audit": {
+    title: "Build an AI Search Visibility Audit for Your Clients",
+    description:
+      "The complete AI search visibility audit. Identify crawl gaps, missing schema, and entity issues that block your brand from LLM citations.",
+  },
+
+  // Knowledge Hub articles
+  "/knowledge-hub/chatgpt-seo/blocking-gptbot-seo": {
+    title: "Should You Block GPTBot? The SEO Consequences",
+    description:
+      "Blocking GPTBot prevents ChatGPT from crawling and citing your site. Learn the SEO and GEO impact and the correct robots.txt configuration to fix it.",
+  },
+  "/knowledge-hub/ai-overviews/google-ai-overviews-optimization": {
+    title: "Google AI Overviews vs Traditional SERPs: How to Optimize",
+    description:
+      "Optimize your pages for Google AI Overviews. Covers structured data, content formatting, entity clarity, and E-E-A-T signals for AI citation inclusion.",
+  },
+  "/knowledge-hub/agentic-search-aeo/agentic-engine-optimization-b2b-saas-seo": {
+    title: "Agentic Engine Optimization (AEO) for B2B SaaS",
+    description:
+      "AI agents evaluate your SaaS product without human direction. Learn how Agentic Engine Optimization structures your data for autonomous discovery.",
+  },
+
+  // Web Stories
+  "/web-stories/ai-visibility-tracker-tools": {
+    title: "10 Top AI Visibility Tracker Tools",
+    description:
+      "Quick visual guide to the top AI visibility trackers. See which tools monitor brand citations in ChatGPT, Perplexity, and Google AI.",
+  },
+  "/web-stories/reverse-engineer-perplexity-seo": {
+    title: "How to Reverse Engineer Perplexity SEO",
+    description:
+      "Visual step-by-step breakdown of how Perplexity AI selects and cites sources and how to get your brand included in its answers.",
+  },
+  "/web-stories/fix-ai-brand-hallucinations": {
+    title: "3 Steps to Fix AI Brand Hallucinations",
+    description:
+      "AI platforms get your brand wrong. This visual guide shows how to detect and correct LLM hallucinations about your business in 3 steps.",
+  },
+  "/web-stories/chatgpt-stealing-clicks": {
+    title: "Is ChatGPT Stealing Your Organic Clicks?",
+    description:
+      "ChatGPT answers questions your pages used to rank for. See the data behind AI click cannibalization and how to reclaim visibility in LLM answers.",
+  },
+  "/web-stories/ai-citations-vs-backlinks": {
+    title: "AI Citations vs Traditional Backlinks",
+    description:
+      "Backlinks built traditional SEO. AI citations build LLM visibility. See the data on which signal matters more for brand discovery in 2026.",
+  },
+  "/web-stories/rank-google-ai-overviews": {
+    title: "How to Rank in Google AI Overviews",
+    description:
+      "A visual guide to getting featured in Google AI Overviews. Covers content structure, schema, E-E-A-T, and the page signals Google's AI prioritizes.",
   },
 };
 
@@ -161,7 +319,7 @@ export function getPageMeta(pathname: string): PageMeta {
   const exact = STATIC_META[normalized];
   if (exact) return exact;
 
-  // Dynamic patterns
+  // Dynamic fallbacks for pages not explicitly listed in the spreadsheet.
   if (normalized.startsWith("/blog/")) {
     const slug = normalized.replace("/blog/", "");
     const name = titleCase(slug);
@@ -179,7 +337,7 @@ export function getPageMeta(pathname: string): PageMeta {
     };
   }
   if (normalized.startsWith("/knowledge-hub/")) {
-    const parts = normalized.split("/").filter(Boolean); // ["knowledge-hub", category, slug?]
+    const parts = normalized.split("/").filter(Boolean);
     const last = parts[parts.length - 1] ?? "";
     const name = titleCase(last);
     return {
