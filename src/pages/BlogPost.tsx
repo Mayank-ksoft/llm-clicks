@@ -151,7 +151,7 @@ const BlogPost = () => {
                 transition={{ delay: 0.1 }}
                 className="rounded-2xl overflow-hidden border border-border mb-8 aspect-[16/10] bg-secondary/40"
               >
-                <img src={post.image} alt={post.title} width={1024} height={640} className="w-full h-full object-cover" />
+                <img src={post.image} alt={post.title} width={1024} height={640} className="w-full h-full object-contain" />
               </motion.div>
 
               {/* Summarize with AI bar */}
