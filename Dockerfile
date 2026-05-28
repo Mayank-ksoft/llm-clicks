@@ -26,6 +26,7 @@ RUN npm install --omit=dev --no-audit --no-fund
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server ./server
 COPY --from=builder /app/shared ./shared
+COPY --from=builder /app/src ./src
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 EXPOSE 3000
