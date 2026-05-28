@@ -22,13 +22,13 @@ const STATIC_META: Record<string, PageMeta> = {
   ...((metaData as { routes: Record<string, PageMeta> }).routes),
 };
 
-// Build a canonical URL that matches how the site serves the page.
-// Live URLs use a trailing slash on every path, so we mirror that.
+// Build a canonical URL with NO trailing slash (except root "/").
 export function getCanonicalUrl(pathname: string): string {
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
   if (normalized === "/") return `${SITE_ORIGIN}/`;
-  return `${SITE_ORIGIN}${normalized}/`;
+  return `${SITE_ORIGIN}${normalized}`;
 }
+
 
 
 function titleCase(slug: string): string {
