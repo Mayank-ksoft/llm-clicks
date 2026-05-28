@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
+import { getBlogCategoryBySlug } from "../src/lib/blogCategories";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -200,6 +201,15 @@ function metaForPath(pathname: string): { title: string; description: string } {
   const exact = META.routes[normalized];
   if (exact) return exact;
 
+  if (normalized.startsWith("/blog/category/")) {
+    const slug = normalized.replace("/blog/category/", "");
+    const category = getBlogCategoryBySlug(slug);
+    const name = category?.label ?? titleCase(slug);
+    return {
+      title: `${name} Articles | LLMClicks.ai Blog`,
+      description: `${name} articles from LLMClicks.ai covering AI search visibility, LLM SEO, and generative engine optimization.`,
+    };
+  }
   if (normalized.startsWith("/blog/")) {
     const name = titleCase(normalized.replace("/blog/", ""));
     return {
@@ -234,7 +244,7 @@ function metaForPath(pathname: string): { title: string; description: string } {
 
 function canonicalForPath(pathname: string): string {
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
-  return normalized === "/" ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${normalized}`;
+  return normalized === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${normalized}`;
 }
 
 

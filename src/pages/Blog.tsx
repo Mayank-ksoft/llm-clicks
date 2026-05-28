@@ -1,11 +1,12 @@
 import Layout from "@/components/layout/Layout";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, BookOpen, Search, Tag } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { posts } from "@/data/blogPosts";
 import SimplePagination from "@/components/common/SimplePagination";
+import { blogCategoryPath, getBlogCategoryBySlug, getBlogCategoryByTag, indexableBlogCategories } from "@/lib/blogCategories";
 
 const PAGE_SIZE = 9;
 
@@ -14,26 +15,20 @@ const cardVariants = {
   visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.5 } }),
 };
 
-const tagDescriptions: Record<string, string> = {
-  STRATEGY: "High-level playbooks for winning AI search and protecting pipeline.",
-  GUIDE: "Step-by-step tutorials and how-tos for GEO and AI visibility.",
-  COMPARISON: "Tool, platform, and engine comparisons for informed decisions.",
-  "PRODUCT UPDATE": "What's new in LLMClicks.ai — features, releases, and improvements.",
-  "CASE STUDY": "Real customer wins and measurable AI visibility outcomes.",
-  BENCHMARK: "Original data, benchmarks, and research across LLM engines.",
-  TRENDS: "Emerging shifts in AI search, agents, and generative discovery.",
-  TOOLS: "Free utilities, calculators, and resources for marketers.",
-  REPUTATION: "Brand safety, sentiment, and reputation in AI answers.",
-  PROGRAM: "Partner, affiliate, and community program announcements.",
-  FRAMEWORK: "Repeatable frameworks and mental models for AI SEO teams.",
-  AUDIT: "Audit playbooks for diagnosing AI visibility gaps.",
-};
-
 const Blog = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTag = searchParams.get("tag") || "";
+  const { categorySlug } = useParams<{ categorySlug?: string }>();
+  const [searchParams] = useSearchParams();
+  const legacyTag = searchParams.get("tag") || "";
+  const legacyCategory = getBlogCategoryByTag(legacyTag);
+  const activeCategory = categorySlug ? getBlogCategoryBySlug(categorySlug) : undefined;
+  const activeTag = activeCategory?.tag || "";
+  const redirectTo = legacyCategory
+    ? blogCategoryPath(legacyCategory.slug)
+    : categorySlug && (!activeCategory || !activeCategory.indexable)
+      ? "/404"
+      : "";
 
   // Tag counts
   const tagCounts = useMemo(() => {
@@ -45,9 +40,9 @@ const Blog = () => {
 
   const tags = useMemo(
     () =>
-      Object.entries(tagCounts)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => b.count - a.count),
+      indexableBlogCategories
+        .map((category) => ({ ...category, count: tagCounts[category.tag] || 0 }))
+        .filter((category) => category.count > 0),
     [tagCounts],
   );
 
@@ -66,13 +61,9 @@ const Blog = () => {
   const totalPages = Math.max(1, Math.ceil(filteredPosts.length / PAGE_SIZE));
   const pagedPosts = filteredPosts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const clearTag = () => {
-    const next = new URLSearchParams(searchParams);
-    next.delete("tag");
-    setSearchParams(next, { replace: true });
-  };
-
   const showCategoryGrid = !query && !activeTag;
+
+  if (redirectTo) return <Navigate to={redirectTo} replace />;
 
   return (
     <Layout>
@@ -104,24 +95,24 @@ const Blog = () => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
                 {tags.map((t, i) => (
                   <motion.div
-                    key={t.name}
+                    key={t.slug}
                     initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.04 }}
                   >
                     <Link
-                      to={`/blog?tag=${encodeURIComponent(t.name)}`}
+                      to={blogCategoryPath(t.slug)}
                       className="block h-full rounded-2xl border border-border bg-card p-6 hover:border-accent/40 transition-colors shimmer-card group"
                     >
                       <div className="h-10 w-10 rounded-lg bg-accent/15 flex items-center justify-center mb-3">
                         <Tag className="h-5 w-5 text-accent" />
                       </div>
                       <h3 className="font-display text-lg font-bold mb-1 group-hover:text-accent transition-colors capitalize">
-                        {t.name.toLowerCase()}
+                        {t.label}
                       </h3>
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                        {tagDescriptions[t.name] || `Articles tagged ${t.name.toLowerCase()}.`}
+                        {t.description}
                       </p>
                       <span className="text-xs font-medium text-accent flex items-center gap-1 group-hover:gap-2 transition-all">
                         {t.count} {t.count === 1 ? "article" : "articles"} <ArrowRight className="h-3 w-3" />
@@ -138,14 +129,14 @@ const Blog = () => {
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Category</p>
-                <h2 className="font-display text-2xl font-bold capitalize">{activeTag.toLowerCase()}</h2>
+                <h2 className="font-display text-2xl font-bold">{activeCategory?.label}</h2>
               </div>
-              <button
-                onClick={clearTag}
+              <Link
+                to="/blog"
                 className="text-sm text-muted-foreground hover:text-accent inline-flex items-center gap-1.5"
               >
                 <ArrowLeft className="h-3.5 w-3.5" /> All categories
-              </button>
+              </Link>
             </div>
           )}
 

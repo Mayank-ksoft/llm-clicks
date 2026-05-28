@@ -11,6 +11,7 @@ import { posts } from "../src/data/blogPosts";
 import { docs } from "../src/data/docsArticles";
 import { knowledgeHubCategories } from "../src/data/knowledgeHub";
 import { webStories } from "../src/data/webStories";
+import { getBlogCategoryBySlug, indexableBlogCategories } from "../src/lib/blogCategories";
 
 const SITE_ORIGIN = "https://llmclicks.ai";
 const DIST = resolve("dist");
@@ -34,6 +35,15 @@ function metaForPath(pathname: string): { title: string; description: string } {
   if (normalized === "/") return META.default;
   const exact = META.routes[normalized];
   if (exact) return exact;
+  if (normalized.startsWith("/blog/category/")) {
+    const slug = normalized.replace("/blog/category/", "");
+    const category = getBlogCategoryBySlug(slug);
+    const name = category?.label ?? titleCase(slug);
+    return {
+      title: `${name} Articles | LLMClicks.ai Blog`,
+      description: `${name} articles from LLMClicks.ai covering AI search visibility, LLM SEO, and generative engine optimization.`,
+    };
+  }
   if (normalized.startsWith("/blog/")) {
     const name = titleCase(normalized.replace("/blog/", ""));
     return {
@@ -68,7 +78,7 @@ function metaForPath(pathname: string): { title: string; description: string } {
 
 function canonicalForPath(pathname: string): string {
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
-  return normalized === "/" ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${normalized}`;
+  return normalized === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${normalized}`;
 }
 
 
@@ -148,6 +158,7 @@ const template = readFileSync(TEMPLATE_PATH, "utf8");
 const routes = new Set<string>(["/"]);
 for (const k of Object.keys(META.routes)) routes.add(k);
 posts.forEach((p) => routes.add(`/blog/${p.slug}`));
+indexableBlogCategories.forEach((c) => routes.add(`/blog/category/${c.slug}`));
 docs.forEach((d) => routes.add(`/docs/${d.slug}`));
 webStories.forEach((s) => routes.add(`/web-stories/${s.slug}`));
 knowledgeHubCategories.forEach((c) => {

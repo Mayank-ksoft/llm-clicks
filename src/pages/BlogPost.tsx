@@ -15,6 +15,7 @@ import {
 import { getPostBySlug, posts } from "@/data/blogPosts";
 import { useToast } from "@/hooks/use-toast";
 import authorShripad from "@/assets/author-shripad.png";
+import { blogCategoryPath, getBlogCategoryByTag } from "@/lib/blogCategories";
 
 const slugifyHeading = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
@@ -89,6 +90,7 @@ const BlogPost = () => {
   const related = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
   const modifiedDate = post.date; // dataset has only one date — surface as "Last updated"
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const category = getBlogCategoryByTag(post.tag);
 
   const copyLink = async () => {
     try {
@@ -117,7 +119,7 @@ const BlogPost = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator><ChevronRight /></BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbLink asChild><Link to={`/blog?tag=${post.tag}`}>{post.tag}</Link></BreadcrumbLink>
+                <BreadcrumbLink asChild><Link to={blogCategoryPath(post.tag)}>{category?.label ?? post.tag}</Link></BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator><ChevronRight /></BreadcrumbSeparator>
               <BreadcrumbItem>

@@ -258,6 +258,61 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://llmclicks.ai/blog/category/strategy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/guides</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/comparisons</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/product-updates</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/case-studies</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/ai-visibility-benchmarks</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/programs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/trends</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/frameworks</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/tools</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/blog/category/audits</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://llmclicks.ai/docs/how-to-use-prompt-tracker</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

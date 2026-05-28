@@ -5,6 +5,7 @@ import { posts } from "../src/data/blogPosts";
 import { docs } from "../src/data/docsArticles";
 import { knowledgeHubCategories } from "../src/data/knowledgeHub";
 import { webStories } from "../src/data/webStories";
+import { indexableBlogCategories } from "../src/lib/blogCategories";
 
 const BASE_URL = "https://llmclicks.ai";
 
@@ -44,6 +45,7 @@ const staticPaths: Entry[] = [
 const entries: Entry[] = [
   ...staticPaths,
   ...posts.map((p) => ({ path: `/blog/${p.slug}`, changefreq: "monthly", priority: "0.7" })),
+  ...indexableBlogCategories.map((c) => ({ path: `/blog/category/${c.slug}`, changefreq: "weekly", priority: "0.6" })),
   ...docs.map((d) => ({ path: `/docs/${d.slug}`, changefreq: "monthly", priority: "0.6" })),
   ...webStories.map((s) => ({ path: `/web-stories/${s.slug}`, changefreq: "monthly", priority: "0.5" })),
   ...knowledgeHubCategories.flatMap((c) => [

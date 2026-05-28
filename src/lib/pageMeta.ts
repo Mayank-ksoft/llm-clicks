@@ -6,6 +6,7 @@
 // served index.html so non-JS crawlers see the correct tags).
 
 import metaData from "../../shared/pageMeta.json";
+import { getBlogCategoryBySlug } from "./blogCategories";
 
 export type PageMeta = {
   title: string;
@@ -25,7 +26,7 @@ const STATIC_META: Record<string, PageMeta> = {
 // Build a canonical URL with NO trailing slash (except root "/").
 export function getCanonicalUrl(pathname: string): string {
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
-  if (normalized === "/") return `${SITE_ORIGIN}/`;
+  if (normalized === "/") return SITE_ORIGIN;
   return `${SITE_ORIGIN}${normalized}`;
 }
 
@@ -46,6 +47,15 @@ export function getPageMeta(pathname: string): PageMeta {
   if (exact) return exact;
 
   // Dynamic fallbacks for pages not explicitly listed in the spreadsheet.
+  if (normalized.startsWith("/blog/category/")) {
+    const slug = normalized.replace("/blog/category/", "");
+    const category = getBlogCategoryBySlug(slug);
+    const name = category?.label ?? titleCase(slug);
+    return {
+      title: `${name} Articles | LLMClicks.ai Blog`,
+      description: `${name} articles from LLMClicks.ai covering AI search visibility, LLM SEO, and generative engine optimization.`,
+    };
+  }
   if (normalized.startsWith("/blog/")) {
     const slug = normalized.replace("/blog/", "");
     const name = titleCase(slug);
