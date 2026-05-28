@@ -16,14 +16,14 @@
 
     { "source": "/category/ai-visibility-benchmark", "destination": "/blog/category/ai-visibility-benchmarks", "permanent": true },
     { "source": "/blog/category/latest-updates", "destination": "/blog/category/product-updates", "permanent": true },
-    { "source": "/category/learning", "destination": "/blog", "permanent": true },
-    { "source": "/category/learning/feed", "destination": "/blog", "permanent": true },
+    { "source": "/category/learning", "destination": "/blog/category/guides", "permanent": true },
+    { "source": "/category/learning/feed", "destination": "/blog/category/guides", "permanent": true },
     { "source": "/docs-category/free-tools", "destination": "/docs", "permanent": true },
 
     { "source": "/tag/insurance-marketing-2025", "destination": "/blog/ai-visibility-benchmark-general-insurance-usa-2025", "permanent": true },
     { "source": "/tag/ai-seo-for-insurance", "destination": "/blog/ai-visibility-benchmark-general-insurance-usa-2025", "permanent": true },
     { "source": "/tag/ai-visibility-benchmark", "destination": "/blog/category/ai-visibility-benchmarks", "permanent": true },
-    { "source": "/tag/llmclicks-ai", "destination": "/blog", "permanent": true },
+    { "source": "/tag/llmclicks-ai", "destination": "/", "permanent": true },
 
     { "source": "/support", "destination": "/contact", "permanent": true },
     { "source": "/author/llmclicks", "destination": "/author/shripad-deshmukh", "permanent": true },

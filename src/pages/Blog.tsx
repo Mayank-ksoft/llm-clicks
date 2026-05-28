@@ -167,7 +167,7 @@ const Blog = () => {
                       className="rounded-2xl border border-border bg-card overflow-hidden group cursor-pointer shimmer-card glow-hover block h-full"
                     >
                       <div className="aspect-[16/10] overflow-hidden bg-secondary/40 relative">
-                        <img src={post.image} alt={post.title} loading="lazy" width={1024} height={640} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <img src={post.image} alt={post.title} loading="lazy" width={1024} height={640} className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500" />
                         <span className="tag-pill absolute top-3 left-3 z-10 backdrop-blur-md bg-background/70">{post.tag}</span>
                       </div>
                       <div className="p-6">
