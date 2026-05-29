@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 import { getBlogCategoryBySlug } from "../src/lib/blogCategories";
+import { getLegacyRedirect } from "../shared/legacyRedirects";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +16,16 @@ if (!process.env.EMAIL || !process.env.PASS) {
 
 const app = express();
 app.use(express.json());
+
+app.use((req, res, next) => {
+  const redirect = getLegacyRedirect(req.path, req.url.split("?")[1] || "");
+  if (!redirect) return next();
+  if (redirect.statusCode === 410) {
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    return res.status(410).type("text/plain").send("410 Gone — this URL has been permanently removed.");
+  }
+  return res.redirect(redirect.statusCode, redirect.destination);
+});
 
 const MAX_NAME_LENGTH = 100;
 const MAX_MESSAGE_LENGTH = 2000;

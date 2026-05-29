@@ -33,6 +33,8 @@
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/wp-admin/:path*", "destination": "/api/gone" },
     { "source": "/wp-content/plugins/:path*", "destination": "/api/gone" },
+    { "source": "/wp-content/uploads/:path*", "destination": "/api/gone" },
+    { "source": "/wp-content/:path*", "destination": "/api/gone" },
     { "source": "/:file(wp-[^/]+\\.php)", "destination": "/api/gone" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]

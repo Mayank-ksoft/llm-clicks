@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { getLegacyRedirect } from "../shared/legacyRedirects";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
@@ -27,6 +28,11 @@ import WebStoryViewer from "./pages/WebStoryViewer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const legacyRedirect = getLegacyRedirect(window.location.pathname, window.location.search);
+if (legacyRedirect) {
+  window.location.replace(legacyRedirect.destination);
+}
 
 // Renders FeaturePage / FreeToolPage at a fixed slug (root paths matching the live site).
 const FeatureAt = ({ slug }: { slug: string }) => <FeaturePage forcedSlug={slug} />;
