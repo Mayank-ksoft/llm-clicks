@@ -27,6 +27,7 @@ const exactRedirects: ExactRedirect[] = [
   { source: "/tag/llmclicks-ai", destination: "/" },
   { source: "/support", destination: "/contact" },
   { source: "/author/llmclicks", destination: "/author/shripad-deshmukh" },
+  { source: "/blog/updates", destination: "/blog/category/product-updates" },
 ];
 
 function normalizePath(pathname: string): string {
@@ -40,6 +41,25 @@ export function getLegacyRedirect(pathname: string, search = ""): LegacyRedirect
 
   if (normalized === "/" && params.get("post_type") === "web-story") {
     return { destination: "/web-stories", statusCode: 301 };
+  }
+
+  // Elementor library query-string redirects (legacy WordPress template URLs)
+  const elementorLib = params.get("elementor_library");
+  if (normalized === "/" && elementorLib) {
+    const elementorRedirects: Record<string, string> = {
+      "global-footer-2": "/",
+      "docs-category": "/",
+      "elementor-header-6690": "/",
+      "global-kit-styles": "/",
+      "knowledge-hub-main-index": "/knowledge-hub",
+      "knowledge-hub-silo-pillar": "/knowledge-hub",
+      "knowledge-hub-single-article": "/knowledge-hub",
+      "llmclicks-ai-global-blog-post-template": "/blog",
+      "search-results": "/",
+      "web-stories-archive": "/web-stories",
+    };
+    const dest = elementorRedirects[elementorLib];
+    if (dest) return { destination: dest, statusCode: 301 };
   }
 
   const exact = exactRedirects.find((redirect) => redirect.source === normalized);
