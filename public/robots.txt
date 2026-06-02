@@ -12,6 +12,7 @@ Disallow: /wp-content/
 Disallow: /wp-content/uploads/
 Disallow: /wp-content/plugins/
 Disallow: /wp-login.php
+Disallow: /wp-*.php
 Disallow: /xmlrpc.php
 
 # --------------------------------------------------------------------
