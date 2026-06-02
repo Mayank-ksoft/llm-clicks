@@ -27,7 +27,19 @@
 
     { "source": "/support", "destination": "/contact", "permanent": true },
     { "source": "/author/llmclicks", "destination": "/author/shripad-deshmukh", "permanent": true },
-    { "source": "/", "has": [{ "type": "query", "key": "post_type", "value": "web-story" }], "destination": "/web-stories", "permanent": true }
+    { "source": "/", "has": [{ "type": "query", "key": "post_type", "value": "web-story" }], "destination": "/web-stories", "permanent": true },
+
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "global-footer-2" }], "destination": "/", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "docs-category" }], "destination": "/", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "elementor-header-6690" }], "destination": "/", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "global-kit-styles" }], "destination": "/", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "knowledge-hub-main-index" }], "destination": "/knowledge-hub", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "knowledge-hub-silo-pillar" }], "destination": "/knowledge-hub", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "knowledge-hub-single-article" }], "destination": "/knowledge-hub", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "llmclicks-ai-global-blog-post-template" }], "destination": "/blog", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "search-results" }], "destination": "/", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "web-stories-archive" }], "destination": "/web-stories", "permanent": true },
+    { "source": "/blog/updates", "destination": "/blog/category/product-updates", "permanent": true }
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
