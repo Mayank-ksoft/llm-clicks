@@ -259,10 +259,10 @@ const BlogPost = () => {
                         View author profile <ArrowUpRight className="h-3 w-3" />
                       </Link>
                     )}
-                    <a href="https://www.linkedin.com/company/llmclicks-ai/" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
+                    <a href="https://www.linkedin.com/in/shripaddeshmukh/" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
                       LinkedIn <ArrowUpRight className="h-3 w-3" />
                     </a>
-                    <a href="https://x.com/llmclicksai" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
+                    <a href="https://x.com/shripadde" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
                       X / Twitter <ArrowUpRight className="h-3 w-3" />
                     </a>
                   </div>
