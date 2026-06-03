@@ -65,11 +65,15 @@ export function getLegacyRedirect(pathname: string, search = ""): LegacyRedirect
   const exact = exactRedirects.find((redirect) => redirect.source === normalized);
   if (exact) return { destination: exact.destination, statusCode: 301 };
 
+  // Block legacy WordPress admin / plugin / php endpoints with 410 Gone.
+  // IMPORTANT: do NOT 410 /wp-content/uploads/* — those paths still serve
+  // legacy blog/doc images referenced by existing posts. Blocking them
+  // breaks images on the live blog. Only admin, plugins, and wp-*.php
+  // entry points are removed for good.
   if (
     normalized === "/wp-admin" ||
     normalized.startsWith("/wp-admin/") ||
-    normalized === "/wp-content" ||
-    normalized.startsWith("/wp-content/") ||
+    normalized.startsWith("/wp-content/plugins/") ||
     /^\/wp-[^/]+\.php$/i.test(normalized)
   ) {
     return { destination: "/api/gone", statusCode: 410 };

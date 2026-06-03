@@ -25,6 +25,7 @@ import KnowledgeHubCategory from "./pages/KnowledgeHubCategory";
 import KnowledgeHubArticle from "./pages/KnowledgeHubArticle";
 import WebStories from "./pages/WebStories";
 import WebStoryViewer from "./pages/WebStoryViewer";
+import AuthorShripad from "./pages/AuthorShripad";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -95,7 +96,12 @@ const App = () => (
           <Route path="/features/:slug" element={<FeaturePage />} />
           <Route path="/tools/:slug" element={<FreeToolPage />} />
 
-          <Route path="*" element={<NotFound />} />
+          {/* Author pages */}
+          <Route path="/author/shripad-deshmukh" element={<AuthorShripad />} />
+          <Route path="/author/llmclicks" element={<Navigate to="/author/shripad-deshmukh" replace />} />
+
+          {/* Unknown routes — redirect home (per product request) */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
