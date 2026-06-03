@@ -27,6 +27,8 @@
 
     { "source": "/support", "destination": "/contact", "permanent": true },
     { "source": "/author/llmclicks", "destination": "/author/shripad-deshmukh", "permanent": true },
+    { "source": "/author/shripad-deskhmukh", "destination": "/author/shripad-deshmukh", "permanent": true },
+    { "source": "/author/shripaddeshmukh", "destination": "/author/shripad-deshmukh", "permanent": true },
     { "source": "/", "has": [{ "type": "query", "key": "post_type", "value": "web-story" }], "destination": "/web-stories", "permanent": true },
 
     { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "global-footer-2" }], "destination": "/", "permanent": true },

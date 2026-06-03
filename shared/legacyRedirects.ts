@@ -27,6 +27,8 @@ const exactRedirects: ExactRedirect[] = [
   { source: "/tag/llmclicks-ai", destination: "/" },
   { source: "/support", destination: "/contact" },
   { source: "/author/llmclicks", destination: "/author/shripad-deshmukh" },
+  { source: "/author/shripad-deskhmukh", destination: "/author/shripad-deshmukh" },
+  { source: "/author/shripaddeshmukh", destination: "/author/shripad-deshmukh" },
   { source: "/blog/updates", destination: "/blog/category/product-updates" },
 ];
 
