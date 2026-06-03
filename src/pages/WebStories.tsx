@@ -41,7 +41,7 @@ const WebStories = () => {
                     src={story.poster}
                     alt={story.posterAlt}
                     loading="lazy"
-                    className="absolute inset-0 w-full h-full object-contain object-center bg-muted group-hover:scale-105 transition-transform duration-500"
+                    className="absolute inset-0 w-full h-full object-cover object-center bg-muted group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
 
