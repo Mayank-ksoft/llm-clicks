@@ -77,8 +77,9 @@ function metaForPath(pathname: string): { title: string; description: string } {
 }
 
 function canonicalForPath(pathname: string): string {
-  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
-  return normalized === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${normalized}`;
+  const trimmed = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
+  if (trimmed === "/") return `${SITE_ORIGIN}/`;
+  return `${SITE_ORIGIN}${trimmed}/`;
 }
 
 

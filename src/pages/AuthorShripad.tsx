@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Linkedin, Twitter, ArrowUpRight, ArrowRight, MapPin, Clock, Star, Briefcase, User, MessageSquare, ChevronRight } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import founderShripad from "@/assets/founder-shripad.webp";
+import founderShripad from "@/assets/author-shripad.png";
 import { posts } from "@/data/blogPosts";
 
 const expertiseTags = [
@@ -84,7 +84,7 @@ const AuthorShripad = () => {
               alt="Shripad Deshmukh"
               width={120}
               height={120}
-              className="relative z-10 h-[120px] w-[120px] rounded-full object-cover border-2 border-accent/30"
+              className="relative z-10 h-[120px] w-[120px] rounded-full object-cover object-top border-2 border-accent/30"
             />
             <span className="absolute bottom-1 right-1 z-20 h-7 w-7 rounded-full bg-accent border-2 border-background flex items-center justify-center text-white">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -65,6 +65,26 @@ export function getLegacyRedirect(pathname: string, search = ""): LegacyRedirect
   const exact = exactRedirects.find((redirect) => redirect.source === normalized);
   if (exact) return { destination: exact.destination, statusCode: 301 };
 
+  // Legacy WP pagination & category aliases — e.g.
+  //   /blog/category/learning/page/2  -> /blog/category/guides
+  //   /blog/category/latest-updates/page/3 -> /blog/category/product-updates
+  // Also strip /page/N pagination from any current blog category URL.
+  const categoryAliases: Record<string, string> = {
+    learning: "guides",
+    "latest-updates": "product-updates",
+    "ai-visibility-benchmark": "ai-visibility-benchmarks",
+  };
+  const catMatch = normalized.match(/^\/(?:blog\/)?category\/([^/]+)(?:\/page\/\d+)?(?:\/feed)?$/i);
+  if (catMatch) {
+    const slug = catMatch[1].toLowerCase();
+    const dest = categoryAliases[slug] ?? slug;
+    return { destination: `/blog/category/${dest}`, statusCode: 301 };
+  }
+  const pageStrip = normalized.match(/^(\/blog(?:\/category\/[^/]+)?)\/page\/\d+$/i);
+  if (pageStrip) {
+    return { destination: pageStrip[1], statusCode: 301 };
+  }
+
   // Block legacy WordPress admin / plugin / php endpoints with 410 Gone.
   // IMPORTANT: do NOT 410 /wp-content/uploads/* — those paths still serve
   // legacy blog/doc images referenced by existing posts. Blocking them

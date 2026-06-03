@@ -164,6 +164,78 @@ export const webStories: WebStory[] = [
       },
     ],
   },
+  {
+    slug: "ai-citations-vs-backlinks",
+    title: "AI Citations vs Backlinks: The New Authority Metric (2026)",
+    poster:
+      "https://llmclicks.ai/wp-content/uploads/2026/04/reverse-engineer-perplexity-seo.webp",
+    posterAlt: "AI Citations vs Backlinks: The New Authority Metric",
+    excerpt:
+      "Why AI citations are replacing backlinks as the dominant authority metric — and how to engineer entity consensus for ChatGPT, Gemini, and Perplexity.",
+    slides: [
+      {
+        heading: "The link-building era is collapsing.",
+        body: "You spent thousands on high-authority backlinks. But when your target buyer asks ChatGPT for the best SaaS tool in your niche, your brand is completely missing.",
+      },
+      {
+        heading: "LLMs do not care about PageRank.",
+        body: "AI search engines operate on Retrieval-Augmented Generation. They do not crawl your backlink profile to determine authority. They look for Entity Consensus across trusted training data.",
+      },
+      {
+        heading: "AI Citations are the new Domain Rating.",
+        body: "A link from Forbes is useless if the AI cannot fundamentally understand your brand entity. Generative models prioritize frequency of mention, context proximity, and sentiment over raw anchor text.",
+      },
+      {
+        heading: "Your low-DR competitors are winning.",
+        body: "Startups with zero backlinks are dominating Perplexity and Gemini. Why? They optimized their brand citations specifically for Large Language Models instead of traditional crawlers.",
+      },
+      {
+        heading: "Deploying the Entity Cloud.",
+        body: "You must feed the machine structured truth. Building static Cloud Entity Boosters on high-trust nodes forces the LLMs to recognize your brand as the definitive answer.",
+      },
+      {
+        heading: "Track your true AI authority.",
+        body: "Stop measuring outdated metrics. See exactly how frequently ChatGPT, Gemini, and Perplexity are citing your SaaS right now.",
+        cta: { label: "Scan Your Brand Visibility", href: "/ai-visibility-checker" },
+      },
+    ],
+  },
+  {
+    slug: "rank-google-ai-overviews",
+    title: "How to Rank in Google AI Overviews (2026 Playbook)",
+    poster:
+      "https://llmclicks.ai/wp-content/uploads/2026/03/poster-image-1.jpg.webp",
+    posterAlt: "How to Rank in Google AI Overviews",
+    excerpt:
+      "The technical playbook to win citations inside Google's AI Overviews — semantic HTML, nested schema, and brand consensus signals.",
+    slides: [
+      {
+        heading: "The Organic Click is Disappearing.",
+        body: "Google AI Overviews are pushing traditional search results below the fold. If your SaaS is not in the generative snapshot, you are invisible to high-intent buyers.",
+      },
+      {
+        heading: "Crawling is Not Enough.",
+        body: "Getting indexed does not guarantee an AI citation. Google's generative engine relies on Retrieval-Augmented Generation to synthesize answers from highly trusted entity clusters.",
+      },
+      {
+        heading: "Make It Machine-Readable.",
+        body: "AI models cannot parse unstructured fluff. Deploy semantic HTML, strict JSON-LD schema, and clear payload extraction points to feed the algorithm exactly what it needs.",
+      },
+      {
+        heading: "Structure Dictates Visibility.",
+        body: "LLMs crave lists, comparison tables, and direct Q&A formats. If your content is buried in massive text walls, the AI Overview will pull from a competitor who formatted for data extraction.",
+      },
+      {
+        heading: "Brand Consensus Wins.",
+        body: "Google verifies your claims against the broader Knowledge Graph. If external AI nodes do not validate your SaaS as an industry leader, you will not survive the generative synthesis.",
+      },
+      {
+        heading: "Claim Your AI Snapshot.",
+        body: "We just published the exact technical roadmap to reverse-engineer Google AI Overviews. Stop guessing and start structuring your data for the zero-click era.",
+        cta: { label: "Rank in AIO", href: "/blog" },
+      },
+    ],
+  },
 ];
 
 export const getWebStory = (slug: string) =>

@@ -23,11 +23,13 @@ const STATIC_META: Record<string, PageMeta> = {
   ...((metaData as { routes: Record<string, PageMeta> }).routes),
 };
 
-// Build a canonical URL with NO trailing slash (except root "/").
+// Build a canonical URL WITH a trailing slash (except root "/").
+// Matches the site's trailing-slash redirect policy on Vercel, so the
+// canonical, og:url, and rendered URL are always identical.
 export function getCanonicalUrl(pathname: string): string {
-  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
-  if (normalized === "/") return SITE_ORIGIN;
-  return `${SITE_ORIGIN}${normalized}`;
+  const trimmed = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
+  if (trimmed === "/") return `${SITE_ORIGIN}/`;
+  return `${SITE_ORIGIN}${trimmed}/`;
 }
 
 

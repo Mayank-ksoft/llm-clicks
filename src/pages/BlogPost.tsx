@@ -231,24 +231,38 @@ const BlogPost = () => {
 
               {/* Author bio */}
               <div className="mt-10 rounded-2xl border border-border bg-card p-6 flex flex-col sm:flex-row items-start gap-5">
-                <div className="h-16 w-16 rounded-full overflow-hidden bg-gradient-to-br from-accent to-coral flex items-center justify-center text-white font-display text-xl font-bold flex-shrink-0">
+                <Link
+                  to={post.author === "Shripad Deshmukh" ? "/author/shripad-deshmukh" : "#"}
+                  aria-label={`View author page for ${post.author}`}
+                  className="h-16 w-16 rounded-full overflow-hidden bg-gradient-to-br from-accent to-coral flex items-center justify-center text-white font-display text-xl font-bold flex-shrink-0 hover:ring-2 hover:ring-accent transition-all"
+                >
                   {post.author === "Shripad Deshmukh" ? (
-                    <img src={authorShripad} alt={post.author} className="h-full w-full object-cover" />
+                    <img src={authorShripad} alt={post.author} className="h-full w-full object-cover object-top" />
                   ) : (
                     post.author.split(" ").map((w) => w[0]).slice(0, 2).join("")
                   )}
-                </div>
+                </Link>
                 <div className="flex-1">
                   <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Written by</p>
-                  <h3 className="font-display font-bold text-lg mb-1">{post.author}</h3>
+                  <Link
+                    to={post.author === "Shripad Deshmukh" ? "/author/shripad-deshmukh" : "#"}
+                    className="font-display font-bold text-lg mb-1 inline-block hover:text-accent transition-colors"
+                  >
+                    {post.author}
+                  </Link>
                   <p className="text-sm text-muted-foreground mb-3">
                     Founder at LLMClicks.ai — helping SaaS brands track and improve how AI assistants represent them. Two decades in SEO, content strategy, and Generative Engine Optimization.
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center flex-wrap">
+                    {post.author === "Shripad Deshmukh" && (
+                      <Link to="/author/shripad-deshmukh" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
+                        View author profile <ArrowUpRight className="h-3 w-3" />
+                      </Link>
+                    )}
                     <a href="https://www.linkedin.com/company/llmclicks-ai/" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
                       LinkedIn <ArrowUpRight className="h-3 w-3" />
                     </a>
-                    <a href="https://x.com/llmclicksai" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all ml-3">
+                    <a href="https://x.com/llmclicksai" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
                       X / Twitter <ArrowUpRight className="h-3 w-3" />
                     </a>
                   </div>

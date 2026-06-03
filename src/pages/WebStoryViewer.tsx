@@ -101,12 +101,19 @@ const WebStoryViewer = () => {
 
       {/* Stage */}
       <div className="relative w-full max-w-[400px] aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl bg-foreground">
-        {/* Background image */}
-        <img
-          src={story.poster}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
-        />
+        {/* Background image with Ken Burns pan/zoom animation per slide */}
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={`bg-${index}`}
+            src={story.poster}
+            alt=""
+            initial={{ opacity: 0, scale: 1.0 }}
+            animate={{ opacity: 0.55, scale: 1.18 }}
+            exit={{ opacity: 0 }}
+            transition={{ opacity: { duration: 0.6 }, scale: { duration: SLIDE_MS / 1000, ease: "linear" } }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/40 to-foreground/90" />
 
         {/* Progress bars */}
