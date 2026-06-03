@@ -8,7 +8,7 @@ import { webStories } from "@/data/webStories";
 const WebStories = () => {
   return (
     <Layout>
-      <section className="section-padding pt-28 md:pt-36 relative">
+      <section className="section-padding pt-28 md:pt-36 relative overflow-x-hidden">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] accent-mesh opacity-30 pointer-events-none -z-10" />
         <div className="container mx-auto max-w-6xl relative z-10">
           <motion.div
@@ -41,7 +41,7 @@ const WebStories = () => {
                     src={story.poster}
                     alt={story.posterAlt}
                     loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="absolute inset-0 w-full h-full object-contain object-center bg-muted group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
 
