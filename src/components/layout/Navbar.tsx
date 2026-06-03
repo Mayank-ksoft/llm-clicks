@@ -276,7 +276,7 @@ const Navbar = () => {
           <Button
             size="sm"
             variant="outline"
-            className="rounded-xl px-5 border-border text-foreground hover:bg-accent/10 hover:text-foreground hover:border-accent/30"
+            className="rounded-xl px-5 border-border text-foreground hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors"
             asChild
           >
             <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">Book a demo</a>
