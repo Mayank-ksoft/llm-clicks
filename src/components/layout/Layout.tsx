@@ -16,6 +16,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const { title, description } = getPageMeta(normalized);
   const schemaJson = getPageSchema(normalized);
 
+  // Keep the address bar in sync with the canonical (trailing-slash) form.
+  // Internal <Link to="/foo"> clicks land on /foo, but our canonical is /foo/.
+  // Rewrite via history.replaceState so SEO tools never see a mismatch
+  // between the rendered URL and <link rel="canonical">.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const { pathname: current, search, hash } = window.location;
+    if (current.length > 1 && !current.endsWith("/")) {
+      window.history.replaceState(null, "", `${current}/${search}${hash}`);
+    }
+  }, [pathname]);
+
   useEffect(() => {
     syncRouteHeadTags(title, description, canonical);
     const frame = window.requestAnimationFrame(() => {

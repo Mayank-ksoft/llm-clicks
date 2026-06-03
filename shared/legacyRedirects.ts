@@ -65,23 +65,30 @@ export function getLegacyRedirect(pathname: string, search = ""): LegacyRedirect
   const exact = exactRedirects.find((redirect) => redirect.source === normalized);
   if (exact) return { destination: exact.destination, statusCode: 301 };
 
-  // Legacy WP pagination & category aliases — e.g.
-  //   /blog/category/learning/page/2  -> /blog/category/guides
-  //   /blog/category/latest-updates/page/3 -> /blog/category/product-updates
-  // Also strip /page/N pagination from any current blog category URL.
+  // Legacy WP pagination & category aliases. CRITICAL: never return the same
+  // path we received, or we'll 301-loop (which is what broke
+  // /blog/category/guides in production).
   const categoryAliases: Record<string, string> = {
     learning: "guides",
     "latest-updates": "product-updates",
     "ai-visibility-benchmark": "ai-visibility-benchmarks",
   };
-  const catMatch = normalized.match(/^\/(?:blog\/)?category\/([^/]+)(?:\/page\/\d+)?(?:\/feed)?$/i);
+  const catMatch = normalized.match(/^\/(?:blog\/)?category\/([^/]+)(\/page\/\d+|\/feed)?$/i);
   if (catMatch) {
     const slug = catMatch[1].toLowerCase();
-    const dest = categoryAliases[slug] ?? slug;
-    return { destination: `/blog/category/${dest}`, statusCode: 301 };
+    const hasLegacyPrefix = normalized.startsWith("/category/");
+    const hasSuffix = Boolean(catMatch[2]);
+    const aliased = categoryAliases[slug];
+    if (hasLegacyPrefix || aliased || hasSuffix) {
+      const destSlug = aliased ?? slug;
+      const destination = `/blog/category/${destSlug}`;
+      if (destination !== normalized) {
+        return { destination, statusCode: 301 };
+      }
+    }
   }
   const pageStrip = normalized.match(/^(\/blog(?:\/category\/[^/]+)?)\/page\/\d+$/i);
-  if (pageStrip) {
+  if (pageStrip && pageStrip[1] !== normalized) {
     return { destination: pageStrip[1], statusCode: 301 };
   }
 
