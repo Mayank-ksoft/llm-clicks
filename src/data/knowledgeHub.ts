@@ -45,7 +45,7 @@ export const knowledgeHubCategories: KHCategory[] = [
         updated: "April 24, 2026",
         readTime: "15 min read",
         image:
-          "https://llmclicks.ai/wp-content/uploads/2026/04/gptbot-block-allow-seo-consequences-1024x572.webp",
+          "/legacy-assets/gptbot-block-allow-seo-consequences-1024x572.webp",
         imageAlt:
           "Diagram showing an AI crawler bot approaching a website protected by a robots.txt gate, with some pages allowed and others blocked",
         content: [
@@ -870,7 +870,7 @@ export const knowledgeHubCategories: KHCategory[] = [
         updated: "May 14, 2026",
         readTime: "10 min read",
         image:
-          "/wp-content/uploads/2026/05/google-ai-overview--1024x572.webp",
+          "/legacy-assets/google-ai-overview--1024x572.webp",
         imageAlt:
           "A technical SEO manager analyzing a monitor showing a Google AI Overview replacing traditional search engine results.",
         content: [

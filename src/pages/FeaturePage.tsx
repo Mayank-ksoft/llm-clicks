@@ -12,16 +12,16 @@ import TrafficDashboardMockup from "@/components/features/TrafficDashboardMockup
 import WizardDashboardMockup from "@/components/features/WizardDashboardMockup";
 
 // Hotlinked hero images from llmclicks.ai (real CDN URLs, one per feature)
-const imgAudit = "https://llmclicks.ai/wp-content/uploads/2026/01/ai-visibility-audit-dashboard-result.webp";
-const imgTracker = "https://llmclicks.ai/wp-content/uploads/2025/11/ai-visibility-tracker-query-results.webp";
-const imgOptimizer = "https://llmclicks.ai/wp-content/uploads/2026/02/ai-seo-audit-dashboard-meta-tag-task.webp";
-const imgMapper = "https://llmclicks.ai/wp-content/uploads/2026/02/ai-query-mapper-gsc-keyword-mapping.webp";
-const imgTraffic = "https://llmclicks.ai/wp-content/uploads/2025/11/llm-traffic-tracker-chatgpt-perplexity-ai-assistants.webp";
-const imgWizard = "https://llmclicks.ai/wp-content/uploads/2025/11/optimization_wizard.webp";
-const imgListicle = "https://llmclicks.ai/wp-content/uploads/2026/03/llmclicks-ai-listicle-marketplace-dashboard.webp";
-const imgFanOut = "https://llmclicks.ai/wp-content/uploads/2026/02/query-fan-out-generator-hero-banner.webp";
-const imgComparison = "https://llmclicks.ai/wp-content/uploads/2025/11/query-fan-out-coverage-dashboard.webp";
-const imgEmbedding = "https://llmclicks.ai/wp-content/uploads/2026/02/semantic-vector-alignment-infographic.webp";
+const imgAudit = "/legacy-assets/ai-visibility-audit-dashboard-result.webp";
+const imgTracker = "/legacy-assets/ai-visibility-tracker-query-results.webp";
+const imgOptimizer = "/legacy-assets/ai-seo-audit-dashboard-meta-tag-task.webp";
+const imgMapper = "/legacy-assets/ai-query-mapper-gsc-keyword-mapping.webp";
+const imgTraffic = "/legacy-assets/llm-traffic-tracker-chatgpt-perplexity-ai-assistants.webp";
+const imgWizard = "/legacy-assets/optimization_wizard.webp";
+const imgListicle = "/legacy-assets/llmclicks-ai-listicle-marketplace-dashboard.webp";
+const imgFanOut = "/legacy-assets/query-fan-out-generator-hero-banner.webp";
+const imgComparison = "/legacy-assets/query-fan-out-coverage-dashboard.webp";
+const imgEmbedding = "/legacy-assets/semantic-vector-alignment-infographic.webp";
 
 type Step = { title: string; desc: string };
 type Card = { title: string; desc: string };

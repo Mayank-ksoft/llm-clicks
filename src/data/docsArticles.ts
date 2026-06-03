@@ -17,7 +17,7 @@ export const docs: DocArticle[] = [
     "title": "Prompt Tracker Docs: Monitor LLM Visibility",
     "excerpt": "A complete walkthrough of the LLMClicks.ai Prompt Tracker. Discover how to configure custom inputs, isolate AI outputs, and map your share of voice.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Prompt_tracker_1.png",
+    "image": "/legacy-assets/Prompt_tracker_1.png",
     "category": "Visibility Tracking",
     "content": [
       {
@@ -253,7 +253,7 @@ export const docs: DocArticle[] = [
     "title": "Guide: Using the AI Visibility Predictor",
     "excerpt": "Learn how to forecast your generative search rankings. This documentation covers using the AI Visibility Predictor to estimate future LLM traffic.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Visibility_predictor_1.png",
+    "image": "/legacy-assets/Visibility_predictor_1.png",
     "category": "Visibility Tracking",
     "content": [
       {
@@ -454,7 +454,7 @@ export const docs: DocArticle[] = [
     "title": "Tutorial: How to Run an AI Domain Profiler Audit",
     "excerpt": "A complete walkthrough of the LLMClicks.ai AI Domain Profiler Audit tool. Discover how to evaluate site-wide AI metrics, authority scores, and indexation gaps.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/11/Domain-Audit-AI.png",
+    "image": "/legacy-assets/Domain-Audit-AI.png",
     "category": "Audits & Profiling",
     "content": [
       {
@@ -585,7 +585,7 @@ export const docs: DocArticle[] = [
     "title": "How to use AI Listicle Marketplace",
     "excerpt": "",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2026/03/ai-listicle-marketplace-search-section.png",
+    "image": "/legacy-assets/ai-listicle-marketplace-search-section.png",
     "category": "Account & Marketplace",
     "content": [
       {
@@ -715,7 +715,7 @@ export const docs: DocArticle[] = [
     "title": "How to use Lead Module",
     "excerpt": "",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2026/04/Setup.webp",
+    "image": "/legacy-assets/Setup.webp",
     "category": "Account & Marketplace",
     "content": [
       {
@@ -848,7 +848,7 @@ export const docs: DocArticle[] = [
     "title": "Account & Dashboard Settings Guide",
     "excerpt": "Master your LLMClicks workspace. Learn how to connect Google Search Console, manage team permissions, update billing, and configure your account.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Settings_1.png",
+    "image": "/legacy-assets/Settings_1.png",
     "category": "Account & Marketplace",
     "content": [
       {
@@ -1077,7 +1077,7 @@ export const docs: DocArticle[] = [
     "title": "Local Query Generator Guide",
     "excerpt": "Learn how to generate geo-targeted AI search queries. Master the LLMClicks Local Query Generator to capture local intent and dominate regional AI visibility.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Local_query_1.png",
+    "image": "/legacy-assets/Local_query_1.png",
     "category": "AI Query Mapping",
     "content": [
       {
@@ -1229,7 +1229,7 @@ export const docs: DocArticle[] = [
     "title": "SaaS Query Generator Guide",
     "excerpt": "Step-by-step tutorial on building B2B AI search queries. Input your software features and integrations to instantly generate high-converting SaaS prompts.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/SAAS_query_1.png",
+    "image": "/legacy-assets/SAAS_query_1.png",
     "category": "AI Query Mapping",
     "content": [
       {
@@ -1354,7 +1354,7 @@ export const docs: DocArticle[] = [
     "title": "Tutorial: How to Execute an AI Brand Audit",
     "excerpt": "A complete walkthrough of the LLMClicks.ai AI Brand Audit module. Discover how to evaluate ChatGPT mentions, analyze sentiment, and map brand health.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Brand_audit_1.png",
+    "image": "/legacy-assets/Brand_audit_1.png",
     "category": "Audits & Profiling",
     "content": [
       {
@@ -1509,7 +1509,7 @@ export const docs: DocArticle[] = [
     "title": "LLMClicks.ai Support Guide: Tickets, Video & Community",
     "excerpt": "Get unstuck fast. Follow this guide to access direct ticketing support, self-paced video training, and our exclusive user community.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Help_1.png",
+    "image": "/legacy-assets/Help_1.png",
     "category": "Getting Started",
     "content": [
       {
@@ -1624,7 +1624,7 @@ export const docs: DocArticle[] = [
     "title": "Optimization Wizard Guide",
     "excerpt": "Step-by-step guide to applying LLM visibility recommendations. Use the Optimization Wizard to inject missing entities and resolve semantic content gaps fast.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Optimization_wizard_1.png",
+    "image": "/legacy-assets/Optimization_wizard_1.png",
     "category": "On-Page Optimization",
     "content": [
       {
@@ -1777,7 +1777,7 @@ export const docs: DocArticle[] = [
     "title": "On-Page AI Audit Guide",
     "excerpt": "Learn how to run a comprehensive on-page audit for AI search. Master the LLMClicks auditor to optimize entity density, rendering, and semantic structure.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/On_page_audit_1.png",
+    "image": "/legacy-assets/On_page_audit_1.png",
     "category": "Audits & Profiling",
     "content": [
       {
@@ -1990,7 +1990,7 @@ export const docs: DocArticle[] = [
     "title": "Content Comparison Tool Guide",
     "excerpt": "Learn how to run a semantic content gap analysis. Use the Content Comparison module to benchmark your pages against top competitors and AI baselines.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Content_comparison_1.png",
+    "image": "/legacy-assets/Content_comparison_1.png",
     "category": "On-Page Optimization",
     "content": [
       {
@@ -2120,7 +2120,7 @@ export const docs: DocArticle[] = [
     "title": "Content Embedding Analyzer Guide",
     "excerpt": "Learn how to analyze your content for LLM retrieval. Master the Content Embedding Analyzer to optimize semantic relevance and entity density for AI search.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/Content_embedding_1.png",
+    "image": "/legacy-assets/Content_embedding_1.png",
     "category": "On-Page Optimization",
     "content": [
       {
@@ -2304,7 +2304,7 @@ export const docs: DocArticle[] = [
     "title": "LLM Traffic Tracker Guide",
     "excerpt": "Step-by-step guide to tracking ChatGPT and Perplexity traffic. Uncover hidden AI referral data and measure the exact ROI of your generative optimization.",
     "date": "January 1, 2026",
-    "image": "https://llmclicks.ai/wp-content/uploads/2025/12/LLM_1.png",
+    "image": "/legacy-assets/LLM_1.png",
     "category": "Visibility Tracking",
     "content": [
       {

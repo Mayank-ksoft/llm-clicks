@@ -27,7 +27,7 @@ export const posts: BlogPost[] = [
     readTime: "3 min read",
     tag: "PROGRAM",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/04/llmclicks-ai-visibility-affiliate-hero.webp",
+    image: "/legacy-assets/llmclicks-ai-visibility-affiliate-hero.webp",
     content: [
       { type: "p", text: "Every marketer wants to profit from the Generative AI shift. The problem is how software companies treat the partners driving that growth." },
       { type: "p", text: "Most SaaS affiliate programs are built to protect the house. They offer 30-day cookies that expire long before enterprise clients clear their budgets. They pay one-time bounties that cheat you out of the long-term value you generate." },
@@ -74,7 +74,7 @@ export const posts: BlogPost[] = [
     readTime: "15 min read",
     tag: "TRENDS",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/04/future-of-ai-search.webp",
+    image: "/legacy-assets/future-of-ai-search.webp",
     content: [
       { type: "p", text: "A buyer opens ChatGPT and types a simple prompt: “What is the best AI visibility platform for a SaaS team?”" },
       { type: "p", text: "ChatGPT returns three options. Your brand is not one of them. Your competitor is recommended instead. Why? Because that competitor has been consistently mentioned in AI-cited listicles, review sites, and comparison content for the past 18 months." },
@@ -229,7 +229,7 @@ export const posts: BlogPost[] = [
     readTime: "29 min read",
     tag: "GUIDE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/03/llm-next-token-prediction-mechanism.webp",
+    image: "/legacy-assets/llm-next-token-prediction-mechanism.webp",
     content: [
       { type: "p", text: "A buyer opens ChatGPT and types: “What is the best AI visibility tool for a SaaS team?”" },
       { type: "p", text: "ChatGPT returns three recommendations. Your competitor is number one. Your brand is not mentioned at all." },
@@ -527,7 +527,7 @@ export const posts: BlogPost[] = [
     readTime: "26 min read",
     tag: "COMPARISON",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/03/otterly-vs-peec-vs-llmclicks-comparison.webp",
+    image: "/legacy-assets/otterly-vs-peec-vs-llmclicks-comparison.webp",
     content: [
       { type: "p", text: "I built LLMClicks.ai because Otterly was running on our account and still missed the problem that was costing us demos." },
       { type: "p", text: "ChatGPT was telling prospects our Pro plan cost $79 per month. Our actual price was $49. Prospects showed up to calls already skeptical. Some did not show up at all. When I checked our Otterly dashboard, it showed healthy mention counts and positive sentiment. Eighteen brand mentions logged. Zero alerts." },
@@ -898,7 +898,7 @@ export const posts: BlogPost[] = [
     readTime: "6 min read",
     tag: "COMPARISON",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/03/semrush-ahrefs-alternatives.webp",
+    image: "/legacy-assets/semrush-ahrefs-alternatives.webp",
     content: [
       { type: "p", text: "If you are actively searching for a Semrush or Ahrefs alternative, the monthly subscription cost is probably not your only frustration. You are experiencing severe platform fatigue." },
       { type: "p", text: "You log into your expensive legacy dashboard every morning. You see your target keywords sitting comfortably in position one. But when you check your actual pipeline, your organic traffic is flatlining and your conversions are stagnant. You are ranking at the top, but nobody is clicking." },
@@ -1041,7 +1041,7 @@ export const posts: BlogPost[] = [
     readTime: "9 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/03/traditional-seo-vs-ai-search-visibility.jpg",
+    image: "/legacy-assets/traditional-seo-vs-ai-search-visibility.jpg",
     content: [
       { type: "p", text: "AI search visibility is the measure of how frequently, prominently, and accurately your brand is cited by Large Language Models (LLMs) like ChatGPT, Perplexity, Gemini, and Google AI Overviews when users ask industry-specific questions." },
       { type: "p", text: "Marketing leaders must prioritize this metric because traditional organic traffic is steadily declining. Your buyers are bypassing standard search engines entirely. Instead of scrolling through ten blue links on Google, enterprise SaaS buyers now ask AI agents for direct software recommendations. If your brand is not included in that single synthesized answer, you do not exist to that prospect." },
@@ -1118,7 +1118,7 @@ export const posts: BlogPost[] = [
     readTime: "10 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/03/traditional-search-vs-ai-share-of-voice.webp",
+    image: "/legacy-assets/traditional-search-vs-ai-share-of-voice.webp",
     content: [
       { type: "p", text: "Traditional SEO taught you to track competitor keyword rankings. That model is dead. Today, when a bottom-of-funnel prospect asks ChatGPT to recommend a software tool, there are no ten blue links. There is only one synthesized answer. If your competitor gets cited and you do not, they steal the pipeline." },
       { type: "p", text: "Most competitive analysis guides from legacy SEO tools treat AI visibility as a passive reporting metric. They tell you to look at a chart. They do not tell you how to weaponize the data." },
@@ -1218,7 +1218,7 @@ export const posts: BlogPost[] = [
     readTime: "4 min read",
     tag: "GUIDE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/04/ai-listicle-marketplace.webp",
+    image: "/legacy-assets/ai-listicle-marketplace.webp",
     content: [
       // { type: "p", text: "By Shripad Deskhmukh , Founder at LLMClicks.ai" },
       // { type: "p", text: "Published on: 04 March 2026 | 1070 words | 6-minutes read" },
@@ -1272,7 +1272,7 @@ export const posts: BlogPost[] = [
     readTime: "10 min read",
     tag: "GUIDE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/03/human-vs-ai-crawler-website-view.webp",
+    image: "/legacy-assets/human-vs-ai-crawler-website-view.webp",
     content: [
       { type: "p", text: "Traditional SEO audits focus heavily on Googlebot. But what happens when GPTBot, ClaudeBot, and PerplexityBot try to parse your JavaScript-heavy SaaS website?" },
       { type: "p", text: "Most technical SEO professionals are flying blind right now. They are optimizing for traditional indexing while completely ignoring the fact that <a href=\"/blog/how-llms-work\">large language models</a> extract and synthesize data differently. If your site architecture is not machine-readable, your brand will not be cited." },
@@ -1394,7 +1394,7 @@ export const posts: BlogPost[] = [
     readTime: "10 min read",
     tag: "FRAMEWORK",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/02/ai-visibility-framework-keyword-vs-prompt-in.webp",
+    image: "/legacy-assets/ai-visibility-framework-keyword-vs-prompt-in.webp",
     content: [
       { type: "p", text: "Traditional keyword research is failing SaaS growth teams. We are no longer operating in an era of blind intuition and estimated search volumes. Search has evolved into a landscape of precise measurement and highly complex queries." },
       { type: "p", text: "There is a fundamental difference between typing “agency project management tools” into a search engine and asking an AI platform a constrained question. Today, a buyer opens ChatGPT and prompts: “Which project management tool is best for a creative agency that needs client portals and integrated time tracking: Asana, Monday, or ClickUp?”" },
@@ -1514,7 +1514,7 @@ export const posts: BlogPost[] = [
     readTime: "20 min read",
     tag: "TOOLS",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/02/ai-seo-vs-traditional-seo-hero.webp",
+    image: "/legacy-assets/ai-seo-vs-traditional-seo-hero.webp",
     content: [
       { type: "p", text: "The traditional “Blue Link” era is officially over." },
       { type: "p", text: "For two decades, the goal of search engine optimization was simple. You wrote content, built backlinks, and tracked your position on a static list of 10 blue links. If you ranked number one, you won." },
@@ -1841,7 +1841,7 @@ export const posts: BlogPost[] = [
     readTime: "11 min read",
     tag: "AUDIT",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/02/seo-trends-agency-pivot.webp",
+    image: "/legacy-assets/seo-trends-agency-pivot.webp",
     content: [
       { type: "p", text: "The agency retainer model is facing its biggest stress test in a decade." },
       { type: "p", text: "For years, the formula was simple and profitable: sell a package of four blog posts, five backlinks, and a technical audit per month. You reported on keyword ranking improvements, traffic grew (mostly), and the client renewed the contract. It was a predictable machine." },
@@ -1970,7 +1970,7 @@ export const posts: BlogPost[] = [
     readTime: "15 min read",
     tag: "REPUTATION",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/01/ai-brand-reputation-crisis-traditional-vs-reality.webp",
+    image: "/legacy-assets/ai-brand-reputation-crisis-traditional-vs-reality.webp",
     content: [
       { type: "p", text: "You’ve set up Google Alerts. You’re monitoring mentions on Brand24. Your team responds to every negative review within 2 hours. Your G2 rating? A perfect 4.8 stars. Your Trustpilot reviews? Glowing." },
       { type: "p", text: "Yet right now, thousands of potential customers are asking ChatGPT about your brand and getting answers that are completely, demonstrably wrong. Wrong pricing. Wrong features. Wrong positioning. Some are being told your product doesn’t exist. Others are hearing about “controversies” that never happened." },
@@ -2291,7 +2291,7 @@ export const posts: BlogPost[] = [
     readTime: "2 min read",
     tag: "PRODUCT UPDATE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/llm-visibility-vs-traditional-seo-ai-mentions.webp",
+    image: "/legacy-assets/llm-visibility-vs-traditional-seo-ai-mentions.webp",
     content: [
       { type: "p", text: "We’ve shipped several important updates this week to make LLMClicks more powerful, easier to use, and more actionable for AI-first SEO." },
       { type: "p", text: "Here’s what’s new 👇" },
@@ -2361,7 +2361,7 @@ export const posts: BlogPost[] = [
     readTime: "18 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/01/generative-engine-optimization-geo-saas-feature.webp",
+    image: "/legacy-assets/generative-engine-optimization-geo-saas-feature.webp",
     content: [
       { type: "p", text: "It is a Monday morning in January 2026. You and your team have just pushed live a major feature update that you have been working on for months. The product team is excited, the sales team is ready to pitch, and naturally, you head over to Google to see how it looks in the search results. You type in the core problem your feature solves, expecting to see your carefully crafted landing page or your latest blog post sitting at the top of the rankings." },
       { type: "p", text: "But instead of seeing your link, you see something else entirely." },
@@ -2613,7 +2613,7 @@ export const posts: BlogPost[] = [
     readTime: "10 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/01/perplexity-seo-reverse-engineering-algorithm.webp",
+    image: "/legacy-assets/perplexity-seo-reverse-engineering-algorithm.webp",
     content: [
       { type: "p", text: "The era of “ 10 blue links ” is fading. We are entering the age of the Answer Engine." },
       { type: "p", text: "For digital marketers and SEO professionals, this shift poses a critical question: how does Perplexity compare to Google? We have previously analyzed the core differences between <a href=\"/blog/llm-visibility-vs-traditional-seo\">LLM visibility vs traditional SEO</a> , but the short answer is: Perplexity focuses on answers, not clicks. More importantly, how do we rank in it?" },
@@ -2738,7 +2738,7 @@ export const posts: BlogPost[] = [
     readTime: "9 min read",
     tag: "GUIDE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2026/01/ai-visibility-dimens.webp",
+    image: "/legacy-assets/ai-visibility-dimens.webp",
     content: [
       { type: "p", text: "Search behavior is changing faster than most brands realize. Instead of typing broad keywords and comparing lists of links, users are increasingly asking detailed questions and trusting the answers generated by AI systems like ChatGPT, Google Gemini, and Perplexity. When a buyer asks an AI agent to recommend the best software in your category, their decision is often shaped by a single synthesized response." },
       { type: "p", text: "The numbers demand an immediate shift in your tracking strategy:" },
@@ -2846,7 +2846,7 @@ export const posts: BlogPost[] = [
     readTime: "1 min read",
     tag: "PRODUCT UPDATE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/llm-visibility-vs-traditional-seo-ai-mentions.webp",
+    image: "/legacy-assets/llm-visibility-vs-traditional-seo-ai-mentions.webp",
     content: [
       { type: "h2", text: "Product Update week 22 to 27 December" },
       { type: "p", text: "✅ New Features" },
@@ -2878,7 +2878,7 @@ export const posts: BlogPost[] = [
     readTime: "14 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/llm-seo-vs-traditional-seo-feature.webp",
+    image: "/legacy-assets/llm-seo-vs-traditional-seo-feature.webp",
     content: [
       { type: "p", text: "Ranking on Google used to be the finish line. Today, it’s often just the starting point." },
       { type: "p", text: "As users turn to ChatGPT, Gemini, Claude, and Perplexity for direct answers, brand discovery is increasingly happening inside AI-generated responses, not on traditional search result pages (SERPs)." },
@@ -3114,7 +3114,7 @@ export const posts: BlogPost[] = [
     readTime: "14 min read",
     tag: "GUIDE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/ai-visibility-chatgpt-gemini-perplexity.webp",
+    image: "/legacy-assets/ai-visibility-chatgpt-gemini-perplexity.webp",
     content: [
       { type: "p", text: "By 2026, many customers will stop searching and start asking. Instead of scrolling traditional Google results, they’ll rely on answers from ChatGPT, Gemini, and Perplexity to decide which brands to trust. This shift is already visible in how AI-generated summaries are replacing link-heavy search results and reshaping discovery." },
       { type: "p", text: "That change creates a new kind of risk. AI systems don’t just list websites. They summarize brands. Your product, pricing, or positioning can be condensed into a few sentences before a user ever visits your site, or worse, without them visiting at all. As we’ve explained in our guide on <a href=\"/blog/what-is-ai-search-visibility\">what AI visibility really means</a> and how it differs from SEO, being mentioned inaccurately can be more damaging than not being mentioned at all." },
@@ -3373,7 +3373,7 @@ export const posts: BlogPost[] = [
     readTime: "21 min read",
     tag: "COMPARISON",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/top-ai-visibility-tracker-tools.webp",
+    image: "/legacy-assets/top-ai-visibility-tracker-tools.webp",
     content: [
       { type: "p", text: "I built LLMClicks.ai because I was frustrated. Our own SaaS product was being mentioned in ChatGPT responses, which should have been great news. Except that AI was giving users completely wrong information about our pricing." },
       { type: "p", text: "Prospects would show up to demo calls saying, “I saw on ChatGPT that your Pro plan is $79 per month.” Our actual price? $49. When I clarified the correct pricing, prospects questioned our credibility." },
@@ -3959,7 +3959,7 @@ export const posts: BlogPost[] = [
     readTime: "10 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/llm-next-token-prediction-mechanism.webp",
+    image: "/legacy-assets/llm-next-token-prediction-mechanism.webp",
     content: [
       { type: "h2", text: "1. Introduction — Why This Experiment Matters" },
       { type: "p", text: "For more than two decades, SEO has revolved around one central truth:" },
@@ -4372,7 +4372,7 @@ export const posts: BlogPost[] = [
     readTime: "7 min read",
     tag: "GUIDE",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/12/120-point-on-page-ai-audit-guide.webp",
+    image: "/legacy-assets/120-point-on-page-ai-audit-guide.webp",
     content: [
       { type: "p", text: "Most SEO audits check 25 factors. Your competitors using Otterly might check 50. But here’s what everyone’s missing: AI engines don’t just crawl your site; they interpret it. And when ChatGPT or Perplexity misunderstands your pricing or features, you lose customers before they ever reach your website." },
       { type: "p", text: "Traditional SEO audits were designed for robots that follow rules. AI engines follow context. Our <a href=\"/blog/ai-search-readiness-audit\">AI search readiness audit</a> guide covers the technical foundation you need before diving into on-page fixes. They make assumptions, fill in gaps, and sometimes hallucinate facts about your business. That’s why we built the 120-point On-Page Audit to check if AI can understand you correctly, not just find you." },
@@ -4530,7 +4530,7 @@ export const posts: BlogPost[] = [
     readTime: "3 min read",
     tag: "STRATEGY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/11/query-fanout-ai-topic-coverage.webp",
+    image: "/legacy-assets/query-fanout-ai-topic-coverage.webp",
     content: [
       { type: "h2", text: "🧭 Intro: The Shift from Keywords to Topics" },
       { type: "p", text: "In traditional SEO, we optimize for keywords." },
@@ -4632,7 +4632,7 @@ export const posts: BlogPost[] = [
     readTime: "4 min read",
     tag: "CASE STUDY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/11/chatgpt-gtm-strategist-saas-organic-growth.webp",
+    image: "/legacy-assets/chatgpt-gtm-strategist-saas-organic-growth.webp",
     content: [
       { type: "p", text: "A Founder’s Journal on Building, Launching, and Scaling With AI as a Co-Pilot" },
       { type: "p", text: "When we started LLMClicks.ai , we had a big idea but a tiny budget." },
@@ -4741,7 +4741,7 @@ export const posts: BlogPost[] = [
     readTime: "4 min read",
     tag: "CASE STUDY",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/10/llm-seo-faq-failure-semantic-fanout-case-study.webp",
+    image: "/legacy-assets/llm-seo-faq-failure-semantic-fanout-case-study.webp",
     content: [
       { type: "h2", text: "📍 Background" },
       { type: "p", text: "Every law firm knows the SEO playbook:" },
@@ -4860,7 +4860,7 @@ export const posts: BlogPost[] = [
     readTime: "4 min read",
     tag: "BENCHMARK",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/10/us-insurance-ai-visibility-benchmark.webp",
+    image: "/legacy-assets/us-insurance-ai-visibility-benchmark.webp",
     content: [
       { type: "p", text: "Generative AI is quietly becoming the new front page of search — and it’s already reshaping how Americans discover insurance brands." },
       { type: "p", text: "As part of our ongoing AI Visibility Benchmark series (see also our <a href=\"/blog/ai-visibility-benchmark-general-insurance-india-2025\">India insurers benchmark</a>), we expanded our dataset to analyze how the top U.S. general insurance companies appear inside AI-generated answers from ChatGPT and Perplexity." },
@@ -4963,7 +4963,7 @@ export const posts: BlogPost[] = [
     readTime: "8 min read",
     tag: "BENCHMARK",
     author: "Shripad Deshmukh",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/10/india-insurers-ai-visibility-benchmark.webp",
+    image: "/legacy-assets/india-insurers-ai-visibility-benchmark.webp",
     content: [
       { type: "h2", text: "🔍 Introduction: The Rise of AI-First Search in Insurance" },
       { type: "p", text: "For over two decades, SEO was simple — rank high on Google, get clicks, and win customers. But in 2025, a quiet revolution is reshaping how discovery happens." },

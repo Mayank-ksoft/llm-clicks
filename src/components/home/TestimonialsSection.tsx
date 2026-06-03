@@ -7,13 +7,13 @@ const testimonials = [
     name: "James Ortega",
     role: "Agency Founder",
     quote: "With LLMClicks, we finally understood why competitors showed up in ChatGPT answers and fixed it.",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/11/james-ortega-llmclicks-review-ai-visibility.webp",
+    image: "/legacy-assets/james-ortega-llmclicks-review-ai-visibility.webp",
   },
   {
     name: "Lena Chow",
     role: "SEO Manager",
     quote: "The AI Visibility Audit gave us a clear roadmap. We've doubled mentions in Perplexity within a month.",
-    image: "https://llmclicks.ai/wp-content/uploads/2025/11/lena-chow-ai-visibility-audit-review.webp",
+    image: "/legacy-assets/lena-chow-ai-visibility-audit-review.webp",
   },
 ];
 

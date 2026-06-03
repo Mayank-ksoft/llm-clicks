@@ -34,7 +34,7 @@
         "screenshot": [
           {
             "@type": "ImageObject",
-            "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+            "url": "/legacy-assets/llmclicks-favicon.webp",
             "caption": "LLMClicks.ai AI Visibility and GEO Analytics Dashboard",
             "width": 1280,
             "height": 800
@@ -81,14 +81,14 @@
         "url": "https://llmclicks.ai",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+          "url": "/legacy-assets/llmclicks-favicon.webp",
           "width": 192,
           "height": 192,
           "caption": "LLMClicks.ai Core Logo"
         },
         "image": {
           "@type": "ImageObject",
-          "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+          "url": "/legacy-assets/llmclicks-favicon.webp",
           "width": 1200,
           "height": 630
         },
@@ -217,7 +217,7 @@
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://llmclicks.ai/wp-content/uploads/2025/08/llmclicks-favicon.webp",
+          "url": "/legacy-assets/llmclicks-favicon.webp",
           "width": 1200,
           "height": 630,
           "caption": "LLMClicks.ai - Advanced AI Visibility Tracker and GEO Optimization Platform"
@@ -450,7 +450,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -476,7 +476,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai_visibility_audit.webp",
+    "screenshot": "/legacy-assets/ai_visibility_audit.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Visibility Audit",
@@ -515,7 +515,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -541,7 +541,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-visibility-tracker-query-results.webp",
+    "screenshot": "/legacy-assets/ai-visibility-tracker-query-results.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Visibility Tracker",
@@ -580,7 +580,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -606,7 +606,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/on-page-optimiser-seo-audit-report.webp",
+    "screenshot": "/legacy-assets/on-page-optimiser-seo-audit-report.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "On Page Optimiser",
@@ -646,7 +646,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -672,7 +672,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/query-fan-out-coverage-dashboard.webp",
+    "screenshot": "/legacy-assets/query-fan-out-coverage-dashboard.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "Query Fan-Out Coverage",
@@ -712,7 +712,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -738,7 +738,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/content-embedding-analyzer-dashboard.webp",
+    "screenshot": "/legacy-assets/content-embedding-analyzer-dashboard.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "Content Embedding Analyzer",
@@ -778,7 +778,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -804,7 +804,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-query-mapper-select-target-page.webp",
+    "screenshot": "/legacy-assets/ai-query-mapper-select-target-page.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Query Mapper",
@@ -844,7 +844,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -870,7 +870,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/elementor/thumbs/industry-benchmarks-dashboard-reoufhvl50gmcob91tx783t27d74k0l9dnckxmqh6w.webp",
+    "screenshot": "/legacy-assets/industry-benchmarks-dashboard-reoufhvl50gmcob91tx783t27d74k0l9dnckxmqh6w.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "Industry Benchmarks",
@@ -913,7 +913,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -939,7 +939,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/llm-traffic-tracker-chatgpt-perplexity-ai-assistants.webp",
+    "screenshot": "/legacy-assets/llm-traffic-tracker-chatgpt-perplexity-ai-assistants.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "LLM Traffic Tracker",
@@ -1067,7 +1067,7 @@
       "PDF audit report generation",
       "No signup or credit card required"
     ],
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-readiness-analyzer-readiness-score.webp",
+    "screenshot": "/legacy-assets/ai-readiness-analyzer-readiness-score.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Readiness Analyzer",
@@ -1123,7 +1123,7 @@
       "Downloadable PDF AI brand summary",
       "100% free tool with instant results"
     ],
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-domain-profiler-chatgpt-perplexity-claude.webp",
+    "screenshot": "/legacy-assets/ai-domain-profiler-chatgpt-perplexity-claude.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Domain Profiler",
@@ -1178,7 +1178,7 @@
       "PDF export of AI Visibility Report",
       "No login or signup required"
     ],
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/ai-visibility-checker-chatgpt-perplexity-claude.webp",
+    "screenshot": "/legacy-assets/ai-visibility-checker-chatgpt-perplexity-claude.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Visibility Checker",
@@ -1218,7 +1218,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -1242,7 +1242,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2025/11/optimization_wizard.webp",
+    "screenshot": "/legacy-assets/optimization_wizard.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "SEO Optimization Wizard",
@@ -1281,7 +1281,7 @@
       "@type": "Organization",
       "name": "LLMClicks.ai",
       "url": "https://llmclicks.ai/",
-      "logo": "https://llmclicks.ai/wp-content/uploads/2025/09/LLM_logo-removebg-preview.png"
+      "logo": "/legacy-assets/LLM_logo-removebg-preview.png"
     },
     "publisher": {
       "@type": "Organization",
@@ -1307,7 +1307,7 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock"
     },
-    "screenshot": "https://llmclicks.ai/wp-content/uploads/2026/03/llmclicks-ai-listicle-marketplace-dashboard.webp",
+    "screenshot": "/legacy-assets/llmclicks-ai-listicle-marketplace-dashboard.webp",
     "applicationSuite": "LLMClicks AI Visibility Tools",
     "keywords": [
       "AI Listicle Marketplace",

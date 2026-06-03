@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,7 +9,7 @@ import { getWebStory } from "@/data/webStories";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { syncRouteHeadTags } from "@/lib/headTags";
 
-const SLIDE_MS = 7000;
+const DEFAULT_SLIDE_MS = 7000;
 
 const WebStoryViewer = () => {
   const { slug } = useParams();
@@ -22,6 +22,8 @@ const WebStoryViewer = () => {
   const storyPath = slug ? `/web-stories/${slug}` : "/web-stories";
   const meta = getPageMeta(storyPath);
   const canonical = getCanonicalUrl(storyPath);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [slideDuration, setSlideDuration] = useState(DEFAULT_SLIDE_MS);
 
   const next = useCallback(() => {
     setIndex((i) => (i + 1 < total ? i + 1 : i));
@@ -37,9 +39,9 @@ const WebStoryViewer = () => {
   useEffect(() => {
     if (!story || paused) return;
     if (index >= total - 1) return;
-    const t = setTimeout(() => next(), SLIDE_MS);
+    const t = setTimeout(() => next(), slideDuration);
     return () => clearTimeout(t);
-  }, [index, paused, story, total, next, progressKey]);
+  }, [index, paused, story, total, next, progressKey, slideDuration]);
 
   // Keyboard
   useEffect(() => {
@@ -66,6 +68,15 @@ const WebStoryViewer = () => {
   if (!story) return <Navigate to="/web-stories" replace />;
 
   const slide = story.slides[index];
+  const hasVideo = Boolean(slide.video);
+
+  // Pause/resume the active slide video.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (paused) v.pause();
+    else v.play().catch(() => {});
+  }, [paused, index]);
 
   return (
     <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4">
@@ -101,20 +112,43 @@ const WebStoryViewer = () => {
 
       {/* Stage */}
       <div className="relative w-full max-w-[400px] aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl bg-foreground">
-        {/* Background image with Ken Burns pan/zoom animation per slide */}
+        {/* Background media — autoplay video with Ken Burns fallback to image */}
         <AnimatePresence mode="wait">
-          <motion.img
-            key={`bg-${index}`}
-            src={story.poster}
-            alt=""
-            initial={{ opacity: 0, scale: 1.0 }}
-            animate={{ opacity: 0.55, scale: 1.18 }}
-            exit={{ opacity: 0 }}
-            transition={{ opacity: { duration: 0.6 }, scale: { duration: SLIDE_MS / 1000, ease: "linear" } }}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          {hasVideo ? (
+            <motion.video
+              key={`vid-${index}`}
+              ref={videoRef}
+              src={slide.video}
+              poster={slide.poster || story.poster}
+              autoPlay
+              muted
+              playsInline
+              loop
+              preload="auto"
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              onLoadedMetadata={(e) => {
+                const d = (e.currentTarget.duration || 0) * 1000;
+                setSlideDuration(d > 2000 ? d : DEFAULT_SLIDE_MS);
+              }}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <motion.img
+              key={`bg-${index}`}
+              src={slide.image || slide.poster || story.poster}
+              alt=""
+              initial={{ opacity: 0, scale: 1.0 }}
+              animate={{ opacity: 1, scale: 1.18 }}
+              exit={{ opacity: 0 }}
+              transition={{ opacity: { duration: 0.6 }, scale: { duration: slideDuration / 1000, ease: "linear" } }}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/40 to-foreground/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-foreground/30 to-foreground/90 pointer-events-none" />
 
         {/* Progress bars */}
         <div className="absolute top-3 left-3 right-3 z-10 flex gap-1">
@@ -129,7 +163,7 @@ const WebStoryViewer = () => {
                 initial={{ width: i < index ? "100%" : "0%" }}
                 animate={{ width: i < index ? "100%" : i === index ? "100%" : "0%" }}
                 transition={{
-                  duration: i === index ? SLIDE_MS / 1000 : 0,
+                  duration: i === index ? slideDuration / 1000 : 0,
                   ease: "linear",
                 }}
                 style={
