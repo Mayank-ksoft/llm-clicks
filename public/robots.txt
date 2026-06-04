@@ -7,6 +7,13 @@
 User-agent: *
 Content-Signal: search=yes,ai-input=yes,ai-train=yes
 Allow: /
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /wp-content/uploads/
+Disallow: /wp-content/plugins/
+Disallow: /wp-login.php
+Disallow: /wp-*.php
+Disallow: /xmlrpc.php
 
 # --------------------------------------------------------------------
 # 1. AI AGENTS, LLM BOT, & RETRIEVAL ENGINE ALLOWANCES
