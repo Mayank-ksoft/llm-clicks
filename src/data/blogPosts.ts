@@ -1212,7 +1212,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "llmclicks-backlink-marketplace-comprehensive-user-guide",
-    title: "LLMClicks Backlink Marketplace: Comprehensive User Guide",
+    title: "LLMClicks Backlink Marketplace: Complete User Guide",
     excerpt: "Your complete guide to the LLMClicks.ai Backlink Marketplace. Learn how to filter domains by AI relevance, track orders, and monetize your existing site inventory.",
     date: "March 4, 2026",
     readTime: "4 min read",
@@ -4626,7 +4626,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "chatgpt-as-gtm-strategist-llmclicks-case-study",
-    title: "How ChatGPT Became Our GTM Strategist and Helped LLMClicks.ai Get 637 Users Without Ads",
+    title: "ChatGPT as a GTM Strategist: LLMClicks Case Study",
     excerpt: "Learn how LLMClicks.ai used ChatGPT as its GTM strategist to plan, launch, and grow, reaching 637 users with ₹0 ad spend in this practical SaaS case study.",
     date: "November 6, 2025",
     readTime: "4 min read",
@@ -4735,7 +4735,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "why-faqs-fail-llm-seo-nyc-personal-injury-case-study",
-    title: "Why 100+ NYC Personal Injury FAQs Fail in LLM SEO: A Real Case Study ⚖️",
+    title: "Why FAQs Fail for LLM SEO: NYC Injury Law Case Study",
     excerpt: "We analyzed 100+ NYC personal injury pages with FAQs. See why 76% fail LLM SEO, what ChatGPT rewards instead, and how intent-aligned FAQs boost visibility.",
     date: "October 31, 2025",
     readTime: "4 min read",
@@ -4854,7 +4854,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "ai-visibility-benchmark-general-insurance-usa-2025",
-    title: "How U.S. Insurers Rank in ChatGPT & Perplexity: AI Visibility Benchmark",
+    title: "AI Visibility Benchmark: US Insurance Industry 2026",
     excerpt: "Discover which U.S. insurers lead in AI visibility across ChatGPT and Perplexity. The 2025 benchmark by LLMClicks.ai reveals leaders, gaps, and growth insights.",
     date: "October 29, 2025",
     readTime: "4 min read",
@@ -4957,7 +4957,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "ai-visibility-benchmark-general-insurance-india-2025",
-    title: "How India’s Insurers Rank in ChatGPT & Perplexity: AI Benchmark 2025",
+    title: "AI Visibility Benchmark: India Insurance Industry 2026",
     excerpt: "We tested India’s top insurers across ChatGPT and Perplexity. See which brands lead in AI visibility and why traditional Google rankings now mean less.",
     date: "October 8, 2025",
     readTime: "8 min read",

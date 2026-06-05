@@ -12,6 +12,7 @@ import { docs } from "../src/data/docsArticles";
 import { knowledgeHubCategories } from "../src/data/knowledgeHub";
 import { webStories } from "../src/data/webStories";
 import { getBlogCategoryBySlug, indexableBlogCategories } from "../src/lib/blogCategories";
+import { DOCS_CATEGORIES, getDocsCategoryBySlug } from "../src/lib/docsCategories";
 
 const SITE_ORIGIN = "https://llmclicks.ai";
 const DIST = resolve("dist");
@@ -49,6 +50,15 @@ function metaForPath(pathname: string): { title: string; description: string } {
     return {
       title: `${name} | LLMClicks.ai Blog`,
       description: `${name} — insights on AI visibility and LLM SEO from LLMClicks.ai.`,
+    };
+  }
+  if (normalized.startsWith("/docs/category/")) {
+    const slug = normalized.replace("/docs/category/", "");
+    const category = getDocsCategoryBySlug(slug);
+    const name = category?.title ?? titleCase(slug);
+    return {
+      title: `${name} | LLMClicks.ai Docs`,
+      description: `${name} documentation from LLMClicks.ai — setup guides, walkthroughs, and best-practice playbooks.`,
     };
   }
   if (normalized.startsWith("/docs/")) {
@@ -161,6 +171,7 @@ for (const k of Object.keys(META.routes)) routes.add(k);
 posts.forEach((p) => routes.add(`/blog/${p.slug}`));
 indexableBlogCategories.forEach((c) => routes.add(`/blog/category/${c.slug}`));
 docs.forEach((d) => routes.add(`/docs/${d.slug}`));
+DOCS_CATEGORIES.forEach((c) => routes.add(`/docs/category/${c.slug}`));
 webStories.forEach((s) => routes.add(`/web-stories/${s.slug}`));
 knowledgeHubCategories.forEach((c) => {
   routes.add(`/knowledge-hub/${c.slug}`);

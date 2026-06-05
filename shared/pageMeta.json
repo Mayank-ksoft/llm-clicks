@@ -20,6 +20,10 @@
       "title": "Analyze Query Fan-Out Coverage for AI Search",
       "description": "Expand any seed query into 10-20 semantic variations and measure your brand's citation coverage gaps across ChatGPT, Perplexity, and Google AI."
     },
+    "/content-comparison": {
+      "title": "Content Comparison Tool | Compare Content for AI Visibility",
+      "description": "Compare your content against competitors and AI-generated answers. Identify content gaps, topic coverage differences, and optimization opportunities to improve AI visibility."
+    },
     "/content-embedding-analyzer": {
       "title": "Content Embedding Analyzer: Map Your Semantic Entities",
       "description": "Check semantic alignment between your content and AI queries. Improve embedding relevance to increase citation probability in RAG-based LLM answers."
@@ -89,7 +93,7 @@
       "description": "Compare LLMClicks.ai with other AI visibility tools. See features, pricing, and accuracy across ChatGPT, Gemini, Claude, and Perplexity tracking."
     },
     "/blog": {
-      "title": "Blog | AI Search, LLM SEO & Visibility Insights | LLMClicks.ai",
+      "title": "LLMClicks Blog | AI Visibility, GEO & LLM SEO Insights",
       "description": "Insights, guides, and case studies on AI search, LLM SEO, and how to grow brand visibility across ChatGPT, Gemini, Claude, and Perplexity."
     },
     "/docs": {
@@ -183,6 +187,30 @@
     "/blog/ai-search-visibility-audit": {
       "title": "Build an AI Search Visibility Audit for Your Clients",
       "description": "The complete AI search visibility audit. Identify crawl gaps, missing schema, and entity issues that block your brand from LLM citations."
+    },
+    "/blog/llmclicks-backlink-marketplace-comprehensive-user-guide": {
+      "title": "LLMClicks Backlink Marketplace: Complete User Guide",
+      "description": "Your complete guide to the LLMClicks.ai Backlink Marketplace. Learn how to filter domains by AI relevance, track orders, and monetize your existing site inventory."
+    },
+    "/blog/why-faqs-fail-llm-seo-nyc-personal-injury-case-study": {
+      "title": "Why FAQs Fail for LLM SEO: NYC Injury Law Case Study",
+      "description": "We analyzed 100+ NYC personal injury pages with FAQs. See why 76% fail LLM SEO, what ChatGPT rewards instead, and how intent-aligned FAQs boost visibility."
+    },
+    "/blog/ai-visibility-benchmark-general-insurance-usa-2025": {
+      "title": "AI Visibility Benchmark: US Insurance Industry 2026",
+      "description": "Discover which U.S. insurers lead in AI visibility across ChatGPT and Perplexity. The 2025 benchmark by LLMClicks.ai reveals leaders, gaps, and growth insights."
+    },
+    "/blog/do-llms-care-about-backlinks-or-domain-age": {
+      "title": "Do LLMs Care About Backlinks or Domain Age?",
+      "description": "We tested India's top insurers across ChatGPT and Perplexity. See which brands lead in AI visibility and why traditional Google rankings now mean less."
+    },
+    "/blog/chatgpt-as-gtm-strategist-llmclicks-case-study": {
+      "title": "ChatGPT as a GTM Strategist: LLMClicks Case Study",
+      "description": "Learn how LLMClicks.ai used ChatGPT as its GTM strategist to plan, launch, and grow, reaching 637 users with ₹0 ad spend in this practical SaaS case study."
+    },
+    "/blog/ai-visibility-benchmark-general-insurance-india-2025": {
+      "title": "AI Visibility Benchmark: India Insurance Industry 2026",
+      "description": "We tested India's top insurers across ChatGPT and Perplexity. See which brands lead in AI visibility and why traditional Google rankings now mean less."
     },
     "/knowledge-hub/chatgpt-seo/blocking-gptbot-seo": {
       "title": "Should You Block GPTBot? The SEO Consequences",
