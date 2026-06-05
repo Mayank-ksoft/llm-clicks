@@ -61,7 +61,14 @@
     { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "search-results" }], "destination": "/", "permanent": true },
     { "source": "/", "has": [{ "type": "query", "key": "elementor_library", "value": "web-stories-archive" }], "destination": "/web-stories/", "permanent": true },
     { "source": "/blog/updates", "destination": "/blog/category/product-updates/", "permanent": true },
-    { "source": "/blog/updates/", "destination": "/blog/category/product-updates/", "permanent": true }
+    { "source": "/blog/updates/", "destination": "/blog/category/product-updates/", "permanent": true },
+
+    { "source": "/docs/:any*", "has": [{ "type": "query", "key": "cat", "value": "Getting Started" }], "destination": "/docs/category/getting-started/", "permanent": true },
+    { "source": "/docs/:any*", "has": [{ "type": "query", "key": "cat", "value": "Visibility Tracking" }], "destination": "/docs/category/visibility-tracking/", "permanent": true },
+    { "source": "/docs/:any*", "has": [{ "type": "query", "key": "cat", "value": "On-Page Optimization" }], "destination": "/docs/category/on-page-optimization/", "permanent": true },
+    { "source": "/docs/:any*", "has": [{ "type": "query", "key": "cat", "value": "AI Query Mapping" }], "destination": "/docs/category/ai-query-mapping/", "permanent": true },
+    { "source": "/docs/:any*", "has": [{ "type": "query", "key": "cat", "value": "Audits & Profiling" }], "destination": "/docs/category/audits-and-profiling/", "permanent": true },
+    { "source": "/docs/:any*", "has": [{ "type": "query", "key": "cat", "value": "Account & Marketplace" }], "destination": "/docs/category/account-and-marketplace/", "permanent": true }
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },

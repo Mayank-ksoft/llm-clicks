@@ -8,6 +8,7 @@ import { docs } from "../src/data/docsArticles";
 import { knowledgeHubCategories } from "../src/data/knowledgeHub";
 import { webStories } from "../src/data/webStories";
 import { indexableBlogCategories } from "../src/lib/blogCategories";
+import { DOCS_CATEGORIES } from "../src/lib/docsCategories";
 
 const BASE_URL = "https://llmclicks.ai";
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
@@ -107,10 +108,21 @@ const blogEntries: Entry[] = posts.map((p) => ({
 }));
 
 // ----- Docs sitemap -----
-const docsEntries: Entry[] = docs.map((d) => ({
+const docsCategoryEntries: Entry[] = DOCS_CATEGORIES.map((c) => {
+  const latest = docs
+    .filter((d) => d.category === c.title)
+    .map((d) => toISODate(d.date))
+    .sort()
+    .pop();
+  return { path: `/docs/category/${c.slug}`, lastmod: latest ?? BUILD_DATE };
+}).filter((e) => e.lastmod);
+
+const docsArticleEntries: Entry[] = docs.map((d) => ({
   path: `/docs/${d.slug}`,
   lastmod: toISODate(d.date),
 }));
+
+const docsEntries: Entry[] = [...docsCategoryEntries, ...docsArticleEntries];
 
 // ----- Knowledge Hub sitemap -----
 const khEntries: Entry[] = knowledgeHubCategories.flatMap((c) => {

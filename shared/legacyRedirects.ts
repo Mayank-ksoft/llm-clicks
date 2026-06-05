@@ -32,6 +32,16 @@ const exactRedirects: ExactRedirect[] = [
   { source: "/blog/updates", destination: "/blog/category/product-updates" },
 ];
 
+// Map of legacy ?cat=<title> values to their semantic category slugs.
+const docsCategoryAliases: Record<string, string> = {
+  "getting started": "getting-started",
+  "visibility tracking": "visibility-tracking",
+  "on-page optimization": "on-page-optimization",
+  "ai query mapping": "ai-query-mapping",
+  "audits & profiling": "audits-and-profiling",
+  "account & marketplace": "account-and-marketplace",
+};
+
 function normalizePath(pathname: string): string {
   const path = pathname.split("?")[0] || "/";
   return path.length > 1 ? path.replace(/\/+$/, "") : "/";
@@ -40,6 +50,16 @@ function normalizePath(pathname: string): string {
 export function getLegacyRedirect(pathname: string, search = ""): LegacyRedirectMatch | null {
   const normalized = normalizePath(pathname);
   const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+
+  // /docs?cat=<Title> (and /docs/?cat=<Title>) → /docs/category/<slug>
+  if (normalized === "/docs") {
+    const cat = params.get("cat");
+    if (cat) {
+      const slug = docsCategoryAliases[cat.toLowerCase()];
+      if (slug) return { destination: `/docs/category/${slug}`, statusCode: 301 };
+      return { destination: "/docs", statusCode: 301 };
+    }
+  }
 
   if (normalized === "/" && params.get("post_type") === "web-story") {
     return { destination: "/web-stories", statusCode: 301 };

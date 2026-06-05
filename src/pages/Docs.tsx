@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import { Link, useParams, Navigate, useSearchParams } from "react-router-dom";
+import { Link, useParams, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { docs, getDocBySlug } from "@/data/docsArticles";
 import SimplePagination from "@/components/common/SimplePagination";
+import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
 
 const DOCS_PAGE_SIZE = 10;
 
@@ -29,11 +30,12 @@ const categoryMeta: Record<string, { icon: typeof Compass; desc: string }> = {
 const slugifyHeading = (t: string) =>
   t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
 
-const DocIndex = () => {
+const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeCat = searchParams.get("cat") || "";
+  const categoryFromSlug = getDocsCategoryBySlug(categorySlug);
+  const activeCat = categoryFromSlug?.title || "";
+  const invalidCategory = Boolean(categorySlug) && !categoryFromSlug;
 
   useEffect(() => { setPage(1); }, [query, activeCat]);
 
@@ -58,11 +60,9 @@ const DocIndex = () => {
     );
   }, [query, activeCat]);
 
-  const clearCategory = () => {
-    const next = new URLSearchParams(searchParams);
-    next.delete("cat");
-    setSearchParams(next, { replace: true });
-  };
+  if (invalidCategory) {
+    return <Navigate to="/docs" replace />;
+  }
 
   return (
     <Layout>
@@ -117,7 +117,7 @@ const DocIndex = () => {
                   <motion.div key={c.title}
                     initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
                     <Link
-                      to={`/docs?cat=${encodeURIComponent(c.title)}`}
+                      to={docsCategoryPath(c.title)}
                       className="block rounded-2xl border border-border bg-card p-6 hover:border-accent/30 transition-colors shimmer-card group h-full"
                     >
                       <div className="h-10 w-10 rounded-lg bg-accent/15 flex items-center justify-center mb-3">
@@ -139,12 +139,12 @@ const DocIndex = () => {
                 <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Category</p>
                 <h2 className="font-display text-2xl font-bold">{activeCat}</h2>
               </div>
-              <button
-                onClick={clearCategory}
+              <Link
+                to="/docs"
                 className="text-sm text-muted-foreground hover:text-accent inline-flex items-center gap-1.5"
               >
                 <ArrowLeft className="h-3.5 w-3.5" /> All categories
-              </button>
+              </Link>
             </div>
           )}
 
@@ -245,7 +245,7 @@ const DocDetail = ({ slug }: { slug: string }) => {
               </BreadcrumbItem>
               <BreadcrumbSeparator><ChevronRight /></BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbLink asChild><Link to={`/docs?cat=${encodeURIComponent(doc.category)}`}>{doc.category}</Link></BreadcrumbLink>
+                <BreadcrumbLink asChild><Link to={docsCategoryPath(doc.category)}>{doc.category}</Link></BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator><ChevronRight /></BreadcrumbSeparator>
               <BreadcrumbItem>
@@ -380,7 +380,8 @@ const DocDetail = ({ slug }: { slug: string }) => {
 };
 
 const Docs = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug, categorySlug } = useParams<{ slug: string; categorySlug: string }>();
+  if (categorySlug) return <DocIndex categorySlug={categorySlug} />;
   return slug ? <DocDetail slug={slug} /> : <DocIndex />;
 };
 

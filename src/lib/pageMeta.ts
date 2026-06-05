@@ -7,6 +7,7 @@
 
 import metaData from "../../shared/pageMeta.json";
 import { getBlogCategoryBySlug } from "./blogCategories";
+import { getDocsCategoryBySlug } from "./docsCategories";
 
 export type PageMeta = {
   title: string;
@@ -64,6 +65,15 @@ export function getPageMeta(pathname: string): PageMeta {
     return {
       title: `${name} | LLMClicks.ai Blog`,
       description: `${name} — insights on AI visibility and LLM SEO from LLMClicks.ai.`,
+    };
+  }
+  if (normalized.startsWith("/docs/category/")) {
+    const slug = normalized.replace("/docs/category/", "");
+    const category = getDocsCategoryBySlug(slug);
+    const name = category?.title ?? titleCase(slug);
+    return {
+      title: `${name} | LLMClicks.ai Docs`,
+      description: `${name} documentation from LLMClicks.ai — setup guides, walkthroughs, and best-practice playbooks.`,
     };
   }
   if (normalized.startsWith("/docs/")) {

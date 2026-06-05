@@ -72,6 +72,7 @@ const App = () => (
           <Route path="/blog/category/:categorySlug" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/docs" element={<Docs />} />
+          <Route path="/docs/category/:categorySlug" element={<Docs />} />
           <Route path="/docs/:slug" element={<Docs />} />
 
           {/* Feature pages — root paths, exact live slugs */}
