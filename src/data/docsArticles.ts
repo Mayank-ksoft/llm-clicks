@@ -1656,10 +1656,6 @@ export const docs: DocArticle[] = [
         ]
       },
       {
-        "type": "p",
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
-      },
-      {
         "type": "h3",
         "text": "Step 2 : #"
       },
