@@ -1,4 +1,6 @@
-// Generates public/sitemap.xml. Runs before dev/build via predev/prebuild scripts.
+// Generates a sitemap index + per-section sitemaps with <lastmod> tags.
+// Runs before dev/build via predev/prebuild npm hooks. Outputs into public/
+// (Vite copies public/ into dist/ at build, so Vercel serves these at the root).
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 import { posts } from "../src/data/blogPosts";
@@ -8,66 +10,187 @@ import { webStories } from "../src/data/webStories";
 import { indexableBlogCategories } from "../src/lib/blogCategories";
 
 const BASE_URL = "https://llmclicks.ai";
+const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
-interface Entry { path: string; changefreq?: string; priority?: string; }
+function toISODate(input?: string): string {
+  if (!input) return BUILD_DATE;
+  const d = new Date(input);
+  if (Number.isNaN(d.getTime())) return BUILD_DATE;
+  return d.toISOString().slice(0, 10);
+}
 
-const staticPaths: Entry[] = [
-  { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/about-us", changefreq: "monthly", priority: "0.7" },
-  { path: "/pricing", changefreq: "monthly", priority: "0.9" },
-  { path: "/contact", changefreq: "yearly", priority: "0.5" },
-  { path: "/affiliate-program", changefreq: "monthly", priority: "0.6" },
-  { path: "/ai-visibility-tool-comparison", changefreq: "monthly", priority: "0.7" },
-  { path: "/industry-benchmarks", changefreq: "monthly", priority: "0.7" },
-  { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
-  { path: "/terms", changefreq: "yearly", priority: "0.3" },
-  { path: "/blog", changefreq: "weekly", priority: "0.9" },
-  { path: "/docs", changefreq: "weekly", priority: "0.7" },
-  { path: "/knowledge-hub", changefreq: "weekly", priority: "0.8" },
-  { path: "/web-stories", changefreq: "weekly", priority: "0.6" },
-  // Feature pages
-  { path: "/ai-visibility-audit", priority: "0.8" },
-  { path: "/ai-visibility-tracker", priority: "0.8" },
-  { path: "/ai-listicle-marketplace", priority: "0.8" },
-  { path: "/on-page-optimiser", priority: "0.8" },
-  { path: "/ai-query-mapper", priority: "0.8" },
-  { path: "/llm-traffic-tracker", priority: "0.8" },
-  { path: "/optimization-wizard", priority: "0.8" },
-  { path: "/query-fan-out-coverage", priority: "0.8" },
-  { path: "/content-comparison", priority: "0.8" },
-  { path: "/content-embedding-analyzer", priority: "0.8" },
-  // Free tools
-  { path: "/ai-visibility-checker", priority: "0.7" },
-  { path: "/ai-readiness-analyzer", priority: "0.7" },
-  { path: "/ai-domain-profiler", priority: "0.7" },
-];
+function url(path: string): string {
+  const withSlash = path === "/" || path.endsWith("/") ? path : `${path}/`;
+  return `${BASE_URL}${withSlash}`;
+}
 
-const entries: Entry[] = [
-  ...staticPaths,
-  ...posts.map((p) => ({ path: `/blog/${p.slug}`, changefreq: "monthly", priority: "0.7" })),
-  ...indexableBlogCategories.map((c) => ({ path: `/blog/category/${c.slug}`, changefreq: "weekly", priority: "0.6" })),
-  ...docs.map((d) => ({ path: `/docs/${d.slug}`, changefreq: "monthly", priority: "0.6" })),
-  ...webStories.map((s) => ({ path: `/web-stories/${s.slug}`, changefreq: "monthly", priority: "0.5" })),
-  ...knowledgeHubCategories.flatMap((c) => [
-    { path: `/knowledge-hub/${c.slug}`, changefreq: "monthly", priority: "0.6" },
-    ...c.articles.map((a) => ({ path: `/knowledge-hub/${c.slug}/${a.slug}`, changefreq: "monthly", priority: "0.6" })),
-  ]),
-];
+interface Entry { path: string; lastmod: string; images?: { loc: string; title?: string }[]; }
 
-const xml = [
-  `<?xml version="1.0" encoding="UTF-8"?>`,
-  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-  ...entries.map((e) =>
-    [
+function renderUrlset(entries: Entry[], withImages = false): string {
+  const ns = withImages
+    ? `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`
+    : `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+  const body = entries.map((e) => {
+    const lines = [
       `  <url>`,
-      `    <loc>${BASE_URL}${e.path}${e.path === "/" || e.path.endsWith("/") ? "" : "/"}</loc>`,
-      e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-      e.priority ? `    <priority>${e.priority}</priority>` : null,
-      `  </url>`,
-    ].filter(Boolean).join("\n"),
+      `    <loc>${url(e.path)}</loc>`,
+      `    <lastmod>${e.lastmod}</lastmod>`,
+    ];
+    if (withImages && e.images?.length) {
+      for (const img of e.images) {
+        lines.push(`    <image:image>`);
+        lines.push(`      <image:loc>${absUrl(img.loc)}</image:loc>`);
+        if (img.title) lines.push(`      <image:title>${escapeXml(img.title)}</image:title>`);
+        lines.push(`    </image:image>`);
+      }
+    }
+    lines.push(`  </url>`);
+    return lines.join("\n");
+  });
+  return [`<?xml version="1.0" encoding="UTF-8"?>`, ns, ...body, `</urlset>`].join("\n");
+}
+
+function absUrl(loc: string): string {
+  if (/^https?:\/\//i.test(loc)) return loc;
+  return `${BASE_URL}${loc.startsWith("/") ? "" : "/"}${loc}`;
+}
+
+function escapeXml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
+// ----- Pages sitemap -----
+const staticPages: Entry[] = [
+  "/",
+  "/about-us",
+  "/pricing",
+  "/contact",
+  "/affiliate-program",
+  "/ai-visibility-tool-comparison",
+  "/industry-benchmarks",
+  "/privacy-policy",
+  "/terms",
+  "/blog",
+  "/docs",
+  "/knowledge-hub",
+  "/web-stories",
+  "/ai-visibility-audit",
+  "/ai-visibility-tracker",
+  "/ai-listicle-marketplace",
+  "/on-page-optimiser",
+  "/ai-query-mapper",
+  "/llm-traffic-tracker",
+  "/optimization-wizard",
+  "/query-fan-out-coverage",
+  "/content-comparison",
+  "/content-embedding-analyzer",
+  "/ai-visibility-checker",
+  "/ai-readiness-analyzer",
+  "/ai-domain-profiler",
+].map((path) => ({ path, lastmod: BUILD_DATE }));
+
+const categoryPages: Entry[] = indexableBlogCategories.map((c) => {
+  const latest = posts
+    .filter((p) => p.tag.toUpperCase() === c.tag.toUpperCase())
+    .map((p) => toISODate(p.date))
+    .sort()
+    .pop();
+  return { path: `/blog/category/${c.slug}`, lastmod: latest ?? BUILD_DATE };
+});
+
+const pagesEntries: Entry[] = [...staticPages, ...categoryPages];
+
+// ----- Blog sitemap -----
+const blogEntries: Entry[] = posts.map((p) => ({
+  path: `/blog/${p.slug}`,
+  lastmod: toISODate(p.date),
+}));
+
+// ----- Docs sitemap -----
+const docsEntries: Entry[] = docs.map((d) => ({
+  path: `/docs/${d.slug}`,
+  lastmod: toISODate(d.date),
+}));
+
+// ----- Knowledge Hub sitemap -----
+const khEntries: Entry[] = knowledgeHubCategories.flatMap((c) => {
+  const articleEntries = c.articles.map((a) => ({
+    path: `/knowledge-hub/${c.slug}/${a.slug}`,
+    lastmod: toISODate(a.updated ?? a.date),
+  }));
+  const catLatest = articleEntries.map((a) => a.lastmod).sort().pop() ?? BUILD_DATE;
+  return [{ path: `/knowledge-hub/${c.slug}`, lastmod: catLatest }, ...articleEntries];
+});
+
+// ----- Web Stories sitemap -----
+const webStoryEntries: Entry[] = webStories.map((s) => ({
+  path: `/web-stories/${s.slug}`,
+  lastmod: BUILD_DATE,
+}));
+
+// ----- Image sitemap (blog, docs, KH, web stories hero/poster images) -----
+const imageEntries: Entry[] = [
+  ...posts
+    .filter((p) => !!p.image)
+    .map((p) => ({
+      path: `/blog/${p.slug}`,
+      lastmod: toISODate(p.date),
+      images: [{ loc: p.image, title: p.title }],
+    })),
+  ...docs
+    .filter((d) => !!d.image)
+    .map((d) => ({
+      path: `/docs/${d.slug}`,
+      lastmod: toISODate(d.date),
+      images: [{ loc: d.image, title: d.title }],
+    })),
+  ...knowledgeHubCategories.flatMap((c) =>
+    c.articles
+      .filter((a) => !!a.image)
+      .map((a) => ({
+        path: `/knowledge-hub/${c.slug}/${a.slug}`,
+        lastmod: toISODate(a.updated ?? a.date),
+        images: [{ loc: a.image, title: a.title }],
+      })),
   ),
-  `</urlset>`,
+  ...webStories
+    .filter((s) => !!s.poster)
+    .map((s) => ({
+      path: `/web-stories/${s.slug}`,
+      lastmod: BUILD_DATE,
+      images: [{ loc: s.poster, title: s.title }],
+    })),
+];
+
+// ----- Write sub-sitemaps -----
+const sections: { file: string; entries: Entry[]; withImages?: boolean }[] = [
+  { file: "pages-sitemap.xml", entries: pagesEntries },
+  { file: "blog-sitemap.xml", entries: blogEntries },
+  { file: "docs-sitemap.xml", entries: docsEntries },
+  { file: "knowledge-hub-sitemap.xml", entries: khEntries },
+  { file: "web-stories-sitemap.xml", entries: webStoryEntries },
+  { file: "image-sitemap.xml", entries: imageEntries, withImages: true },
+];
+
+for (const s of sections) {
+  writeFileSync(resolve(`public/${s.file}`), renderUrlset(s.entries, s.withImages));
+  console.log(`${s.file} written (${s.entries.length} entries)`);
+}
+
+// ----- Sitemap index -----
+const indexXml = [
+  `<?xml version="1.0" encoding="UTF-8"?>`,
+  `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+  ...sections.map((s) =>
+    [
+      `  <sitemap>`,
+      `    <loc>${BASE_URL}/${s.file}</loc>`,
+      `    <lastmod>${BUILD_DATE}</lastmod>`,
+      `  </sitemap>`,
+    ].join("\n"),
+  ),
+  `</sitemapindex>`,
 ].join("\n");
 
-writeFileSync(resolve("public/sitemap.xml"), xml);
-console.log(`sitemap.xml written (${entries.length} entries)`);
+writeFileSync(resolve("public/sitemap.xml"), indexXml);
+console.log(`sitemap.xml index written (${sections.length} sitemaps)`);
