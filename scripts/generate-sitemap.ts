@@ -99,13 +99,15 @@ const categoryPages: Entry[] = indexableBlogCategories.map((c) => {
   return { path: `/blog/category/${c.slug}`, lastmod: latest ?? BUILD_DATE };
 });
 
-const pagesEntries: Entry[] = [...staticPages, ...categoryPages];
+const pagesEntries: Entry[] = staticPages;
 
-// ----- Blog sitemap -----
-const blogEntries: Entry[] = posts.map((p) => ({
+// ----- Blog sitemap (taxonomy categories + posts) -----
+const blogPostEntries: Entry[] = posts.map((p) => ({
   path: `/blog/${p.slug}`,
   lastmod: toISODate(p.date),
 }));
+
+const blogEntries: Entry[] = [...categoryPages, ...blogPostEntries];
 
 // ----- Docs sitemap -----
 const docsCategoryEntries: Entry[] = DOCS_CATEGORIES.map((c) => {
