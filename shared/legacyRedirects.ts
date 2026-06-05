@@ -2,7 +2,7 @@ export type LegacyRedirectMatch = {
   destination: string;
   statusCode: 301 | 302 | 410;
 };
-
+ 
 type ExactRedirect = {
   source: string;
   destination: string;
