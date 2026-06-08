@@ -1,10 +1,22 @@
 // Auto-generated from llmclicks.ai live content. All article images hot-linked from the source.
+// import imgAccuracyStats from "@/assets/blog-tracker-tools/ai-visibility-vs-accuracy-stats.webp";
+const imgAccuracyStats = {url: "/blog-tracker-tools/ai-visibility-vs-accuracy-stats.webp"};
+const imgMethodology={url:"/blog-tracker-tools/ai-tracker-testing-methodology-process.webp"};
+const imgOtterly={url:"/blog-tracker-tools/otterly-ai-mention-tracking-dashboard.webp"};
+const imgPeec={url:"/blog-tracker-tools/peec-ai-competitive-benchmarking-dashboard.webp"};
+const imgSeRanking={url:"/blog-tracker-tools/se-ranking-ai-visibility-dashboard.webp"};
+const imgGetAiso={url:"/blog-tracker-tools/getaiso-content-optimization-interface.webp"};
+const imgProfound={url:"/blog-tracker-tools/profound-enterprise-ai-visibility-analytics.webp"};
+const imgProductRankings={url:"/blog-tracker-tools/ai-product-rankings-free-search-tool.webp"};
+const imgPricingChart={url:"/blog-tracker-tools/ai-visibility-tools-pricing-comparison-chart.webp"};
+
 export type BlogSection =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }
   | { type: "ul"; items: string[] }
-  | { type: "quote"; text: string };
+  | { type: "quote"; text: string }
+  | { type: "img"; src: string; alt: string; caption?: string };
 
 export interface BlogPost {
   slug: string;
@@ -3378,7 +3390,9 @@ export const posts: BlogPost[] = [
       { type: "p", text: "I built LLMClicks.ai because I was frustrated. Our own SaaS product was being mentioned in ChatGPT responses, which should have been great news. Except that AI was giving users completely wrong information about our pricing." },
       { type: "p", text: "Prospects would show up to demo calls saying, “I saw on ChatGPT that your Pro plan is $79 per month.” Our actual price? $49. When I clarified the correct pricing, prospects questioned our credibility." },
       { type: "p", text: "This wasn’t a Google ranking problem. We ranked #3 for our main keywords. This was an AI accuracy problem, and I had no way to detect it, let alone fix it." },
+      { type: "img", src: imgAccuracyStats.url, alt: "Statistical chart comparing raw AI search visibility metrics against factual accuracy rates in generative responses." },
       { type: "p", text: "So I started testing every AI visibility tracking tool I could find. Over four months, I signed up for 11 platforms, ran the same 30 prompts through each one, and documented what actually worked versus what just looked impressive in demo screenshots." },
+      { type: "img", src: imgMethodology.url, alt: "Flowchart explaining the strict testing methodology and ranking criteria for B2B SaaS AI visibility trackers." },
       { type: "p", text: "Here’s what I learned: Most AI visibility tracking tools count mentions. Almost none detect when AI is lying about you." },
       { type: "h2", text: "The Problem Most Tools Miss" },
       { type: "p", text: "During testing, I found our brand mentioned in 18 different AI responses across ChatGPT and Perplexity . Sounds good, right?" },
@@ -3518,6 +3532,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "Best for: Small teams, budget-conscious testing, basic tracking Core strength: Affordability and simplicity LLM coverage: ChatGPT, Perplexity, Google Gemini Pricing: $29-$489/month Free trial: 14 Days" },
       { type: "h3", text: "Overview" },
       { type: "p", text: "Otterly.ai is often the first tracking software teams try because it’s affordable and straightforward to set up." },
+      { type: "img", src: imgOtterly.url, alt: "Otterly AI dashboard tracking brand mentions and competitor visibility across ChatGPT and Perplexity." },
       { type: "h3", text: "What Otterly Does Well" },
       { type: "p", text: "Easy Setup: Creating my account and setting up tracking took 8 minutes. You enter your brand name, select LLMs to monitor, and start getting reports." },
       { type: "p", text: "Affordable Entry Point: At $29/month, Otterly is one of the cheapest paid options for AI visibility tracking. Good for testing whether AI visibility matters for your business before bigger investment." },
@@ -3564,6 +3579,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "Best for: Agencies, competitive intelligence, established brands Core strength: Side-by-side competitor visibility comparison LLM coverage: ChatGPT, Perplexity, Claude, Gemini, Copilot Pricing: €89-€499/month Free trial: 14 days (Card Required)" },
       { type: "h3", text: "Overview" },
       { type: "p", text: "Peec AI focuses heavily on competitive benchmarking, making it popular with agencies managing AI visibility for multiple clients." },
+      { type: "img", src: imgPeec.url, alt: "Peec.ai analytics dashboard displaying generative search impression trends and click-through rates." },
       { type: "h3", text: "What Peec Does Well" },
       { type: "p", text: "Competitive Comparison: Peec’s standout feature. You can track up to 5 competitors simultaneously and see:" },
       { type: "ul", items: [
@@ -3628,6 +3644,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "Free trial: 14 days" },
       { type: "h3", text: "Overview" },
       { type: "p", text: "SE Ranking brings AI search visibility into the same environment as your organic search and traffic data, including Google Analytics 4 integration. As a suite, SE Ranking also offers Planable as a companion product, allowing teams to factor social performance into their broader search and AI visibility strategy rather than analyzing each channel in isolation." },
+      { type: "img", src: imgSeRanking.url, alt: "SE Ranking dashboard interface displaying AI search tracking metrics and generative engine keyword performance." },
       { type: "h3", text: "What SE Ranking Does Well" },
       { type: "p", text: "Cross-platform AI tracking with daily updates: SE Ranking monitors brand mentions and website links across Google AI Overviews, AI Mode, Gemini, Perplexity, and ChatGPT. Position data refreshes daily and includes historical trends, so visibility shifts show up as patterns." },
       { type: "p", text: "Position-level data: It shows whether you appear in AI answers and where, including the top 3 positions within a response. That matters when you’re trying to move from being cited to being cited prominently." },
@@ -3676,6 +3693,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "Best for: Content teams focused on optimization Core strength: Content recommendations for AI visibility LLM coverage: Limited (optimization-focused) Pricing: $75-$1250/month" },
       { type: "h3", text: "Overview" },
       { type: "p", text: "GetAiso takes a different approach than pure tracking tools, focusing on content optimization to improve AI visibility." },
+      { type: "img", src: imgGetAiso.url, alt: "GetAISEO platform interface tracking brand visibility metrics across multiple generative search engines." },
       { type: "h3", text: "What It Does" },
       { type: "ul", items: [
         "Analyzes your content for AI-friendliness",
@@ -3699,6 +3717,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "Best for: Fortune 500, large enterprises Core strength: Scale, compliance, multi-brand tracking LLM coverage: 8+ platforms (most comprehensive) Pricing: $99-$399/month" },
       { type: "h3", text: "Overview" },
       { type: "p", text: "Profound is one of the earliest AI visibility platforms, built specifically for large organizations with complex needs." },
+      { type: "img", src: imgProfound.url, alt: "Profound enterprise dashboard analyzing AI market share and generative engine citation frequency." },
       { type: "h3", text: "What Profound Does Well" },
       { type: "p", text: "Comprehensive Platform Coverage: Tracks more LLMs than any competitor – ChatGPT, Claude, Gemini, Perplexity, Copilot, Meta AI, Grok, plus emerging platforms." },
       { type: "p", text: "Automated Prompt Discovery: Profound automatically finds:" },
@@ -3765,6 +3784,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "Best for: Anyone wanting free AI visibility checks Core strength: Zero cost, no signup required Coverage: Various AI platforms Pricing: Free" },
       { type: "h3", text: "What It Is" },
       { type: "p", text: "AI Product Rankings isn’t a traditional tracking tool. It’s a free website where you search for your product and see how it ranks in AI-generated lists." },
+      { type: "img", src: imgProductRankings.url, alt: "AI Product Rankings dashboard comparing software brand visibility scores across ChatGPT and Claude models." },
       { type: "h3", text: "How It Works" },
       { type: "ul", items: [
         "Go to the website",
@@ -3899,6 +3919,7 @@ export const posts: BlogPost[] = [
       { type: "p", text: "The question is “What is AI saying about us, and is it true?”" },
       { type: "p", text: "That’s the problem LLMClicks was built to solve, and why accuracy detection became our core differentiator." },
       { type: "h2", text: "How much do AI visibility trackers cost?" },
+      { type: "img", src: imgPricingChart.url, alt: "Comparison chart detailing the monthly enterprise pricing tiers for the top 11 AI visibility tracking platforms." },
       { type: "ul", items: [
         "Free: AI Product Rankings, Goodie (limited)",
         "Budget: Otterly ($29-79/mo), LLMClicks.ai (Free Trail Available) ($49/mo)",

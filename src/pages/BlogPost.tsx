@@ -211,6 +211,24 @@ const BlogPost = () => {
                         "{block.text}"
                       </blockquote>
                     );
+                  if (block.type === "img")
+                    return (
+                      <figure key={i} className="my-8">
+                        <div className="rounded-2xl overflow-hidden border border-border bg-secondary/40">
+                          <img
+                            src={block.src}
+                            alt={block.alt}
+                            loading="lazy"
+                            className="w-full h-auto object-contain"
+                          />
+                        </div>
+                        {block.caption && (
+                          <figcaption className="mt-2 text-sm text-muted-foreground text-center">
+                            {block.caption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    );
                   return <p key={i} className="text-foreground/80">{renderTextWithLinks(block.text)}</p>;
                 })}
               </div>
