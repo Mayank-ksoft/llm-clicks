@@ -1,14 +1,7 @@
-import { motion } from "framer-motion";
-
 const brands = ["AgencyCo", "MarketFlow", "SEO Labs", "DataBridge", "GrowthPulse", "BrandAI"];
 
 const TrustedByMarquee = () => (
-  <motion.div
-    className="mt-16 text-center overflow-hidden"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay: 0.8 }}
-  >
+  <div className="mt-16 text-center overflow-hidden">
     <p className="text-sm font-medium text-muted-foreground mb-5">Trusted by over 500 companies and agencies</p>
     <div className="relative">
       {/* Fade edges */}
@@ -25,7 +18,7 @@ const TrustedByMarquee = () => (
         ))}
       </div>
     </div>
-  </motion.div>
+  </div>
 );
 
 export default TrustedByMarquee;

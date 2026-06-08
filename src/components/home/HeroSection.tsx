@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { useState, useEffect, lazy, Suspense } from "react";
@@ -24,7 +23,8 @@ const HeroSection = () => {
     <section className="relative overflow-hidden pt-20 md:pt-24 pb-10 px-4">
       {/* Static mesh gradient background (parallax removed — caused forced reflow each frame) */}
       <div className="absolute inset-0 accent-mesh pointer-events-none" />
-      <div className="absolute inset-0 grain-overlay pointer-events-none" />
+      {/* Grain overlay desktop-only — paint cost on mobile pushes Speed Index */}
+      <div className="absolute inset-0 grain-overlay pointer-events-none hidden md:block" />
 
       {/* Decorative shapes (desktop only to avoid mobile layout work) */}
       <div className="absolute top-32 left-[10%] w-16 h-16 border border-accent/10 rounded-2xl animate-spin-slow hidden md:block" />
@@ -44,15 +44,10 @@ const HeroSection = () => {
             <h1 className="font-display text-[2rem] sm:text-[2.6rem] md:text-[3.4rem] lg:text-[3.6rem] leading-[1.08] font-bold tracking-tight mb-4">
               Your brand is invisible in{" "}
               <span className="relative inline-block">
-                <motion.span
-                  key={wordIndex}
-                  className="relative z-10"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                >
+                {/* Plain span — paints on first frame; no framer-motion dependency */}
+                <span key={wordIndex} className="relative z-10 hero-word-fade">
                   {words[wordIndex]}
-                </motion.span>
+                </span>
                 <span className="absolute bottom-1 left-0 right-0 h-3 bg-accent/15 -skew-x-2 rounded-sm" />
               </span>
               . LLMClicks.ai fixes that.

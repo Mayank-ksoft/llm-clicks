@@ -164,6 +164,16 @@
     color: hsl(var(--accent));
     font-weight: 300;
   }
+
+  /* Rotating hero word — pure CSS fade, no JS dependency */
+  .hero-word-fade {
+    animation: heroWordFade 0.3s ease-out;
+  }
+}
+
+@keyframes heroWordFade {
+  from { opacity: 0.6; transform: translateY(4px); }
+  to   { opacity: 1;   transform: translateY(0); }
 }
 
 @keyframes shimmer {
