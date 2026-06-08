@@ -1,5 +1,4 @@
 // Auto-generated from llmclicks.ai live content. All article images hot-linked from the source.
-// import imgAccuracyStats from "@/assets/blog-tracker-tools/ai-visibility-vs-accuracy-stats.webp";
 const imgAccuracyStats = {url: "/blog-tracker-tools/ai-visibility-vs-accuracy-stats.webp"};
 const imgMethodology={url:"/blog-tracker-tools/ai-tracker-testing-methodology-process.webp"};
 const imgOtterly={url:"/blog-tracker-tools/otterly-ai-mention-tracking-dashboard.webp"};
@@ -3464,6 +3463,7 @@ export const posts: BlogPost[] = [
       { type: "h2", text: "Detailed Reviews: 11 AI Visibility Tracking Tools Tested" },
       { type: "h3", text: "1. LLMClicks.ai (Our Platform) – Accuracy-First AI Visibility Tracking" },
       { type: "p", text: "Best for: B2B SaaS, agencies, accuracy-critical brands Core strength: Detects hallucinations and incorrect information LLM coverage: ChatGPT, Perplexity, Claude, Gemini, Copilot Pricing: $49-$399/month Free trial: Yes (50 credits, no credit card required)" },
+      { type: "img", src: "/blog-tracker-tools/llmclicks-ai-visibility-audit-dashboard.webp", alt: "LLMClicks.ai 120-point visibility audit dashboard showing Share of Voice and query fan-out metrics." },
       { type: "h3", text: "Why I Built LLMClicks.ai" },
       { type: "p", text: "After discovering ChatGPT was giving wrong pricing for our product, I searched for tools that could:" },
       { type: "ul", items: [
