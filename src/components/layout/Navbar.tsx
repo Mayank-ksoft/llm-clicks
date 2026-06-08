@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronRight, Menu, X, Eye, BarChart3, FileText, Wand2, Activity, Compass, Zap, Globe, Search, ArrowRight, ShoppingBag, GitCompare, Layers, BookOpen, LifeBuoy, DollarSign, Library, PlayCircle } from "lucide-react";
+import { ChevronDown, ChevronRight, Menu, X, Eye, BarChart3, FileText, Wand2, Activity, Compass, Zap, Globe, Search, ArrowRight, ShoppingBag, GitCompare, Layers, BookOpen, LifeBuoy, DollarSign, Library, PlayCircle, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/llmclicks-logo.png";
@@ -48,6 +48,7 @@ const resourceLinks = [
   { label: "Web Stories", desc: "Bite-sized GEO teardowns", icon: PlayCircle, to: "/web-stories" },
   { label: "Docs", desc: "Setup guides and tutorials", icon: LifeBuoy, to: "/docs" },
   { label: "Industry Benchmarks", desc: "How your category ranks in AI", icon: BarChart3, to: "/industry-benchmarks" },
+  { label: "Industry Solutions", desc: "GEO playbooks by vertical", icon: Building2, to: "/industries" },
   { label: "Affiliate Program", desc: "Earn up to 30% recurring", icon: DollarSign, to: "/affiliate-program" },
 ];
 

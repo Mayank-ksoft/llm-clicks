@@ -93,6 +93,20 @@ export function getPageMeta(pathname: string): PageMeta {
       description: `${name} — explore the LLMClicks.ai Knowledge Hub for AI visibility insights.`,
     };
   }
+  if (normalized === "/industries") {
+    return {
+      title: "Industry Solutions | AI Visibility & GEO Playbooks | LLMClicks.ai",
+      description: "Industry-specific GEO playbooks showing how brands in SaaS, banking, insurance, healthcare, ecommerce and more win citations in ChatGPT, Perplexity, Gemini and Claude.",
+    };
+  }
+  if (normalized.startsWith("/industries/")) {
+    const slug = normalized.replace("/industries/", "");
+    const name = titleCase(slug);
+    return {
+      title: `${name} Industry | AI Visibility & GEO Playbook | LLMClicks.ai`,
+      description: `GEO playbook for the ${name.toLowerCase()} industry — how brands in this vertical get cited by ChatGPT, Perplexity, Gemini and Claude.`,
+    };
+  }
   if (normalized.startsWith("/web-stories/")) {
     const slug = normalized.replace("/web-stories/", "");
     const name = titleCase(slug);

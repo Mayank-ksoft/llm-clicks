@@ -27,6 +27,8 @@ import WebStories from "./pages/WebStories";
 import WebStoryViewer from "./pages/WebStoryViewer";
 import AuthorShripad from "./pages/AuthorShripad";
 import NotFound from "./pages/NotFound";
+import Industries from "./pages/Industries";
+import IndustryPage from "./pages/IndustryPage";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +66,8 @@ const App = () => (
           <Route path="/ai-visibility-tool-comparison" element={<Comparison />} />
           <Route path="/comparison" element={<Navigate to="/ai-visibility-tool-comparison" replace />} />
           <Route path="/industry-benchmarks" element={<IndustryBenchmarks />} />
+          <Route path="/industries" element={<Industries />} />
+          <Route path="/industries/:slug" element={<IndustryPage />} />
           <Route path="/privacy-policy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
 
