@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight, Menu, X, Eye, BarChart3, FileText, Wand2, Activity, Compass, Zap, Globe, Search, ArrowRight, ShoppingBag, GitCompare, Layers, BookOpen, LifeBuoy, DollarSign, Library, PlayCircle, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@/assets/llmclicks-logo.png";
+import logo from "@/assets/llmclicks-ai-logo.webp";
 
 type FeatureItem = {
   label: string;
@@ -84,8 +84,15 @@ const Navbar = () => {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <img src={logo} alt="LLMClicks.ai logo" className="h-8 w-auto" />
-          {/* <span className="font-display text-lg font-bold tracking-tight">LLMClicks</span> */}
+          <img
+            src={logo}
+            alt="LLMClicks.ai logo"
+            width={137}
+            height={32}
+            decoding="async"
+            fetchPriority="high"
+            className="h-8 w-auto"
+          />
         </Link>
 
         {/* Desktop Nav */}
