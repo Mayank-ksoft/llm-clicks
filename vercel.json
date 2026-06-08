@@ -76,6 +76,6 @@
     { "source": "/wp-content/plugins/:path*", "destination": "/api/gone" },
 
     { "source": "/:file(wp-[^/]+\\.php)", "destination": "/api/gone" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
   ]
 }
