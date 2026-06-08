@@ -16,6 +16,50 @@ import { getPostBySlug, posts } from "@/data/blogPosts";
 import { useToast } from "@/hooks/use-toast";
 import authorShripad from "@/assets/author-shripad.png";
 import { blogCategoryPath, getBlogCategoryByTag } from "@/lib/blogCategories";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+const isFaqHeading = (text: string) => /frequently asked questions|^faq\b|^faqs\b/i.test(text.trim());
+const stripQPrefix = (text: string) => text.replace(/^\s*(q\s*\d+\s*[\.\):-]?\s*)/i, "").trim();
+const stripAnsPrefix = (text: string) => text.replace(/^\s*(ans\s*[:\.-]?\s*|answer\s*[:\.-]?\s*)/i, "").trim();
+
+type FaqItem = { q: string; answers: any[] };
+type Renderable = any | { type: "faq"; items: FaqItem[]; key: string };
+
+function buildRenderable(content: any[]): Renderable[] {
+  const out: Renderable[] = [];
+  let i = 0;
+  while (i < content.length) {
+    const b = content[i];
+    if (b.type === "h2" && isFaqHeading(b.text)) {
+      out.push(b);
+      i++;
+      const items: FaqItem[] = [];
+      while (i < content.length && content[i].type !== "h2") {
+        if (content[i].type === "h3") {
+          const q = stripQPrefix(content[i].text);
+          i++;
+          const answers: any[] = [];
+          while (i < content.length && content[i].type !== "h3" && content[i].type !== "h2") {
+            const a = content[i];
+            if (a.type === "p") answers.push({ ...a, text: stripAnsPrefix(a.text) });
+            else answers.push(a);
+            i++;
+          }
+          items.push({ q, answers });
+        } else {
+          // stray block before first question — render as-is
+          out.push(content[i]);
+          i++;
+        }
+      }
+      if (items.length > 0) out.push({ type: "faq", items, key: `faq-${i}` });
+      continue;
+    }
+    out.push(b);
+    i++;
+  }
+  return out;
+}
 
 const slugifyHeading = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80);
@@ -177,7 +221,41 @@ const BlogPost = () => {
               </div>
 
               <div className="space-y-5 text-foreground/90 text-[1.0625rem] leading-[1.75]">
-                {post.content.map((block, i) => {
+                {buildRenderable(post.content).map((block: any, i: number) => {
+                  if (block.type === "faq") {
+                    return (
+                      <Accordion
+                        key={block.key ?? `faq-${i}`}
+                        type="single"
+                        collapsible
+                        className="mt-4 mb-6 rounded-2xl border border-border bg-card/40 divide-y divide-border overflow-hidden"
+                      >
+                        {block.items.map((item: FaqItem, j: number) => (
+                          <AccordionItem key={j} value={`item-${j}`} className="border-b-0 px-5">
+                            <AccordionTrigger className="text-left font-display font-semibold text-base md:text-lg hover:no-underline py-5 [&[data-state=open]]:text-accent">
+                              {item.q}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-foreground/80 text-[1rem] leading-[1.75] pb-5">
+                              <div className="space-y-3">
+                                {item.answers.map((a: any, k: number) => {
+                                  if (a.type === "ul") {
+                                    return (
+                                      <ul key={k} className="space-y-2 pl-5 list-disc marker:text-accent">
+                                        {a.items.map((it: string, m: number) => (
+                                          <li key={m}>{renderTextWithLinks(it)}</li>
+                                        ))}
+                                      </ul>
+                                    );
+                                  }
+                                  return <p key={k}>{renderTextWithLinks(a.text)}</p>;
+                                })}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    );
+                  }
                   if (block.type === "h2") {
                     const id = slugifyHeading(block.text);
                     return (
@@ -202,7 +280,7 @@ const BlogPost = () => {
                   if (block.type === "ul")
                     return (
                       <ul key={i} className="space-y-2.5 pl-5 list-disc marker:text-accent">
-                        {block.items.map((it, j) => <li key={j} className="text-foreground/80 leading-[1.7]">{renderTextWithLinks(it)}</li>)}
+                        {block.items.map((it: string, j: number) => <li key={j} className="text-foreground/80 leading-[1.7]">{renderTextWithLinks(it)}</li>)}
                       </ul>
                     );
                   if (block.type === "quote")
