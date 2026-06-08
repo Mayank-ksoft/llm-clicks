@@ -19,7 +19,7 @@ const Industries = () => (
     </Helmet>
 
     {/* Hero */}
-    <section className="relative pt-28 md:pt-36 pb-16 overflow-hidden">
+    <section className="relative pt-12 md:pt-66 pb-16 overflow-hidden">
       <div
         className="absolute inset-x-0 top-0 h-[600px] opacity-40 pointer-events-none -z-10"
         style={{

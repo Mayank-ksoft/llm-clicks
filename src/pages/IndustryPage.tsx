@@ -137,7 +137,7 @@ const IndustryPage = () => {
       </Helmet>
 
       {/* Breadcrumb */}
-      <div className="container mx-auto max-w-[1100px] px-6 pt-28 md:pt-32 pb-4">
+      <div className="container mx-auto max-w-[1100px] px-6 pt-12 md:pt-16 pb-2">
         <nav className="text-sm text-muted-foreground">
           <ol className="flex items-center gap-2">
             <li><Link to="/" className="hover:text-accent">Home</Link></li>
