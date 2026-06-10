@@ -61,7 +61,7 @@ export function getLegacyRedirect(pathname: string, search = ""): LegacyRedirect
     }
   }
 
-  if (normalized === "/" && params.get("post_type") === "web-story") {
+  if ((normalized === "/" || normalized === "/web-stories") && params.get("post_type") === "web-story") {
     return { destination: "/web-stories", statusCode: 301 };
   }
 
