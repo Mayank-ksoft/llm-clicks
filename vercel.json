@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "functions": {
+    "api/**/*.ts": {
+      "includeFiles": "shared/**"
+    }
+  },
   "trailingSlash": true,
   "redirects": [
     { "source": "/blog/how-to-measure-ai-search-visibility", "destination": "/blog/ai-visibility-measurement-guide/", "permanent": true },

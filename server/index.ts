@@ -7,7 +7,7 @@ import fs from "fs";
 import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 import { getBlogCategoryBySlug } from "../src/lib/blogCategories";
 import { getLegacyRedirect } from "../shared/legacyRedirects";
-import { bootstrapStatus, adminLogin, adminSignup } from "../shared/adminAuth.ts";
+import { bootstrapStatus, adminLogin, adminSignup } from "../shared/adminAuth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
