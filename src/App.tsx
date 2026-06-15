@@ -31,6 +31,13 @@ const WebStoryViewer = lazy(() => import("./pages/WebStoryViewer"));
 const AuthorShripad = lazy(() => import("./pages/AuthorShripad"));
 const Industries = lazy(() => import("./pages/Industries"));
 const IndustryPage = lazy(() => import("./pages/IndustryPage"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminMenus = lazy(() => import("./pages/admin/AdminMenus"));
+const AdminFooter = lazy(() => import("./pages/admin/AdminFooter"));
+const AdminPages = lazy(() => import("./pages/admin/AdminPages"));
+const AdminPageDetail = lazy(() => import("./pages/admin/AdminPageDetail"));
+import AdminGuard from "./components/admin/AdminGuard";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +113,13 @@ const App = () => (
 
             <Route path="/author/shripad-deshmukh" element={<AuthorShripad />} />
             <Route path="/author/llmclicks" element={<Navigate to="/author/shripad-deshmukh" replace />} />
+
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminGuard><AdminDashboard /></AdminGuard>} />
+            <Route path="/admin/menus" element={<AdminGuard><AdminMenus /></AdminGuard>} />
+            <Route path="/admin/footer" element={<AdminGuard><AdminFooter /></AdminGuard>} />
+            <Route path="/admin/pages" element={<AdminGuard><AdminPages /></AdminGuard>} />
+            <Route path="/admin/pages/:id" element={<AdminGuard><AdminPageDetail /></AdminGuard>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

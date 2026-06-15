@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { getPageSchema } from "@/lib/pageSchema";
 import { syncRouteHeadTags } from "@/lib/headTags";
+import CmsSeoOverride from "@/components/seo/CmsSeoOverride";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
@@ -51,6 +52,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <script type="application/ld+json">{schemaJson}</script>
         )}
       </Helmet>
+      <CmsSeoOverride />
       <Navbar />
       <main className="pt-16">{children}</main>
       <Footer />
