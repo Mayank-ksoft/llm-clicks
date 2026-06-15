@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, MenuSquare, PanelBottom, FileText, LogOut } from "lucide-react";
+import { LayoutDashboard, MenuSquare, PanelBottom, FileText, LogOut, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
@@ -51,7 +51,15 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
             </NavLink>
           ))}
         </nav>
-        <div className="p-3 border-t border-border">
+        <div className="p-3 border-t border-border space-y-1">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40"
+          >
+            <ExternalLink className="h-4 w-4" /> View site
+          </a>
           <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={signOut}>
             <LogOut className="h-4 w-4" /> Sign out
           </Button>

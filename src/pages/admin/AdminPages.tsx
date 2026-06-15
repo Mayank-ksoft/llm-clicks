@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
-import { Badge } from "@/components/ui/badge";
+
 
 type PageRow = {
   id: string;
@@ -37,6 +37,14 @@ const AdminPages = () => {
 
   const parentMap = new Map((data ?? []).map((p) => [p.id, p.path]));
 
+  // Group rows by section for readability.
+  const grouped = (data ?? []).reduce<Record<string, PageRow[]>>((acc, p) => {
+    const key = p.section ?? "none";
+    (acc[key] ||= []).push(p);
+    return acc;
+  }, {});
+  const sectionOrder = ["features", "resources", "free_tools", "company", "legal", "none"];
+
   return (
     <AdminLayout>
       <div className="p-8 max-w-5xl">
@@ -47,35 +55,42 @@ const AdminPages = () => {
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
-          <div className="rounded-xl border border-border overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/40 text-left">
-                <tr>
-                  <th className="px-4 py-2 font-medium">Title</th>
-                  <th className="px-4 py-2 font-medium">Path</th>
-                  <th className="px-4 py-2 font-medium">Section</th>
-                  <th className="px-4 py-2 font-medium">Parent</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(data ?? []).map((p) => (
-                  <tr key={p.id} className="border-t border-border hover:bg-muted/20">
-                    <td className="px-4 py-2">
-                      <Link to={`/admin/pages/${p.id}`} className="text-accent hover:underline font-medium">
-                        {p.title}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{p.path}</td>
-                    <td className="px-4 py-2">
-                      <Badge variant="outline">{SECTION_LABELS[p.section] ?? p.section}</Badge>
-                    </td>
-                    <td className="px-4 py-2 text-xs text-muted-foreground">
-                      {p.parent_id ? parentMap.get(p.parent_id) ?? "—" : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-8">
+            {sectionOrder
+              .filter((s) => grouped[s]?.length)
+              .map((section) => (
+                <div key={section}>
+                  <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+                    {SECTION_LABELS[section] ?? section}
+                  </h2>
+                  <div className="rounded-xl border border-border overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead className="bg-muted/40 text-left">
+                        <tr>
+                          <th className="px-4 py-2 font-medium">Title</th>
+                          <th className="px-4 py-2 font-medium">Path</th>
+                          <th className="px-4 py-2 font-medium">Parent</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {grouped[section].map((p) => (
+                          <tr key={p.id} className="border-t border-border hover:bg-muted/20">
+                            <td className="px-4 py-2">
+                              <Link to={`/admin/pages/${p.id}`} className="text-accent hover:underline font-medium">
+                                {p.title}
+                              </Link>
+                            </td>
+                            <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{p.path}</td>
+                            <td className="px-4 py-2 text-xs text-muted-foreground">
+                              {p.parent_id ? parentMap.get(p.parent_id) ?? "—" : "—"}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
           </div>
         )}
       </div>

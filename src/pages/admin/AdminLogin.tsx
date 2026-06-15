@@ -7,6 +7,34 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+// Admin auth via our own edge-function APIs (admin-signup / admin-login).
+// We deliberately avoid calling supabase.auth.signUp / signInWithPassword
+// from the client. After the function returns tokens we hydrate the JS
+// client via supabase.auth.setSession so RLS-backed queries work in the UI.
+
+const FN_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+async function callFn<T = unknown>(name: string, body: unknown): Promise<T> {
+  const res = await fetch(`${FN_BASE}/${name}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error((data as { error?: string })?.error ?? `Request failed (${res.status})`);
+  return data as T;
+}
+
+type SessionResponse = {
+  access_token: string;
+  refresh_token: string;
+};
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"loading" | "signup" | "login">("loading");
@@ -17,17 +45,17 @@ const AdminLogin = () => {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.functions.invoke("admin-bootstrap-status");
-      if (error) {
-        toast.error("Could not check admin status");
+      try {
+        const data = await callFn<{ hasAdmin: boolean }>("admin-bootstrap-status", {});
+        setMode(data.hasAdmin ? "login" : "signup");
+      } catch (e) {
+        toast.error((e as Error).message || "Could not check admin status");
         setMode("login");
-        return;
       }
-      setMode(data?.hasAdmin ? "login" : "signup");
     })();
   }, []);
 
-  // If already logged in as admin, jump to dashboard.
+  // If already signed in as admin, skip to dashboard.
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getSession();
@@ -42,55 +70,21 @@ const AdminLogin = () => {
     })();
   }, [navigate]);
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/admin`,
-          data: { full_name: name },
-        },
+      const isSignup = mode === "signup";
+      const session = await callFn<SessionResponse>(
+        isSignup ? "admin-signup" : "admin-login",
+        isSignup ? { email, password, full_name: name } : { email, password },
+      );
+      const { error: setErr } = await supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
       });
-      if (error) throw error;
-      if (!data.session) {
-        // Sign in immediately (auto-confirm is on, but just in case)
-        const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInErr) throw signInErr;
-      }
-      const { error: bootErr } = await supabase.functions.invoke("admin-bootstrap");
-      if (bootErr) throw new Error(bootErr.message);
-      toast.success("Admin account created");
-      navigate("/admin", { replace: true });
-    } catch (err) {
-      toast.error((err as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      const { data: session } = await supabase.auth.getSession();
-      const uid = session.session?.user.id;
-      if (!uid) throw new Error("No session");
-      const { data: roleRow } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", uid)
-        .eq("role", "admin")
-        .maybeSingle();
-      if (!roleRow) {
-        await supabase.auth.signOut();
-        throw new Error("This account does not have admin access.");
-      }
-      toast.success("Welcome back");
+      if (setErr) throw setErr;
+      toast.success(isSignup ? "Admin account created" : "Welcome back");
       navigate("/admin", { replace: true });
     } catch (err) {
       toast.error((err as Error).message);
@@ -116,7 +110,7 @@ const AdminLogin = () => {
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <form
-        onSubmit={isSignup ? handleSignup : handleLogin}
+        onSubmit={submit}
         className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 space-y-5"
       >
         <div>

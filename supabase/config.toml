@@ -1,1 +1,12 @@
-project_id = "ouxriftthsnqjogebxlt"
+# Replace with your Supabase project ref (the subdomain of your project URL).
+# Example: if VITE_SUPABASE_URL=https://abcd1234.supabase.co then project_id="abcd1234".
+project_id = "rlbriopbtyymmwitkunu"
+
+[functions.admin-bootstrap-status]
+verify_jwt = false
+
+[functions.admin-signup]
+verify_jwt = false
+
+[functions.admin-login]
+verify_jwt = false

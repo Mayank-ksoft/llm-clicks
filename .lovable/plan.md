@@ -1,79 +1,68 @@
+# CMS completion plan
 
-## Goal
+## What already works (verified by reading code)
 
-Build a WordPress-style CMS for this site (LLMClicks marketing site) covering: admin auth (first-run signup → login afterwards), menu management (parent/child + mega menu, drag-and-drop), footer widget management (5 columns), pages list with parent assignment, and per-page SEO management — all reflected live on the front end.
+- `pages`, `page_seo`, `menus`, `menu_items`, `footer_settings`, `user_roles` + `has_role()` schema is in place (migrations were created earlier).
+- `/admin/login` shows **Signup** when no admin row exists, else **Login** (via `admin-bootstrap-status` edge fn).
+- `AdminGuard` checks `user_roles.role='admin'` and redirects otherwise.
+- Admin pages already exist for **Dashboard / Menus / Footer / Pages / Page detail**.
+- Menus admin has **drag-and-drop** (`@dnd-kit`), **parent/child nesting**, **`is_mega_trigger`** + **`is_column_group`** flags, per-location selector (Primary Nav + 5 footer columns).
+- Footer admin edits brand blurb / socials / copyright; the 5 column link lists are managed under Menus.
+- Pages admin lists every seeded page, edit screen lets you pick **Section** (features / resources / free_tools / company / legal / none) and **Parent page**, plus full SEO (meta title/desc, canonical, OG, JSON-LD schema, tagline, robots, keywords).
+- `<CmsSeoOverride />` reads `page_seo` per pathname and overrides head via `react-helmet-async` — frontend reflects admin edits.
+- `Navbar.tsx` still uses hardcoded arrays (not CMS-driven). `Footer.tsx` IS CMS-driven (reads `useCmsMenu` + falls back to hardcoded if empty).
 
-## Prerequisite
+## Gaps to close (this iteration)
 
-Enable **Lovable Cloud** (Supabase under the hood) — needed for admin auth, role storage, and CMS tables. Currently the project has no backend.
+### 1. Credential placeholders for the new Supabase project
+- Update `supabase/config.toml` `project_id` to a `__YOUR_PROJECT_REF__` placeholder with a TODO comment.
+- Update `.env.example` (create if missing) with `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`.
+- Leave `src/integrations/supabase/client.ts` alone — it already reads from `import.meta.env`. Document in `.env.example` exactly where to paste keys.
+- Note: the runtime CSP error (`rlbriopbtyymmwitkunu.supabase.co`) comes from a stale `.env` baked into the deployed bundle and a CSP that doesn't whitelist it. After you paste the new keys and rebuild, the CSP also needs to be widened. I'll update CSP in `index.html` / `vercel.json` (whichever ships it) to allow the new Supabase host once you give me the URL. For now I'll switch CSP to allow `https://*.supabase.co` so any Supabase project works.
 
-## Database schema (new migration)
+### 2. Custom admin auth APIs (don't call `supabase.auth.*` from the client)
+Two new edge functions + rewrite of `AdminLogin.tsx`:
+- **`admin-signup`** (`POST {email,password,full_name}`): rejects if any admin exists; calls `admin.auth.admin.createUser` (service role) with `email_confirm: true`; inserts `user_roles(user_id,'admin')`; returns `{ session }` by calling `admin.auth.admin.generateLink('magiclink')` or simply issuing a password-grant via Supabase auth REST. Cleanest path: after createUser, call the GoTrue `/token?grant_type=password` endpoint server-side and return the access/refresh tokens.
+- **`admin-login`** (`POST {email,password}`): verifies the user has `role='admin'` in `user_roles`; if yes, hits GoTrue `/token?grant_type=password` server-side and returns `{ access_token, refresh_token, user }`. If not admin, 403.
+- Client (`AdminLogin.tsx`): no more `supabase.auth.signUp/signInWithPassword`. POSTs to these functions, then calls `supabase.auth.setSession({ access_token, refresh_token })` to hydrate the JS client so RLS-backed queries (`from('user_roles')`, etc.) work in the admin UI.
+- Keep `admin-bootstrap-status` as the gate that decides Signup-vs-Login screen.
+- Delete `admin-bootstrap` (folded into `admin-signup`).
+- Input validation with `zod` on both functions; CORS headers; clear 400/401/403/409 errors.
 
-1. `profiles` — id (FK auth.users), email, full_name, created_at.
-2. `app_role` enum + `user_roles` table (id, user_id, role) — used to gate `/admin` via `has_role()` security-definer function. Standard Lovable pattern.
-3. `pages` — id, path (unique, e.g. `/pricing`), title, parent_id (self-FK, nullable), section (enum: `features`/`resources`/`free_tools`/`company`/`legal`/`none`), created_at. Seeded from the current routes in `App.tsx`.
-4. `page_seo` — page_id (FK), meta_title, meta_description, canonical_url, og_title, og_description, og_image, schema_jsonb (JSON-LD), tagline, robots, keywords, updated_at.
-5. `menus` — id, location (enum: `primary_nav`, `footer_col_1..5`), label.
-6. `menu_items` — id, menu_id, parent_id (self-FK), label, url, page_id (nullable FK), icon, description, is_mega (bool), position (int), open_in_new_tab.
-7. `footer_settings` — singleton row: logo description, social links JSON, copyright.
+### 3. SQL seed file for current page SEO (you paste into SQL editor)
+- New file `supabase/seeds/page_seo.sql` — for every route in `App.tsx`, upserts a `pages` row (path/title/section) and a `page_seo` row populated from the values currently hardcoded in each page component (`shared/pageMeta.json` + per-page Helmet tags). One transaction, idempotent (uses `ON CONFLICT (path) DO UPDATE` on pages and `ON CONFLICT (page_id) DO UPDATE` on `page_seo`).
+- Adds the corresponding unique constraints if missing (small migration: `supabase/migrations/<ts>_seo_seed_constraints.sql` adding `unique(page_id)` on `page_seo`).
+- I'll source titles/descriptions from `shared/pageMeta.json` so the seed matches what's live today.
 
-RLS: public `SELECT` on `pages`, `page_seo`, `menus`, `menu_items`, `footer_settings`. Mutations restricted to `admin` role via `has_role(auth.uid(), 'admin')`. Grants added per the public-schema-grants rule.
+### 4. Small fixes / polish
+- `AdminLayout` sidebar: add a top "View site" link.
+- Page detail save toast: full reload hint already there; also call `qc.invalidateQueries({ queryKey: ["page-seo", path] })` with the actual path so other tabs update without a refresh.
+- Pages list: group rows by section for readability.
+- Navbar refactor to CMS-driven is **out of scope** for this iteration (would risk regressions on the marketing site). I'll log it as a TODO. Footer is already CMS-driven.
 
-## Admin auth flow
+## Files touched
 
-- New route `/admin/login`. On load, call an edge function `admin-bootstrap-status` that returns `{ hasAdmin: boolean }` (counts rows in `user_roles` where role='admin'; runs with service role so it doesn't need RLS exposure).
-- If `hasAdmin === false` → render Signup form (email + password + name). On submit: `supabase.auth.signUp`, then call edge function `admin-bootstrap` which (a) verifies no admin exists yet, (b) inserts `user_roles(user_id, 'admin')` for the new user. Idempotent + race-safe.
-- If `hasAdmin === true` → render Login form only. After login, check `has_role` → redirect to `/admin`.
-- `<AdminGuard>` wraps all `/admin/*` routes: requires session + admin role, else redirect to `/admin/login`.
-
-Email confirmations: disabled in cloud auth settings so first-run signup works instantly.
-
-## Admin UI (`/admin/*`)
-
-Sidebar layout (`AdminLayout`) with sections:
-
-- **Dashboard** — counts + quick links.
-- **Menus** — pick location (Primary Nav / Footer Col 1–5). Tree view with drag-and-drop using `@dnd-kit/core` + `@dnd-kit/sortable` (already plays well with React 18). Supports nesting (parent/child) and an "Is mega menu" toggle on top-level Primary Nav items. Each item: label, link target (free URL or pick from `pages`), icon name, description (used in mega menu cards), open-in-new-tab.
-- **Footer** — edit the 5 column titles, the brand blurb, social links, copyright. Column link lists are managed under Menus → Footer Col N (one menu per column, drag-and-drop ordering).
-- **Pages** — read-only list of all routes seeded from `App.tsx`. Click → detail page showing: path, current parent (Section dropdown: Features / Resources / Free Tools / Company / Legal / None) editable, and the full **SEO panel**: meta title, meta description, canonical URL, og title/description/image, JSON-LD schema (textarea, validated as JSON), tagline, robots, keywords. Save updates `page_seo`.
-- **Users** — list admins (optional, simple).
-
-## Front-end integration
-
-- Install `react-helmet-async`, wrap `<HelmetProvider>` in `src/main.tsx`.
-- New `<SeoHead pagePath="/pricing" />` component that fetches `page_seo` for the route via TanStack Query and renders Helmet tags. Falls back gracefully to existing `index.html` defaults if no row.
-- Add `<SeoHead />` to the shared `Layout.tsx` (auto-detects `location.pathname`), so every page picks up admin-edited SEO without per-page wiring.
-- New hooks: `usePrimaryNav()`, `useFooterMenus()`, `useFooterSettings()` — fetch from CMS tables via TanStack Query, cached.
-- **Navbar.tsx** refactored to render from `usePrimaryNav()` instead of the hardcoded `featureLinks`/`resourceLinks`/`simpleLinks` arrays. Mega menu rendering driven by `is_mega` flag + children. Icons resolved via a `lucide-react` name→component map (the same icon set already in use). Hardcoded arrays seeded into DB so v1 ships identical to current UI.
-- **Footer.tsx** refactored: brand column reads `footer_settings`; the 5 link columns render `menu_items` from each `footer_col_N` menu.
-
-## Technical details
-
-- New deps: `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `react-helmet-async`.
-- New files (high-level):
-  - `supabase/migrations/<ts>_cms.sql` (schema, enums, RLS, grants, seed)
-  - `supabase/functions/admin-bootstrap-status/index.ts`
-  - `supabase/functions/admin-bootstrap/index.ts`
-  - `src/integrations/supabase/client.ts` (auto-generated by enabling Cloud)
-  - `src/lib/cms/iconMap.ts`, `src/lib/cms/queries.ts`
-  - `src/hooks/usePrimaryNav.ts`, `useFooterMenus.ts`, `useFooterSettings.ts`, `usePageSeo.ts`
-  - `src/components/seo/SeoHead.tsx`
-  - `src/components/admin/AdminLayout.tsx`, `AdminGuard.tsx`
-  - `src/pages/admin/AdminLogin.tsx`, `AdminDashboard.tsx`, `AdminMenus.tsx`, `AdminFooter.tsx`, `AdminPages.tsx`, `AdminPageDetail.tsx`, `AdminUsers.tsx`
-  - Routes added to `src/App.tsx` under `/admin/*`.
-- Existing pages stay untouched aside from `Layout.tsx` (adds `<SeoHead/>`) and `Navbar.tsx`/`Footer.tsx` (read from hooks).
+- `supabase/config.toml` — placeholder project_id + comment.
+- `.env.example` (new) — keys with comments.
+- `index.html` and/or `vercel.json` — CSP `connect-src` widened to `https://*.supabase.co` and `https://*.functions.supabase.co`.
+- `supabase/functions/admin-signup/index.ts` (new), `admin-login/index.ts` (new).
+- `supabase/functions/admin-bootstrap/` — delete.
+- `src/pages/admin/AdminLogin.tsx` — switch to fetch calls + `setSession`.
+- `supabase/seeds/page_seo.sql` (new).
+- `supabase/migrations/<ts>_page_seo_unique.sql` (new) — small constraint add.
+- `src/pages/admin/AdminPages.tsx` — section grouping.
+- `src/components/admin/AdminLayout.tsx` — "View site" link.
 
 ## Out of scope (per your message)
 
-- Editing page **body content** — only the SEO/parent metadata is editable. Content remains in the React components.
-- Blog/Docs/KnowledgeHub article CMS — those already have their own data flow; not touched here.
-- Public sign-up for end users — auth is admin-only.
+- Editing page body content (only metadata + SEO).
+- Refactoring `Navbar.tsx` to render from CMS (the data + admin UI already exist; the swap can come next).
+- Public end-user auth.
 
-## Open questions before I build
+## What I need from you afterwards
 
-1. **Confirm Lovable Cloud is OK to enable** (this provisions the backend; no external account needed).
-2. **Drag-and-drop library** — I'll use `@dnd-kit` (modern, React 18 friendly). OK?
-3. **Pages list** — should I seed only the routes I see in `App.tsx` today, or also include the dynamic ones (`/blog/:slug`, `/features/:slug`, `/industries/:slug`, `/tools/:slug`) as templates (one row per pattern, SEO acts as default for the pattern)?
-4. **First-run signup** — should it be open at `/admin/login` (anyone who finds the URL before you sign up could grab the admin seat), or should I hide it behind a one-time setup token printed to the console / required env var? Open is simpler; token is safer.
+- The new Supabase URL + publishable (anon) key → paste into `.env` (or tell me and I'll set them).
+- Then run `supabase/seeds/page_seo.sql` in the SQL editor to backfill SEO.
+- First visit to `/admin/login` will show the Signup form to create the admin.
 
-Reply with answers (or just "go") and I'll implement.
+Reply **"go"** and I'll implement steps 1-4.
