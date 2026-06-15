@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,22 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCmsMenu, type MenuLocation, type MenuNode } from "@/hooks/useCmsMenu";
 import { ICON_NAMES } from "@/lib/cms/iconMap";
-import { ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, GripVertical, ChevronRight, ChevronDown } from "lucide-react";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const LOCATIONS: { value: MenuLocation; label: string }[] = [
   { value: "primary_nav", label: "Primary Navigation" },
@@ -36,26 +51,18 @@ const AdminMenus = () => {
   const { data, isLoading } = useCmsMenu(location);
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Draft | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const refresh = () => qc.invalidateQueries({ queryKey: ["cms-menu", location] });
-
-  const move = async (item: MenuNode, dir: -1 | 1) => {
-    const siblings = item.parent_id
-      ? flattenFindChildren(data?.tree ?? [], item.parent_id)
-      : data?.tree ?? [];
-    const idx = siblings.findIndex((s) => s.id === item.id);
-    const swap = siblings[idx + dir];
-    if (!swap) return;
-    await supabase.from("menu_items").update({ position: swap.position }).eq("id", item.id);
-    await supabase.from("menu_items").update({ position: item.position }).eq("id", swap.id);
-    refresh();
-  };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this item and its children?")) return;
     const { error } = await supabase.from("menu_items").delete().eq("id", id);
     if (error) toast.error(error.message);
-    else { toast.success("Deleted"); refresh(); }
+    else {
+      toast.success("Deleted");
+      refresh();
+    }
   };
 
   const saveDraft = async (parentId: string | null) => {
@@ -76,10 +83,7 @@ const AdminMenus = () => {
       const { error } = await supabase.from("menu_items").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
     } else {
-      // append at end
-      const siblings = parentId
-        ? flattenFindChildren(data.tree, parentId)
-        : data.tree;
+      const siblings = parentId ? findChildrenById(data.tree, parentId) : data.tree;
       const nextPos = (siblings[siblings.length - 1]?.position ?? -1) + 1;
       const { error } = await supabase
         .from("menu_items")
@@ -91,15 +95,47 @@ const AdminMenus = () => {
     toast.success("Saved");
   };
 
+  // Reorder siblings via DnD — writes new positions to DB.
+  const reorderSiblings = async (parentId: string | null, oldIndex: number, newIndex: number) => {
+    if (!data) return;
+    const siblings = parentId ? findChildrenById(data.tree, parentId) : data.tree;
+    const reordered = arrayMove(siblings, oldIndex, newIndex);
+    // Optimistic local update via React Query cache
+    qc.setQueryData(["cms-menu", location], (old: any) => {
+      if (!old) return old;
+      const clone = structuredClone(old);
+      const target = parentId ? findChildrenById(clone.tree, parentId) : clone.tree;
+      const swapped = arrayMove(target, oldIndex, newIndex);
+      // mutate in place
+      if (parentId) {
+        const parent = findNodeById(clone.tree, parentId);
+        if (parent) parent.children = swapped.map((n: MenuNode, i: number) => ({ ...n, position: i }));
+      } else {
+        clone.tree = swapped.map((n: MenuNode, i: number) => ({ ...n, position: i }));
+      }
+      return clone;
+    });
+    // Persist new positions
+    const updates = reordered.map((node, idx) =>
+      supabase.from("menu_items").update({ position: idx }).eq("id", node.id),
+    );
+    const results = await Promise.all(updates);
+    const err = results.find((r) => r.error);
+    if (err?.error) {
+      toast.error(err.error.message);
+      refresh();
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="p-8 max-w-4xl space-y-6">
         <div>
           <h1 className="font-display text-2xl font-bold">Menus</h1>
           <p className="text-sm text-muted-foreground">
-            Manage navigation items. Toggle <em>Mega trigger</em> for top-level items that open a
-            multi-column panel, and <em>Column group</em> for child nodes that act as headings
-            inside a mega panel.
+            Drag the handle to reorder items within the same parent. Use{" "}
+            <em>Mega trigger</em> for top-level items that open a multi-column panel and{" "}
+            <em>Column group</em> for child nodes that act as headings inside it.
           </p>
         </div>
 
@@ -110,7 +146,9 @@ const AdminMenus = () => {
             onChange={(e) => setLocation(e.target.value as MenuLocation)}
           >
             {LOCATIONS.map((l) => (
-              <option key={l.value} value={l.value}>{l.label}</option>
+              <option key={l.value} value={l.value}>
+                {l.label}
+              </option>
             ))}
           </select>
           <Button size="sm" onClick={() => setEditing(blankDraft(null))}>
@@ -127,19 +165,19 @@ const AdminMenus = () => {
                 No items yet. Click "Add" above to create the first one.
               </p>
             ) : (
-              <ul className="space-y-1">
-                {data!.tree.map((n) => (
-                  <MenuRow
-                    key={n.id}
-                    node={n}
-                    depth={0}
-                    onEdit={(node) => setEditing(toDraft(node))}
-                    onAddChild={(parent) => setEditing(blankDraft(parent.id))}
-                    onMove={move}
-                    onDelete={remove}
-                  />
-                ))}
-              </ul>
+              <SortableTree
+                nodes={data!.tree}
+                parentId={null}
+                depth={0}
+                expanded={expanded}
+                onToggleExpanded={(id) =>
+                  setExpanded((s) => ({ ...s, [id]: !s[id] }))
+                }
+                onReorder={reorderSiblings}
+                onEdit={(node) => setEditing(toDraft(node))}
+                onAddChild={(parent) => setEditing(blankDraft(parent.id))}
+                onDelete={remove}
+              />
             )}
           </Card>
         )}
@@ -148,16 +186,25 @@ const AdminMenus = () => {
           <Card className="p-6 space-y-3">
             <h3 className="font-semibold text-sm">
               {editing.id ? "Edit item" : "New item"}
-              {editing.parent_id && <span className="text-muted-foreground"> (child)</span>}
+              {editing.parent_id && (
+                <span className="text-muted-foreground"> (child)</span>
+              )}
             </h3>
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-xs">Label</label>
-                <Input value={editing.label} onChange={(e) => setEditing({ ...editing, label: e.target.value })} />
+                <Input
+                  value={editing.label}
+                  onChange={(e) => setEditing({ ...editing, label: e.target.value })}
+                />
               </div>
               <div className="space-y-1">
                 <label className="text-xs">URL / path</label>
-                <Input value={editing.url} onChange={(e) => setEditing({ ...editing, url: e.target.value })} placeholder="/about-us" />
+                <Input
+                  value={editing.url}
+                  onChange={(e) => setEditing({ ...editing, url: e.target.value })}
+                  placeholder="/about-us"
+                />
               </div>
               <div className="space-y-1">
                 <label className="text-xs">Icon</label>
@@ -167,31 +214,64 @@ const AdminMenus = () => {
                   onChange={(e) => setEditing({ ...editing, icon: e.target.value })}
                 >
                   <option value="">(none)</option>
-                  {ICON_NAMES.map((n) => <option key={n}>{n}</option>)}
+                  {ICON_NAMES.map((n) => (
+                    <option key={n}>{n}</option>
+                  ))}
                 </select>
               </div>
               <div className="space-y-1">
                 <label className="text-xs">Description</label>
-                <Input value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} />
+                <Input
+                  value={editing.description}
+                  onChange={(e) =>
+                    setEditing({ ...editing, description: e.target.value })
+                  }
+                />
               </div>
             </div>
             <div className="flex flex-wrap gap-4 text-sm">
               <label className="flex items-center gap-2">
-                <input type="checkbox" checked={editing.is_mega_trigger} onChange={(e) => setEditing({ ...editing, is_mega_trigger: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={editing.is_mega_trigger}
+                  onChange={(e) =>
+                    setEditing({ ...editing, is_mega_trigger: e.target.checked })
+                  }
+                />
                 Mega trigger
               </label>
               <label className="flex items-center gap-2">
-                <input type="checkbox" checked={editing.is_column_group} onChange={(e) => setEditing({ ...editing, is_column_group: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={editing.is_column_group}
+                  onChange={(e) =>
+                    setEditing({ ...editing, is_column_group: e.target.checked })
+                  }
+                />
                 Column group
               </label>
               <label className="flex items-center gap-2">
-                <input type="checkbox" checked={editing.open_in_new_tab} onChange={(e) => setEditing({ ...editing, open_in_new_tab: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={editing.open_in_new_tab}
+                  onChange={(e) =>
+                    setEditing({ ...editing, open_in_new_tab: e.target.checked })
+                  }
+                />
                 Open in new tab
               </label>
             </div>
             <div className="flex gap-2 pt-2">
-              <Button size="sm" onClick={() => saveDraft(editing.parent_id)} disabled={!editing.label.trim()}>Save</Button>
-              <Button size="sm" variant="ghost" onClick={() => setEditing(null)}>Cancel</Button>
+              <Button
+                size="sm"
+                onClick={() => saveDraft(editing.parent_id)}
+                disabled={!editing.label.trim()}
+              >
+                Save
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setEditing(null)}>
+                Cancel
+              </Button>
             </div>
           </Card>
         )}
@@ -200,8 +280,184 @@ const AdminMenus = () => {
   );
 };
 
+/* ============================================================
+ * Sortable tree (one DnD context per sibling list)
+ * ============================================================ */
+
+type RowProps = {
+  node: MenuNode;
+  depth: number;
+  isExpanded: boolean;
+  hasChildren: boolean;
+  onToggleExpanded: (id: string) => void;
+  onEdit: (n: MenuNode) => void;
+  onAddChild: (parent: MenuNode) => void;
+  onDelete: (id: string) => void;
+};
+
+const SortableRow = ({
+  node,
+  depth,
+  isExpanded,
+  hasChildren,
+  onToggleExpanded,
+  onEdit,
+  onAddChild,
+  onDelete,
+}: RowProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: node.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    paddingLeft: depth * 20 + 8,
+  };
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 py-1.5 rounded hover:bg-muted/30 px-2"
+    >
+      <button
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => hasChildren && onToggleExpanded(node.id)}
+        className={`h-4 w-4 flex items-center justify-center ${
+          hasChildren ? "text-muted-foreground hover:text-foreground" : "opacity-0"
+        }`}
+        aria-label={isExpanded ? "Collapse" : "Expand"}
+      >
+        {isExpanded ? (
+          <ChevronDown className="h-3.5 w-3.5" />
+        ) : (
+          <ChevronRight className="h-3.5 w-3.5" />
+        )}
+      </button>
+      <span className="flex-1 text-sm">
+        {node.label}
+        {node.is_mega_trigger && (
+          <span className="ml-2 text-[10px] uppercase text-accent">mega</span>
+        )}
+        {node.is_column_group && (
+          <span className="ml-2 text-[10px] uppercase text-muted-foreground">
+            column
+          </span>
+        )}
+        {node.url && (
+          <span className="ml-2 text-xs font-mono text-muted-foreground">
+            {node.url}
+          </span>
+        )}
+      </span>
+      <Button size="sm" variant="ghost" onClick={() => onAddChild(node)}>
+        <Plus className="h-3 w-3" /> Child
+      </Button>
+      <Button size="sm" variant="ghost" onClick={() => onEdit(node)}>
+        Edit
+      </Button>
+      <Button size="icon" variant="ghost" onClick={() => onDelete(node.id)}>
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
+
+const SortableTree = ({
+  nodes,
+  parentId,
+  depth,
+  expanded,
+  onToggleExpanded,
+  onReorder,
+  onEdit,
+  onAddChild,
+  onDelete,
+}: {
+  nodes: MenuNode[];
+  parentId: string | null;
+  depth: number;
+  expanded: Record<string, boolean>;
+  onToggleExpanded: (id: string) => void;
+  onReorder: (parentId: string | null, oldIndex: number, newIndex: number) => void;
+  onEdit: (n: MenuNode) => void;
+  onAddChild: (parent: MenuNode) => void;
+  onDelete: (id: string) => void;
+}) => {
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+  const ids = useMemo(() => nodes.map((n) => n.id), [nodes]);
+
+  const handleDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    const oldIndex = nodes.findIndex((n) => n.id === active.id);
+    const newIndex = nodes.findIndex((n) => n.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    onReorder(parentId, oldIndex, newIndex);
+  };
+
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+        <div className="space-y-0.5">
+          {nodes.map((node) => {
+            const isExpanded = expanded[node.id] ?? depth < 1;
+            const hasChildren = node.children.length > 0;
+            return (
+              <div key={node.id}>
+                <SortableRow
+                  node={node}
+                  depth={depth}
+                  isExpanded={isExpanded}
+                  hasChildren={hasChildren}
+                  onToggleExpanded={onToggleExpanded}
+                  onEdit={onEdit}
+                  onAddChild={onAddChild}
+                  onDelete={onDelete}
+                />
+                {hasChildren && isExpanded && (
+                  <SortableTree
+                    nodes={node.children}
+                    parentId={node.id}
+                    depth={depth + 1}
+                    expanded={expanded}
+                    onToggleExpanded={onToggleExpanded}
+                    onReorder={onReorder}
+                    onEdit={onEdit}
+                    onAddChild={onAddChild}
+                    onDelete={onDelete}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </SortableContext>
+    </DndContext>
+  );
+};
+
+/* ============================================================
+ * helpers
+ * ============================================================ */
+
 function blankDraft(parent_id: string | null): Draft {
-  return { label: "", url: "", icon: "", description: "", is_mega_trigger: false, is_column_group: false, open_in_new_tab: false, parent_id };
+  return {
+    label: "",
+    url: "",
+    icon: "",
+    description: "",
+    is_mega_trigger: false,
+    is_column_group: false,
+    open_in_new_tab: false,
+    parent_id,
+  };
 }
 function toDraft(n: MenuNode): Draft {
   return {
@@ -216,47 +472,17 @@ function toDraft(n: MenuNode): Draft {
     parent_id: n.parent_id,
   };
 }
-function flattenFindChildren(tree: MenuNode[], parentId: string): MenuNode[] {
-  for (const n of tree) {
-    if (n.id === parentId) return n.children;
-    const r = flattenFindChildren(n.children, parentId);
-    if (r.length) return r;
-  }
-  return [];
+function findChildrenById(tree: MenuNode[], parentId: string): MenuNode[] {
+  const n = findNodeById(tree, parentId);
+  return n?.children ?? [];
 }
-
-const MenuRow = ({
-  node, depth, onEdit, onAddChild, onMove, onDelete,
-}: {
-  node: MenuNode;
-  depth: number;
-  onEdit: (n: MenuNode) => void;
-  onAddChild: (parent: MenuNode) => void;
-  onMove: (n: MenuNode, dir: -1 | 1) => void;
-  onDelete: (id: string) => void;
-}) => (
-  <li>
-    <div className="flex items-center gap-2 py-1.5 rounded hover:bg-muted/30 px-2" style={{ paddingLeft: depth * 20 + 8 }}>
-      <span className="flex-1 text-sm">
-        {node.label}
-        {node.is_mega_trigger && <span className="ml-2 text-[10px] uppercase text-accent">mega</span>}
-        {node.is_column_group && <span className="ml-2 text-[10px] uppercase text-muted-foreground">column</span>}
-        {node.url && <span className="ml-2 text-xs font-mono text-muted-foreground">{node.url}</span>}
-      </span>
-      <Button size="icon" variant="ghost" onClick={() => onMove(node, -1)}><ChevronUp className="h-4 w-4" /></Button>
-      <Button size="icon" variant="ghost" onClick={() => onMove(node, 1)}><ChevronDown className="h-4 w-4" /></Button>
-      <Button size="sm" variant="ghost" onClick={() => onAddChild(node)}><Plus className="h-3 w-3" /> Child</Button>
-      <Button size="sm" variant="ghost" onClick={() => onEdit(node)}>Edit</Button>
-      <Button size="icon" variant="ghost" onClick={() => onDelete(node.id)}><Trash2 className="h-4 w-4" /></Button>
-    </div>
-    {node.children.length > 0 && (
-      <ul>
-        {node.children.map((c) => (
-          <MenuRow key={c.id} node={c} depth={depth + 1} onEdit={onEdit} onAddChild={onAddChild} onMove={onMove} onDelete={onDelete} />
-        ))}
-      </ul>
-    )}
-  </li>
-);
+function findNodeById(tree: MenuNode[], id: string): MenuNode | null {
+  for (const n of tree) {
+    if (n.id === id) return n;
+    const r = findNodeById(n.children, id);
+    if (r) return r;
+  }
+  return null;
+}
 
 export default AdminMenus;
