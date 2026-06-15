@@ -5,6 +5,12 @@ import { ChevronDown, ChevronRight, Menu, X, Eye, BarChart3, FileText, Wand2, Ac
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/llmclicks-ai-logo.webp";
+import { useCmsMenu, type MenuNode } from "@/hooks/useCmsMenu";
+import { getIcon } from "@/lib/cms/iconMap";
+
+/* ------------------------------------------------------------------ */
+/* Hardcoded fallback — used when no CMS items exist for primary_nav  */
+/* ------------------------------------------------------------------ */
 
 type FeatureItem = {
   label: string;
@@ -25,10 +31,8 @@ const featureLinks: FeatureItem[] = [
   { label: "AI Visibility Tracker", desc: "Track brand mentions over time", icon: BarChart3, to: "/ai-visibility-tracker" },
   { label: "AI Listicle Marketplace", desc: "Buy placements in AI-cited listicles", icon: ShoppingBag, to: "/ai-listicle-marketplace" },
   {
-    label: "On-Page Optimiser",
-    desc: "AI-friendly content optimization",
-    icon: FileText,
-    to: "/on-page-optimiser",
+    label: "On-Page Optimiser", desc: "AI-friendly content optimization",
+    icon: FileText, to: "/on-page-optimiser",
     children: onPageChildren.map(({ label, to }) => ({ label, to })),
   },
   { label: "AI Query Mapper", desc: "Map queries to brand responses", icon: Compass, to: "/ai-query-mapper" },
@@ -60,13 +64,133 @@ const simpleLinks = [
   { label: "Contact", to: "/contact" },
 ];
 
+/* ------------------------------------------------------------------ */
+/* CMS-driven row helpers                                              */
+/* ------------------------------------------------------------------ */
+
+const externalHref = (url: string) => /^(https?:)?\/\//i.test(url);
+
+const NavLeaf = ({ node, className }: { node: MenuNode; className?: string }) => {
+  const url = node.url ?? "#";
+  if (externalHref(url) || node.open_in_new_tab) {
+    return (
+      <a
+        href={url}
+        target={node.open_in_new_tab ? "_blank" : undefined}
+        rel={node.open_in_new_tab ? "noopener noreferrer" : undefined}
+        className={className}
+      >
+        {node.label}
+      </a>
+    );
+  }
+  return <Link to={url} className={className}>{node.label}</Link>;
+};
+
+const CmsDropdown = ({
+  node,
+  isOpen,
+  onOpen,
+  onClose,
+}: {
+  node: MenuNode;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}) => {
+  const wide = node.is_mega_trigger && node.children.length > 6;
+  return (
+    <div className="relative" onMouseEnter={onOpen} onMouseLeave={onClose}>
+      <button
+        className={cn(
+          "flex items-center gap-1 px-3 py-2 text-sm transition-colors rounded-lg",
+          isOpen ? "text-accent font-medium" : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        {node.label}
+        <ChevronDown
+          className={cn("h-3 w-3 transition-transform duration-200", isOpen && "rotate-180")}
+        />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="absolute left-0 top-full pt-3"
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <div
+              className={cn(
+                "rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden p-3",
+                wide ? "w-[560px] grid grid-cols-2 gap-1" : "w-[320px]",
+              )}
+            >
+              {node.children.map((child) => {
+                const Icon = getIcon(child.icon);
+                const url = child.url ?? "#";
+                const isExt = externalHref(url) || child.open_in_new_tab;
+                const inner = (
+                  <>
+                    <div className="mt-0.5 h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-accent/20 group-hover/item:scale-110 transition-all">
+                      {Icon ? (
+                        <Icon className="h-4 w-4 text-accent" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-accent" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium group-hover/item:text-accent transition-colors truncate">
+                        {child.label}
+                      </p>
+                      {child.description && (
+                        <p className="text-xs text-muted-foreground/70 truncate">
+                          {child.description}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                );
+                const cls =
+                  "flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item";
+                return isExt ? (
+                  <a
+                    key={child.id}
+                    href={url}
+                    target={child.open_in_new_tab ? "_blank" : undefined}
+                    rel={child.open_in_new_tab ? "noopener noreferrer" : undefined}
+                    className={cls}
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <Link key={child.id} to={url} className={cls}>
+                    {inner}
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/* Navbar                                                              */
+/* ------------------------------------------------------------------ */
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  
   const [mobileSubOpen, setMobileSubOpen] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { data: cms } = useCmsMenu("primary_nav");
+  const cmsNodes = cms?.tree ?? [];
+  const useCms = cmsNodes.length > 0;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -74,15 +198,22 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); setOpenDropdown(null); setMobileSubOpen(null); }, [location.pathname]);
+  useEffect(() => {
+    setMobileOpen(false);
+    setOpenDropdown(null);
+    setMobileSubOpen(null);
+  }, [location.pathname]);
 
   return (
-    <nav className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      scrolled ? "bg-background/90 backdrop-blur-2xl border-b border-border/60 shadow-sm" : "bg-transparent"
-    )}>
+    <nav
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled
+          ? "bg-background/90 backdrop-blur-2xl border-b border-border/60 shadow-sm"
+          : "bg-transparent",
+      )}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <img
             src={logo}
@@ -97,189 +228,53 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden items-center gap-0.5 lg:flex">
-          {simpleLinks.slice(0, 2).map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              className={cn(
-                "px-3 py-2 text-sm transition-colors rounded-lg",
-                location.pathname === link.to ? "text-accent font-medium" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          {/* Features Mega Menu Trigger */}
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenDropdown("Features")}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <button className={cn(
-              "flex items-center gap-1 px-3 py-2 text-sm transition-colors rounded-lg",
-              openDropdown === "Features" ? "text-accent font-medium" : "text-muted-foreground hover:text-foreground"
-            )}>
-              Features <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", openDropdown === "Features" && "rotate-180")} />
-            </button>
-
-            <AnimatePresence>
-              {openDropdown === "Features" && (
-                <motion.div
-                  className="absolute -left-72 top-full pt-3"
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <div className="w-[920px] rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden">
-                    <div className="grid grid-cols-3 gap-0">
-                      {/* Column 1: Platform */}
-                      <div className="p-4">
-                        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-2">Platform</p>
-                        {featureLinks.map((item) => (
-                          <Link
-                            key={item.to}
-                            to={item.to}
-                            className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item"
-                          >
-                            <div className="mt-0.5 h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-accent/20 group-hover/item:scale-110 transition-all">
-                              <item.icon className="h-4 w-4 text-accent" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium group-hover/item:text-accent transition-colors">{item.label}</p>
-                              <p className="text-xs text-muted-foreground/70">{item.desc}</p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-
-                      {/* Column 2: Free Tools */}
-                      <div className="p-4 bg-muted/20 border-l border-border">
-                        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-2">Free Tools</p>
-                        {freeToolLinks.map((item) => (
-                          <Link
-                            key={item.to}
-                            to={item.to}
-                            className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item"
-                          >
-                            <div className="mt-0.5 h-8 w-8 rounded-lg bg-coral/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-coral/20 group-hover/item:scale-110 transition-all">
-                              <item.icon className="h-4 w-4 text-coral" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium group-hover/item:text-coral transition-colors">{item.label}</p>
-                              <p className="text-xs text-muted-foreground/70">{item.desc}</p>
-                            </div>
-                          </Link>
-                        ))}
-                        <div className="mt-4 mx-3 p-4 rounded-xl bg-accent/5 border border-accent/10">
-                          <p className="text-sm font-semibold mb-1">Start Free</p>
-                          <p className="text-xs text-muted-foreground mb-3">Get your AI visibility audit — no signup required.</p>
-                          <Button size="sm" className="w-full rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 text-xs group/cta" asChild>
-                            <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">
-                              Try it now <ArrowRight className="ml-1 h-3 w-3 group-hover/cta:translate-x-0.5 transition-transform" />
-                            </a>
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Column 3: On-Page Optimiser sub-pages */}
-                      <div className="p-4 bg-gradient-to-br from-accent/5 to-transparent border-l border-border">
-                        <div className="flex items-center gap-2 px-3 mb-2">
-                          <FileText className="h-3.5 w-3.5 text-accent" />
-                          <p className="text-[10px] font-semibold uppercase tracking-widest text-accent/80">On-Page Optimiser</p>
-                        </div>
-                        <Link
-                          to="/on-page-optimiser"
-                          className="block px-3 mb-3 text-xs text-muted-foreground/80 hover:text-accent transition-colors"
-                        >
-                          AI-friendly content optimization →
-                        </Link>
-                        <div className="space-y-1">
-                          {onPageChildren.map((child) => (
-                            <Link
-                              key={child.to}
-                              to={child.to}
-                              className="block rounded-xl px-3 py-2.5 hover:bg-accent/10 transition-colors group/item"
-                            >
-                              <p className="text-sm font-medium group-hover/item:text-accent transition-colors">{child.label}</p>
-                              <p className="text-xs text-muted-foreground/70">{child.desc}</p>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Resources Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenDropdown("Resources")}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <button className={cn(
-              "flex items-center gap-1 px-3 py-2 text-sm transition-colors rounded-lg",
-              openDropdown === "Resources" ? "text-accent font-medium" : "text-muted-foreground hover:text-foreground"
-            )}>
-              Resources <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", openDropdown === "Resources" && "rotate-180")} />
-            </button>
-
-            <AnimatePresence>
-              {openDropdown === "Resources" && (
-                <motion.div
-                  className="absolute left-0 top-full pt-3"
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <div className="w-[320px] rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden p-3">
-                    {resourceLinks.map((item) => (
-                      <Link
-                        key={item.to}
-                        to={item.to}
-                        className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item"
-                      >
-                        <div className="mt-0.5 h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-accent/20 group-hover/item:scale-110 transition-all">
-                          <item.icon className="h-4 w-4 text-accent" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium group-hover/item:text-accent transition-colors">{item.label}</p>
-                          <p className="text-xs text-muted-foreground/70">{item.desc}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {simpleLinks.slice(2).map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              className={cn(
-                "px-3 py-2 text-sm transition-colors rounded-lg",
-                location.pathname === link.to ? "text-accent font-medium" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {useCms ? (
+            cmsNodes.map((node) =>
+              node.children.length > 0 ? (
+                <CmsDropdown
+                  key={node.id}
+                  node={node}
+                  isOpen={openDropdown === node.id}
+                  onOpen={() => setOpenDropdown(node.id)}
+                  onClose={() => setOpenDropdown(null)}
+                />
+              ) : (
+                <NavLeaf
+                  key={node.id}
+                  node={node}
+                  className={cn(
+                    "px-3 py-2 text-sm transition-colors rounded-lg",
+                    location.pathname === node.url
+                      ? "text-accent font-medium"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                />
+              ),
+            )
+          ) : (
+            <FallbackDesktop
+              location={location}
+              openDropdown={openDropdown}
+              setOpenDropdown={setOpenDropdown}
+            />
+          )}
         </div>
 
         {/* Desktop CTA */}
         <div className="hidden lg:flex items-center gap-2">
           <Button variant="ghost" size="sm" className="text-sm" asChild>
-            <a href="https://app.llmclicks.ai" target="_blank" rel="noopener noreferrer">Log in</a>
+            <a href="https://app.llmclicks.ai" target="_blank" rel="noopener noreferrer">
+              Log in
+            </a>
           </Button>
-          <Button size="sm" className="rounded-xl px-5 bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm shadow-accent/20" asChild>
-            <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">Start free trial</a>
+          <Button
+            size="sm"
+            className="rounded-xl px-5 bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm shadow-accent/20"
+            asChild
+          >
+            <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">
+              Start free trial
+            </a>
           </Button>
           <Button
             size="sm"
@@ -287,7 +282,9 @@ const Navbar = () => {
             className="rounded-xl px-5 border-border text-foreground hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors"
             asChild
           >
-            <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">Book a demo</a>
+            <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">
+              Book a demo
+            </a>
           </Button>
         </div>
 
@@ -308,112 +305,70 @@ const Navbar = () => {
             transition={{ duration: 0.25 }}
           >
             <div className="container mx-auto px-4 py-4 space-y-1">
-              {simpleLinks.slice(0, 2).map((link) => (
-                <Link key={link.label} to={link.to} className="block py-2.5 px-3 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent/5">
-                  {link.label}
-                </Link>
-              ))}
-
-              {/* Features accordion */}
-              <div>
-                <button
-                  className="flex w-full items-center justify-between py-2.5 px-3 text-sm text-muted-foreground rounded-lg hover:bg-accent/5"
-                  onClick={() => setOpenDropdown(openDropdown === "mFeatures" ? null : "mFeatures")}
-                >
-                  Features
-                  <ChevronDown className={cn("h-4 w-4 transition-transform", openDropdown === "mFeatures" && "rotate-180")} />
-                </button>
-                <AnimatePresence>
-                  {openDropdown === "mFeatures" && (
-                    <motion.div
-                      className="ml-3 space-y-0.5 overflow-hidden"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 pt-2 pb-1">Platform</p>
-                      {featureLinks.map((item) => (
-                        <div key={item.to}>
-                          <div className="flex items-center justify-between">
-                            <Link to={item.to} className="flex flex-1 items-center gap-2.5 py-2 px-3 text-sm text-muted-foreground hover:text-accent">
-                              <item.icon className="h-4 w-4 text-accent/60" />
-                              {item.label}
-                            </Link>
-                            {item.children && (
-                              <button
-                                className="p-2 text-muted-foreground"
-                                onClick={(e) => { e.preventDefault(); setMobileSubOpen(mobileSubOpen === item.label ? null : item.label); }}
-                                aria-label="Toggle submenu"
-                              >
-                                <ChevronDown className={cn("h-4 w-4 transition-transform", mobileSubOpen === item.label && "rotate-180")} />
-                              </button>
-                            )}
-                          </div>
-                          {item.children && mobileSubOpen === item.label && (
-                            <div className="ml-9 border-l border-border pl-3 space-y-0.5">
-                              {item.children.map((child) => (
-                                <Link key={child.to} to={child.to} className="block py-2 px-3 text-sm text-muted-foreground hover:text-accent">
-                                  {child.label}
-                                </Link>
-                              ))}
-                            </div>
+              {useCms ? (
+                cmsNodes.map((node) =>
+                  node.children.length > 0 ? (
+                    <div key={node.id}>
+                      <button
+                        className="flex w-full items-center justify-between py-2.5 px-3 text-sm text-muted-foreground rounded-lg hover:bg-accent/5"
+                        onClick={() =>
+                          setMobileSubOpen(mobileSubOpen === node.id ? null : node.id)
+                        }
+                      >
+                        {node.label}
+                        <ChevronDown
+                          className={cn(
+                            "h-4 w-4 transition-transform",
+                            mobileSubOpen === node.id && "rotate-180",
                           )}
+                        />
+                      </button>
+                      {mobileSubOpen === node.id && (
+                        <div className="ml-3 border-l border-border pl-3 space-y-0.5">
+                          {node.children.map((child) => (
+                            <NavLeaf
+                              key={child.id}
+                              node={child}
+                              className="block py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+                            />
+                          ))}
                         </div>
-                      ))}
-                      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 pt-3 pb-1">Free Tools</p>
-                      {freeToolLinks.map((item) => (
-                        <Link key={item.to} to={item.to} className="flex items-center gap-2.5 py-2 px-3 text-sm text-muted-foreground hover:text-accent">
-                          <item.icon className="h-4 w-4 text-coral/60" />
-                          {item.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Resources accordion */}
-              <div>
-                <button
-                  className="flex w-full items-center justify-between py-2.5 px-3 text-sm text-muted-foreground rounded-lg hover:bg-accent/5"
-                  onClick={() => setOpenDropdown(openDropdown === "mResources" ? null : "mResources")}
-                >
-                  Resources
-                  <ChevronDown className={cn("h-4 w-4 transition-transform", openDropdown === "mResources" && "rotate-180")} />
-                </button>
-                <AnimatePresence>
-                  {openDropdown === "mResources" && (
-                    <motion.div
-                      className="ml-3 space-y-0.5 overflow-hidden"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {resourceLinks.map((item) => (
-                        <Link key={item.to} to={item.to} className="flex items-center gap-2.5 py-2 px-3 text-sm text-muted-foreground hover:text-accent">
-                          <item.icon className="h-4 w-4 text-accent/60" />
-                          {item.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {simpleLinks.slice(2).map((link) => (
-                <Link key={link.label} to={link.to} className="block py-2.5 px-3 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent/5">
-                  {link.label}
-                </Link>
-              ))}
+                      )}
+                    </div>
+                  ) : (
+                    <NavLeaf
+                      key={node.id}
+                      node={node}
+                      className="block py-2.5 px-3 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent/5"
+                    />
+                  ),
+                )
+              ) : (
+                <FallbackMobile
+                  openDropdown={openDropdown}
+                  setOpenDropdown={setOpenDropdown}
+                  mobileSubOpen={mobileSubOpen}
+                  setMobileSubOpen={setMobileSubOpen}
+                />
+              )}
 
               <div className="pt-3 space-y-2">
-                <Button className="w-full rounded-xl bg-accent text-accent-foreground hover:bg-accent/90" asChild>
-                  <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">Start free trial</a>
+                <Button
+                  className="w-full rounded-xl bg-accent text-accent-foreground hover:bg-accent/90"
+                  asChild
+                >
+                  <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">
+                    Start free trial
+                  </a>
                 </Button>
-                <Button variant="outline" className="w-full rounded-xl border-border text-foreground hover:bg-accent/10 hover:text-foreground hover:border-accent/30" asChild>
-                  <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">Book a demo</a>
+                <Button
+                  variant="outline"
+                  className="w-full rounded-xl border-border text-foreground hover:bg-accent/10 hover:text-foreground hover:border-accent/30"
+                  asChild
+                >
+                  <a href="https://calendly.com/shripad" target="_blank" rel="noopener noreferrer">
+                    Book a demo
+                  </a>
                 </Button>
               </div>
             </div>
@@ -423,5 +378,373 @@ const Navbar = () => {
     </nav>
   );
 };
+
+/* ------------------------------------------------------------------ */
+/* Hardcoded fallback components                                       */
+/* ------------------------------------------------------------------ */
+
+const FallbackDesktop = ({
+  location,
+  openDropdown,
+  setOpenDropdown,
+}: {
+  location: ReturnType<typeof useLocation>;
+  openDropdown: string | null;
+  setOpenDropdown: (v: string | null) => void;
+}) => (
+  <>
+    {simpleLinks.slice(0, 2).map((link) => (
+      <Link
+        key={link.label}
+        to={link.to}
+        className={cn(
+          "px-3 py-2 text-sm transition-colors rounded-lg",
+          location.pathname === link.to
+            ? "text-accent font-medium"
+            : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        {link.label}
+      </Link>
+    ))}
+
+    <div
+      className="relative"
+      onMouseEnter={() => setOpenDropdown("Features")}
+      onMouseLeave={() => setOpenDropdown(null)}
+    >
+      <button
+        className={cn(
+          "flex items-center gap-1 px-3 py-2 text-sm transition-colors rounded-lg",
+          openDropdown === "Features"
+            ? "text-accent font-medium"
+            : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        Features
+        <ChevronDown
+          className={cn(
+            "h-3 w-3 transition-transform duration-200",
+            openDropdown === "Features" && "rotate-180",
+          )}
+        />
+      </button>
+      <AnimatePresence>
+        {openDropdown === "Features" && (
+          <motion.div
+            className="absolute -left-72 top-full pt-3"
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <div className="w-[920px] rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden">
+              <div className="grid grid-cols-3 gap-0">
+                <div className="p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-2">
+                    Platform
+                  </p>
+                  {featureLinks.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item"
+                    >
+                      <div className="mt-0.5 h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-accent/20 group-hover/item:scale-110 transition-all">
+                        <item.icon className="h-4 w-4 text-accent" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium group-hover/item:text-accent transition-colors">
+                          {item.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">{item.desc}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="p-4 bg-muted/20 border-l border-border">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-2">
+                    Free Tools
+                  </p>
+                  {freeToolLinks.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item"
+                    >
+                      <div className="mt-0.5 h-8 w-8 rounded-lg bg-coral/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-coral/20 group-hover/item:scale-110 transition-all">
+                        <item.icon className="h-4 w-4 text-coral" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium group-hover/item:text-coral transition-colors">
+                          {item.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">{item.desc}</p>
+                      </div>
+                    </Link>
+                  ))}
+                  <div className="mt-4 mx-3 p-4 rounded-xl bg-accent/5 border border-accent/10">
+                    <p className="text-sm font-semibold mb-1">Start Free</p>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Get your AI visibility audit — no signup required.
+                    </p>
+                    <Button
+                      size="sm"
+                      className="w-full rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 text-xs group/cta"
+                      asChild
+                    >
+                      <a
+                        href="https://app.llmclicks.ai/signup"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Try it now{" "}
+                        <ArrowRight className="ml-1 h-3 w-3 group-hover/cta:translate-x-0.5 transition-transform" />
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gradient-to-br from-accent/5 to-transparent border-l border-border">
+                  <div className="flex items-center gap-2 px-3 mb-2">
+                    <FileText className="h-3.5 w-3.5 text-accent" />
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-accent/80">
+                      On-Page Optimiser
+                    </p>
+                  </div>
+                  <Link
+                    to="/on-page-optimiser"
+                    className="block px-3 mb-3 text-xs text-muted-foreground/80 hover:text-accent transition-colors"
+                  >
+                    AI-friendly content optimization →
+                  </Link>
+                  <div className="space-y-1">
+                    {onPageChildren.map((child) => (
+                      <Link
+                        key={child.to}
+                        to={child.to}
+                        className="block rounded-xl px-3 py-2.5 hover:bg-accent/10 transition-colors group/item"
+                      >
+                        <p className="text-sm font-medium group-hover/item:text-accent transition-colors">
+                          {child.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">{child.desc}</p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+
+    <div
+      className="relative"
+      onMouseEnter={() => setOpenDropdown("Resources")}
+      onMouseLeave={() => setOpenDropdown(null)}
+    >
+      <button
+        className={cn(
+          "flex items-center gap-1 px-3 py-2 text-sm transition-colors rounded-lg",
+          openDropdown === "Resources"
+            ? "text-accent font-medium"
+            : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        Resources
+        <ChevronDown
+          className={cn(
+            "h-3 w-3 transition-transform duration-200",
+            openDropdown === "Resources" && "rotate-180",
+          )}
+        />
+      </button>
+      <AnimatePresence>
+        {openDropdown === "Resources" && (
+          <motion.div
+            className="absolute left-0 top-full pt-3"
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <div className="w-[320px] rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden p-3">
+              {resourceLinks.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item"
+                >
+                  <div className="mt-0.5 h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-accent/20 group-hover/item:scale-110 transition-all">
+                    <item.icon className="h-4 w-4 text-accent" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium group-hover/item:text-accent transition-colors">
+                      {item.label}
+                    </p>
+                    <p className="text-xs text-muted-foreground/70">{item.desc}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+
+    {simpleLinks.slice(2).map((link) => (
+      <Link
+        key={link.label}
+        to={link.to}
+        className={cn(
+          "px-3 py-2 text-sm transition-colors rounded-lg",
+          location.pathname === link.to
+            ? "text-accent font-medium"
+            : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        {link.label}
+      </Link>
+    ))}
+  </>
+);
+
+const FallbackMobile = ({
+  openDropdown,
+  setOpenDropdown,
+  mobileSubOpen,
+  setMobileSubOpen,
+}: {
+  openDropdown: string | null;
+  setOpenDropdown: (v: string | null) => void;
+  mobileSubOpen: string | null;
+  setMobileSubOpen: (v: string | null) => void;
+}) => (
+  <>
+    {simpleLinks.slice(0, 2).map((link) => (
+      <Link
+        key={link.label}
+        to={link.to}
+        className="block py-2.5 px-3 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent/5"
+      >
+        {link.label}
+      </Link>
+    ))}
+
+    <div>
+      <button
+        className="flex w-full items-center justify-between py-2.5 px-3 text-sm text-muted-foreground rounded-lg hover:bg-accent/5"
+        onClick={() => setOpenDropdown(openDropdown === "mFeatures" ? null : "mFeatures")}
+      >
+        Features
+        <ChevronDown
+          className={cn("h-4 w-4 transition-transform", openDropdown === "mFeatures" && "rotate-180")}
+        />
+      </button>
+      {openDropdown === "mFeatures" && (
+        <div className="ml-3 space-y-0.5 overflow-hidden">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 pt-2 pb-1">
+            Platform
+          </p>
+          {featureLinks.map((item) => (
+            <div key={item.to}>
+              <div className="flex items-center justify-between">
+                <Link
+                  to={item.to}
+                  className="flex flex-1 items-center gap-2.5 py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+                >
+                  <item.icon className="h-4 w-4 text-accent/60" />
+                  {item.label}
+                </Link>
+                {item.children && (
+                  <button
+                    className="p-2 text-muted-foreground"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileSubOpen(mobileSubOpen === item.label ? null : item.label);
+                    }}
+                    aria-label="Toggle submenu"
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform",
+                        mobileSubOpen === item.label && "rotate-180",
+                      )}
+                    />
+                  </button>
+                )}
+              </div>
+              {item.children && mobileSubOpen === item.label && (
+                <div className="ml-9 border-l border-border pl-3 space-y-0.5">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.to}
+                      to={child.to}
+                      className="block py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 pt-3 pb-1">
+            Free Tools
+          </p>
+          {freeToolLinks.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="flex items-center gap-2.5 py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+            >
+              <item.icon className="h-4 w-4 text-coral/60" />
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div>
+      <button
+        className="flex w-full items-center justify-between py-2.5 px-3 text-sm text-muted-foreground rounded-lg hover:bg-accent/5"
+        onClick={() => setOpenDropdown(openDropdown === "mResources" ? null : "mResources")}
+      >
+        Resources
+        <ChevronDown
+          className={cn("h-4 w-4 transition-transform", openDropdown === "mResources" && "rotate-180")}
+        />
+      </button>
+      {openDropdown === "mResources" && (
+        <div className="ml-3 space-y-0.5 overflow-hidden">
+          {resourceLinks.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="flex items-center gap-2.5 py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+            >
+              <item.icon className="h-4 w-4 text-accent/60" />
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {simpleLinks.slice(2).map((link) => (
+      <Link
+        key={link.label}
+        to={link.to}
+        className="block py-2.5 px-3 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent/5"
+      >
+        {link.label}
+      </Link>
+    ))}
+  </>
+);
 
 export default Navbar;
