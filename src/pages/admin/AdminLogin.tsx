@@ -7,22 +7,14 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-// Admin auth via our own edge-function APIs (admin-signup / admin-login).
-// We deliberately avoid calling supabase.auth.signUp / signInWithPassword
-// from the client. After the function returns tokens we hydrate the JS
-// client via supabase.auth.setSession so RLS-backed queries work in the UI.
+// Admin auth goes through OUR OWN API (Express in dev, Vercel functions in
+// prod) — not directly to Supabase edge functions. The browser never needs
+// the service role key, and CORS is handled by our same-origin /api routes.
 
-const FN_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
-const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
-async function callFn<T = unknown>(name: string, body: unknown): Promise<T> {
-  const res = await fetch(`${FN_BASE}/${name}`, {
+async function callApi<T = unknown>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(path, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: ANON,
-      Authorization: `Bearer ${ANON}`,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
@@ -46,7 +38,7 @@ const AdminLogin = () => {
   useEffect(() => {
     (async () => {
       try {
-        const data = await callFn<{ hasAdmin: boolean }>("admin-bootstrap-status", {});
+        const data = await callApi<{ hasAdmin: boolean }>("/api/admin/bootstrap-status", {});
         setMode(data.hasAdmin ? "login" : "signup");
       } catch (e) {
         toast.error((e as Error).message || "Could not check admin status");
@@ -75,8 +67,8 @@ const AdminLogin = () => {
     setBusy(true);
     try {
       const isSignup = mode === "signup";
-      const session = await callFn<SessionResponse>(
-        isSignup ? "admin-signup" : "admin-login",
+      const session = await callApi<SessionResponse>(
+        isSignup ? "/api/admin/signup" : "/api/admin/login",
         isSignup ? { email, password, full_name: name } : { email, password },
       );
       const { error: setErr } = await supabase.auth.setSession({

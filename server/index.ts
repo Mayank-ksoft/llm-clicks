@@ -7,6 +7,7 @@ import fs from "fs";
 import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 import { getBlogCategoryBySlug } from "../src/lib/blogCategories";
 import { getLegacyRedirect } from "../shared/legacyRedirects";
+import { bootstrapStatus, adminLogin, adminSignup } from "../shared/adminAuth";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -34,6 +35,21 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function sanitize(value: string): string {
   return value.replace(/[<>"'&]/g, "");
 }
+
+app.post("/api/admin/bootstrap-status", async (_req, res) => {
+  const { status, body } = await bootstrapStatus();
+  res.status(status).json(body);
+});
+
+app.post("/api/admin/login", async (req, res) => {
+  const { status, body } = await adminLogin(req.body || {});
+  res.status(status).json(body);
+});
+
+app.post("/api/admin/signup", async (req, res) => {
+  const { status, body } = await adminSignup(req.body || {});
+  res.status(status).json(body);
+});
 
 app.post("/api/send-contact-email", async (req, res) => {
   const { firstName, lastName, email, message } = req.body || {};
