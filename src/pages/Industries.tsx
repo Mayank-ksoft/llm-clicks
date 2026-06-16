@@ -6,8 +6,15 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { industries } from "@/data/industries";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
-const Industries = () => (
+const Industries = () => {
+  const hero = usePageHeroContent({
+    title: "AI Search is Redefining Your Industry. Own the Answers.",
+    subtitle: "Generative Engine Optimization is not generic. AI evaluates software integrations differently than financial compliance. Select your vertical to discover your tailored visibility playbook.",
+    eyebrow: "Vertical Visibility Frameworks",
+  });
+  return (
   <Layout>
     <Helmet>
       <title>Industry Solutions for AI Search Visibility | LLMClicks.ai</title>
@@ -34,20 +41,19 @@ const Industries = () => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <span className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.08em] text-[11px] text-accent bg-accent/10 px-3 py-1 rounded-full mb-6">
-            <Sparkles className="h-3 w-3" /> Vertical Visibility Frameworks
-          </span>
-          <h1 className="font-display text-4xl md:text-5xl lg:text-[56px] font-bold leading-[1.15] tracking-tight max-w-3xl mx-auto">
-            AI Search is Redefining Your Industry.
-            <br />
-            <span className="text-accent relative inline-block mt-2">
-              Own the Answers.
-              <span className="absolute bottom-1 left-0 w-full h-2 bg-accent/20 -z-10" />
+          {hero.eyebrow && (
+            <span className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.08em] text-[11px] text-accent bg-accent/10 px-3 py-1 rounded-full mb-6">
+              <Sparkles className="h-3 w-3" /> {hero.eyebrow}
             </span>
+          )}
+          <h1 className="font-display text-4xl md:text-5xl lg:text-[56px] font-bold leading-[1.15] tracking-tight max-w-3xl mx-auto">
+            {hero.title}
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mt-6">
-            Generative Engine Optimization is not generic. AI evaluates software integrations differently than financial compliance. Select your vertical to discover your tailored visibility playbook.
-          </p>
+          {hero.subtitle && (
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mt-6">
+              {hero.subtitle}
+            </p>
+          )}
 
           <div className="pt-8 mt-8 border-t border-border max-w-2xl mx-auto">
             <p className="text-xs text-muted-foreground/70 font-bold uppercase tracking-widest mb-4">
@@ -164,5 +170,6 @@ const Industries = () => (
     </section>
   </Layout>
 );
+};
 
 export default Industries;

@@ -15,6 +15,7 @@ import {
 import { docs, getDocBySlug } from "@/data/docsArticles";
 import SimplePagination from "@/components/common/SimplePagination";
 import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const DOCS_PAGE_SIZE = 10;
 
@@ -33,6 +34,11 @@ const slugifyHeading = (t: string) =>
 const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const hero = usePageHeroContent({
+    title: "LLMClicks.ai Docs",
+    subtitle: "Setup guides, walkthroughs, and best-practice playbooks for every module of the platform.",
+    eyebrow: "HELP CENTER",
+  });
   const categoryFromSlug = getDocsCategoryBySlug(categorySlug);
   const activeCat = categoryFromSlug?.title || "";
   const invalidCategory = Boolean(categorySlug) && !categoryFromSlug;
@@ -70,11 +76,9 @@ const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
         <div className="absolute inset-0 accent-mesh opacity-30 pointer-events-none" />
         <div className="container mx-auto max-w-6xl relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-            <div className="tag-pill mb-4 mx-auto"><BookOpen className="h-3 w-3" /> HELP CENTER</div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">LLMClicks.ai Docs</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Setup guides, walkthroughs, and best-practice playbooks for every module of the platform.
-            </p>
+            {hero.eyebrow && <div className="tag-pill mb-4 mx-auto"><BookOpen className="h-3 w-3" /> {hero.eyebrow}</div>}
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">{hero.title}</h1>
+            {hero.subtitle && <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{hero.subtitle}</p>}
           </motion.div>
 
           {/* Search */}

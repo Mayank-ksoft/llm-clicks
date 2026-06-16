@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { knowledgeHubCategories } from "@/data/knowledgeHub";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const categoryIcons: Record<string, typeof BookOpen> = {
   "chatgpt-seo": MessageSquare,
@@ -23,6 +24,11 @@ const categoryIcons: Record<string, typeof BookOpen> = {
 
 const KnowledgeHub = () => {
   const [query, setQuery] = useState("");
+  const hero = usePageHeroContent({
+    title: "LLMClicks.ai Knowledge Hub",
+    subtitle: "Technical documentation, AI playbooks, and GEO research for SaaS teams.",
+    eyebrow: "KNOWLEDGE HUB",
+  });
 
   // Flat search results across all categories
   const searchResults = useMemo(() => {
@@ -52,11 +58,9 @@ const KnowledgeHub = () => {
         <div className="container mx-auto max-w-6xl relative z-10">
           {/* Hero */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-            <div className="tag-pill mb-4 mx-auto"><Library className="h-3 w-3" /> KNOWLEDGE HUB</div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">LLMClicks.ai Knowledge Hub</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Technical documentation, AI playbooks, and GEO research for SaaS teams.
-            </p>
+            {hero.eyebrow && <div className="tag-pill mb-4 mx-auto"><Library className="h-3 w-3" /> {hero.eyebrow}</div>}
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">{hero.title}</h1>
+            {hero.subtitle && <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{hero.subtitle}</p>}
           </motion.div>
 
           {/* Search */}

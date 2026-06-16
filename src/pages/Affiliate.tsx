@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight, Check, DollarSign, Trophy, Clock, BarChart3, ShieldCheck, TrendingUp } from "lucide-react";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const stats = [
   { value: "30%", label: "Max recurring commission per referral, every month" },
@@ -60,7 +61,13 @@ const faqs = [
   { q: "What happens if a referred customer cancels?", a: "You stop earning commission for that customer the month they cancel. Commissions already paid are yours — no clawback. LLMClicks has strong retention, so cancellations are infrequent compared to most SaaS." },
 ];
 
-const Affiliate = () => (
+const Affiliate = () => {
+  const hero = usePageHeroContent({
+    title: "Refer Brands to LLMClicks. Earn Recurring Revenue.",
+    subtitle: "Every brand in your network needs AI visibility. You get paid every month they stay a customer. No cap. No expiry. Commission that compounds as you grow.",
+    eyebrow: "AFFILIATE PROGRAM · NOW LIVE",
+  });
+  return (
   <Layout>
     {/* HERO */}
     <section className="section-padding pt-28 md:pt-36 relative overflow-hidden">
@@ -68,9 +75,9 @@ const Affiliate = () => (
       <div className="absolute inset-0 grain-overlay pointer-events-none" />
       <div className="container mx-auto max-w-5xl relative z-10 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="tag-pill mb-4 mx-auto">AFFILIATE PROGRAM · NOW LIVE</div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">Refer Brands to LLMClicks. Earn Recurring Revenue.</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-7">Every brand in your network needs AI visibility. You get paid every month they stay a customer. No cap. No expiry. Commission that compounds as you grow.</p>
+          {hero.eyebrow && <div className="tag-pill mb-4 mx-auto">{hero.eyebrow}</div>}
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">{hero.title}</h1>
+          {hero.subtitle && <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-7">{hero.subtitle}</p>}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button size="lg" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 px-8 glow-hover" asChild>
               <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">Join the Program <ArrowRight className="ml-2 h-4 w-4" /></a>
@@ -223,5 +230,6 @@ const Affiliate = () => (
     </section>
   </Layout>
 );
+};
 
 export default Affiliate;

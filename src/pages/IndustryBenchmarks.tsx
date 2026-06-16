@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BarChart3, Target, TrendingUp, Award } from "lucide-react";
 import BenchmarksDashboardMockup from "@/components/features/BenchmarksDashboardMockup";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const verticals = [
   { name: "SaaS & B2B Software", visibility: 64, leaders: ["HubSpot", "Notion", "Asana"], gaps: 36 },
@@ -13,19 +14,21 @@ const verticals = [
   { name: "Fintech", visibility: 56, leaders: ["Stripe", "Plaid", "Wise"], gaps: 44 },
 ];
 
-const IndustryBenchmarks = () => (
+const IndustryBenchmarks = () => {
+  const hero = usePageHeroContent({
+    title: "Compare Your AI Visibility Against Your Industry",
+    subtitle: "See exactly where you stand versus direct competitors. Our benchmarks reveal who AI assistants recommend in your category and what it takes to overtake them.",
+    eyebrow: "INDUSTRY BENCHMARKS",
+  });
+  return (
   <Layout>
     <section className="section-padding pt-28 md:pt-36 relative overflow-hidden">
       <div className="absolute inset-0 accent-mesh pointer-events-none opacity-40" />
       <div className="container mx-auto max-w-5xl relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="tag-pill mb-4 mx-auto"><BarChart3 className="h-3 w-3" /> INDUSTRY BENCHMARKS</div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">
-            Compare Your AI Visibility Against Your Industry
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            See exactly where you stand versus direct competitors. Our benchmarks reveal who AI assistants recommend in your category and what it takes to overtake them.
-          </p>
+          {hero.eyebrow && <div className="tag-pill mb-4 mx-auto"><BarChart3 className="h-3 w-3" /> {hero.eyebrow}</div>}
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">{hero.title}</h1>
+          {hero.subtitle && <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{hero.subtitle}</p>}
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <Button size="lg" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 px-7 glow-hover" asChild>
               <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">
@@ -128,5 +131,6 @@ const IndustryBenchmarks = () => (
     </section>
   </Layout>
 );
+};
 
 export default IndustryBenchmarks;

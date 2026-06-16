@@ -4,8 +4,13 @@ import { Play } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { webStories } from "@/data/webStories";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const WebStories = () => {
+  const hero = usePageHeroContent({
+    title: "Generative SEO & AI Visibility Stories",
+    subtitle: "Swipe through our bite-sized strategic teardowns. Learn how to optimize your SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.",
+  });
   return (
     <Layout>
       <section className="section-padding pt-28 md:pt-36 relative overflow-x-hidden">
@@ -16,13 +21,9 @@ const WebStories = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-14"
           >
-            <h1 className="font-display text-4xl md:text-6xl font-bold leading-tight mb-5">
-              Generative SEO & AI Visibility Stories
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Swipe through our bite-sized strategic teardowns. Learn how to optimize your
-              SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.
-            </p>
+            {hero.eyebrow && <div className="tag-pill mb-4 mx-auto">{hero.eyebrow}</div>}
+            <h1 className="font-display text-4xl md:text-6xl font-bold leading-tight mb-5">{hero.title}</h1>
+            {hero.subtitle && <p className="text-lg text-muted-foreground">{hero.subtitle}</p>}
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">

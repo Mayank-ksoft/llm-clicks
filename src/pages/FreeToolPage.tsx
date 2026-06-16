@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight, Check, Zap } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 type Step = { title: string; desc: string };
 type Card = { title: string; desc: string };
@@ -161,6 +162,11 @@ const FreeToolPage = ({ forcedSlug }: { forcedSlug?: string } = {}) => {
   const params = useParams();
   const slug = forcedSlug ?? params.slug;
   const tool = slug && toolData[slug] ? toolData[slug] : null;
+  const hero = usePageHeroContent({
+    title: tool?.title ?? "",
+    subtitle: tool?.desc,
+    eyebrow: tool?.tag,
+  });
 
   if (!tool) {
     return (
@@ -185,9 +191,9 @@ const FreeToolPage = ({ forcedSlug }: { forcedSlug?: string } = {}) => {
 
         <div className="container mx-auto max-w-4xl relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="tag-pill mb-4 mx-auto"><Zap className="h-3 w-3" /> {tool.tag}</div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">{tool.title}</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-7">{tool.desc}</p>
+            <div className="tag-pill mb-4 mx-auto"><Zap className="h-3 w-3" /> {hero.eyebrow || tool.tag}</div>
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">{hero.title}</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-7">{hero.subtitle || tool.desc}</p>
             <Button size="lg" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 px-8 glow-hover" asChild>
               <a href={tool.ctaUrl} target="_blank" rel="noopener noreferrer">
                 {tool.ctaLabel} <ArrowRight className="ml-2 h-4 w-4" />

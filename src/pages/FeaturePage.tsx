@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight, Check } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 import TrackerDashboardMockup from "@/components/features/TrackerDashboardMockup";
 import AuditDashboardMockup from "@/components/features/AuditDashboardMockup";
 import OnPageDashboardMockup from "@/components/features/OnPageDashboardMockup";
@@ -493,6 +494,11 @@ const FeaturePage = ({ forcedSlug }: { forcedSlug?: string } = {}) => {
   const params = useParams();
   const slug = forcedSlug ?? params.slug;
   const feature = slug && featureData[slug] ? featureData[slug] : null;
+  const hero = usePageHeroContent({
+    title: feature?.title ?? "",
+    subtitle: feature?.desc,
+    eyebrow: feature?.tag,
+  });
 
   if (!feature) {
     return (
@@ -526,9 +532,9 @@ const FeaturePage = ({ forcedSlug }: { forcedSlug?: string } = {}) => {
         <div className="absolute inset-0 grain-overlay pointer-events-none" />
         <div className="container mx-auto max-w-5xl relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-center">
-            <div className="tag-pill mb-4 mx-auto">{feature.tag}</div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">{feature.title}</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{feature.desc}</p>
+            <div className="tag-pill mb-4 mx-auto">{hero.eyebrow || feature.tag}</div>
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-5 max-w-3xl mx-auto">{hero.title}</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{hero.subtitle || feature.desc}</p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <Button size="lg" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 px-7 glow-hover" asChild>
                 <a href="https://app.llmclicks.ai/signup" target="_blank" rel="noopener noreferrer">Try {feature.title.split(" ").slice(0,3).join(" ")} Free <ArrowRight className="ml-2 h-4 w-4" /></a>

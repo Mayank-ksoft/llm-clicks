@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { posts } from "@/data/blogPosts";
 import SimplePagination from "@/components/common/SimplePagination";
 import { blogCategoryPath, getBlogCategoryBySlug, getBlogCategoryByTag, indexableBlogCategories } from "@/lib/blogCategories";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const PAGE_SIZE = 9;
 
@@ -18,6 +19,11 @@ const cardVariants = {
 const Blog = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const hero = usePageHeroContent({
+    title: "Generative SEO & AI Insights",
+    subtitle: "Actionable strategies to dominate LLM search engines. Protect your SaaS pipeline from the zero-click reality.",
+    eyebrow: "BLOG",
+  });
   const { categorySlug } = useParams<{ categorySlug?: string }>();
   const [searchParams] = useSearchParams();
   const legacyTag = searchParams.get("tag") || "";
@@ -71,9 +77,9 @@ const Blog = () => {
         <div className="absolute -top-40 -left-40 w-[500px] h-[500px] accent-mesh opacity-30 pointer-events-none" />
         <div className="container mx-auto max-w-6xl relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
-            <div className="tag-pill mb-4 mx-auto"><BookOpen className="h-3 w-3" /> BLOG</div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Generative SEO & AI Insights</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Actionable strategies to dominate LLM search engines. Protect your SaaS pipeline from the zero-click reality.</p>
+            {hero.eyebrow && <div className="tag-pill mb-4 mx-auto"><BookOpen className="h-3 w-3" /> {hero.eyebrow}</div>}
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">{hero.title}</h1>
+            {hero.subtitle && <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{hero.subtitle}</p>}
           </motion.div>
 
           <div className="max-w-xl mx-auto mb-12 relative">
