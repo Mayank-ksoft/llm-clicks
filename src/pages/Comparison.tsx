@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Check, X, Minus, ArrowRight, Search, Shield, FileCheck, RefreshCw, Sparkles, Building2, Users, Briefcase, BarChart3, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
 const stats = [
   { value: "120", label: "Accuracy Checks Per Audit" },
@@ -128,7 +129,14 @@ const faqs = [
 
 const row = { hidden: { opacity: 0, x: -10 }, visible: (i: number) => ({ opacity: 1, x: 0, transition: { delay: i * 0.04 } }) };
 
-const Comparison = () => (
+const Comparison = () => {
+  const hero = usePageHeroContent({
+    title: "AI Search Visibility Tracking Tools Comparison",
+    subtitle:
+      "LLMClicks.ai helps you understand exactly how AI platforms describe your brand by measuring accuracy, scoring hallucinations, and comparing performance across ChatGPT, Perplexity, Google AI, Claude and Copilot.",
+    eyebrow: "COMPARISON",
+  });
+  return (
   <Layout>
     {/* Hero */}
     <section className="section-padding pt-28 md:pt-36 relative overflow-hidden">
@@ -136,11 +144,13 @@ const Comparison = () => (
       <div className="absolute inset-0 grain-overlay pointer-events-none" />
       <div className="container mx-auto max-w-4xl relative z-10 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="tag-pill mb-4 mx-auto">COMPARISON</div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">AI Search Visibility Tracking Tools Comparison</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
-            LLMClicks.ai helps you understand exactly how AI platforms describe your brand by measuring accuracy, scoring hallucinations, and comparing performance across ChatGPT, Perplexity, Google AI, Claude and Copilot.
-          </p>
+          {hero.eyebrow && <div className="tag-pill mb-4 mx-auto">{hero.eyebrow}</div>}
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">{hero.title}</h1>
+          {hero.subtitle && (
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
+              {hero.subtitle}
+            </p>
+          )}
           <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
             Unlike most tools that only track whether you were mentioned, LLMClicks.ai analyzes the truthfulness and completeness of those answers. You see where AI gets your messaging right, where it misrepresents your product, and how your competitors appear in the same conversations.
           </p>
@@ -403,6 +413,7 @@ const Comparison = () => (
       </div>
     </section>
   </Layout>
-);
+  );
+};
 
 export default Comparison;

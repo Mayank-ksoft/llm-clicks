@@ -1,11 +1,17 @@
 import Layout from "@/components/layout/Layout";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
-const Privacy = () => (
+const Privacy = () => {
+  const hero = usePageHeroContent({
+    title: "Privacy Policy",
+    subtitle: "Last Updated: November 8, 2025",
+  });
+  return (
   <Layout>
     <section className="section-padding pt-28 md:pt-36">
       <div className="container mx-auto max-w-3xl px-4">
-        <h1 className="font-display text-4xl md:text-5xl font-bold mb-3">Privacy Policy</h1>
-        <p className="text-sm text-muted-foreground mb-10">Last Updated: November 8, 2025</p>
+        <h1 className="font-display text-4xl md:text-5xl font-bold mb-3">{hero.title}</h1>
+        {hero.subtitle && <p className="text-sm text-muted-foreground mb-10">{hero.subtitle}</p>}
 
         <div className="space-y-6 text-muted-foreground leading-relaxed">
           <section className="space-y-3">
@@ -139,6 +145,7 @@ const Privacy = () => (
       </div>
     </section>
   </Layout>
-);
+  );
+};
 
 export default Privacy;

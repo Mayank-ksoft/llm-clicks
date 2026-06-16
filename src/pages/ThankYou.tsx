@@ -3,8 +3,16 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle2, ArrowRight, Home, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePageHeroContent } from "@/hooks/usePageHeroContent";
 
-const ThankYou = () => (
+const ThankYou = () => {
+  const hero = usePageHeroContent({
+    title: "Thank you!",
+    subtitle:
+      "We've received your message and one of our team will get back to you within one business day. In the meantime, feel free to explore the platform.",
+    eyebrow: "MESSAGE RECEIVED",
+  });
+  return (
   <Layout>
     <section className="section-padding pt-28 md:pt-36 relative overflow-hidden min-h-[70vh] flex items-center">
       <div className="absolute inset-0 accent-mesh opacity-40 pointer-events-none" />
@@ -22,11 +30,11 @@ const ThankYou = () => (
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <div className="tag-pill mb-4 mx-auto"><MessageSquare className="h-3 w-3" /> MESSAGE RECEIVED</div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-5">Thank you!</h1>
-          <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-10">
-            We've received your message and one of our team will get back to you within one business day. In the meantime, feel free to explore the platform.
-          </p>
+          {hero.eyebrow && <div className="tag-pill mb-4 mx-auto"><MessageSquare className="h-3 w-3" /> {hero.eyebrow}</div>}
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-5">{hero.title}</h1>
+          {hero.subtitle && (
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-10">{hero.subtitle}</p>
+          )}
         </motion.div>
 
         <motion.div
@@ -64,6 +72,7 @@ const ThankYou = () => (
       </div>
     </section>
   </Layout>
-);
+  );
+};
 
 export default ThankYou;
