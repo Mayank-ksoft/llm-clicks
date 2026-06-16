@@ -155,22 +155,49 @@ const CmsDropdown = ({
                     <div
                       key={col.id}
                       className={cn(
-                        "p-4",
+                        "p-4 flex flex-col",
                         idx === 1 && "bg-muted/20 border-l border-border",
                         idx === 2 && "bg-gradient-to-br from-accent/5 to-transparent border-l border-border",
                       )}
                     >
-                      <p className={cn(
-                        "text-[10px] font-semibold uppercase tracking-widest px-3 mb-2",
-                        idx === 2 ? "text-accent/80" : "text-muted-foreground/60",
-                      )}>
-                        {col.label}
-                      </p>
+                      {idx === 2 && col.url ? (
+                        <Link to={col.url} className="px-3 mb-2 group/header block">
+                          <p className="text-[10px] font-semibold uppercase tracking-widest text-accent/80 mb-1">
+                            {col.label}
+                          </p>
+                          {col.description && (
+                            <p className="text-sm text-accent group-hover/header:underline">
+                              {col.description} →
+                            </p>
+                          )}
+                        </Link>
+                      ) : (
+                        <p className={cn(
+                          "text-[10px] font-semibold uppercase tracking-widest px-3 mb-2",
+                          idx === 2 ? "text-accent/80" : "text-muted-foreground/60",
+                        )}>
+                          {col.label}
+                        </p>
+                      )}
                       <div className="space-y-0.5">
                         {col.children.map((leaf) => (
                           <CmsLeaf key={leaf.id} child={leaf} accent={idx === 1 ? "coral" : "accent"} />
                         ))}
                       </div>
+                      {idx === 1 && (
+                        <div className="mt-3 mx-3 rounded-xl border border-accent/30 bg-accent/5 p-4">
+                          <p className="text-sm font-semibold mb-1">Start Free</p>
+                          <p className="text-xs text-muted-foreground mb-3">
+                            Get your AI visibility audit — no signup required.
+                          </p>
+                          <Link
+                            to="/ai-visibility-checker"
+                            className="inline-flex items-center justify-center gap-2 w-full rounded-lg bg-accent text-accent-foreground text-sm font-medium px-3 py-2 hover:bg-accent/90 transition-colors"
+                          >
+                            Try it now <ArrowRight className="h-3.5 w-3.5" />
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

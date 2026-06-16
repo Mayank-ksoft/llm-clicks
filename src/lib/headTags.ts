@@ -15,6 +15,8 @@ export const syncRouteHeadTags = (
   title: string,
   description: string,
   canonical: string,
+  ogTitle = title,
+  ogDescription = description,
 ) => {
   document.title = title;
 
@@ -39,8 +41,8 @@ export const syncRouteHeadTags = (
   );
 
   [
-    ["og:title", title],
-    ["og:description", description],
+    ["og:title", ogTitle],
+    ["og:description", ogDescription],
     ["og:url", canonical],
   ].forEach(([property, content]) => {
     syncSingleHeadTag(
@@ -55,8 +57,8 @@ export const syncRouteHeadTags = (
   });
 
   [
-    ["twitter:title", title],
-    ["twitter:description", description],
+    ["twitter:title", ogTitle],
+    ["twitter:description", ogDescription],
   ].forEach(([name, content]) => {
     syncSingleHeadTag(
       `meta[name="${name}"]`,

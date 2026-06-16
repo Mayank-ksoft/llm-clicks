@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { getPageSchema } from "@/lib/pageSchema";
 import CmsSeoOverride from "@/components/seo/CmsSeoOverride";
+import { syncRouteHeadTags } from "@/lib/headTags";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
@@ -27,6 +28,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
       window.history.replaceState(null, "", `${current}/${search}${hash}`);
     }
   }, [pathname]);
+
+  // Helmet adds route tags, but static tags from index.html can remain first in
+  // DevTools/crawlers. Keep the canonical first tags synchronized per route.
+  useEffect(() => {
+    syncRouteHeadTags(title, description, canonical);
+  }, [title, description, canonical]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

@@ -1,6 +1,9 @@
 import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { usePageSeo } from "@/hooks/usePageSeo";
+import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
+import { syncRouteHeadTags } from "@/lib/headTags";
 
 /**
  * Overrides head tags with admin-edited SEO from Lovable Cloud when present.
@@ -10,6 +13,19 @@ const CmsSeoOverride = () => {
   const { pathname } = useLocation();
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
   const { data } = usePageSeo(normalized);
+  const fallback = getPageMeta(normalized);
+
+  useEffect(() => {
+    if (!data) return;
+    syncRouteHeadTags(
+      data.meta_title || fallback.title,
+      data.meta_description || fallback.description,
+      data.canonical_url || getCanonicalUrl(normalized),
+      data.og_title || data.meta_title || fallback.title,
+      data.og_description || data.meta_description || fallback.description,
+    );
+  }, [data, fallback.description, fallback.title, normalized]);
+
   if (!data) return null;
 
   const schemaText =
@@ -27,6 +43,8 @@ const CmsSeoOverride = () => {
       {data.og_title && <meta property="og:title" content={data.og_title} />}
       {data.og_description && <meta property="og:description" content={data.og_description} />}
       {data.canonical_url && <meta property="og:url" content={data.canonical_url} />}
+      {data.og_title && <meta name="twitter:title" content={data.og_title} />}
+      {data.og_description && <meta name="twitter:description" content={data.og_description} />}
       {data.og_image && <meta property="og:image" content={data.og_image} />}
       {data.og_image && <meta name="twitter:image" content={data.og_image} />}
       {data.robots && <meta name="robots" content={data.robots} />}
