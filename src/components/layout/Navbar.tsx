@@ -87,6 +87,34 @@ const NavLeaf = ({ node, className }: { node: MenuNode; className?: string }) =>
   return <Link to={url} className={className}>{node.label}</Link>;
 };
 
+const CmsLeaf = ({ child, accent = "accent" }: { child: MenuNode; accent?: "accent" | "coral" }) => {
+  const Icon = getIcon(child.icon);
+  const url = child.url ?? "#";
+  const isExt = externalHref(url) || child.open_in_new_tab;
+  const colorBg = accent === "coral" ? "bg-coral/10 group-hover/item:bg-coral/20" : "bg-accent/10 group-hover/item:bg-accent/20";
+  const colorText = accent === "coral" ? "text-coral" : "text-accent";
+  const colorHoverText = accent === "coral" ? "group-hover/item:text-coral" : "group-hover/item:text-accent";
+  const inner = (
+    <>
+      <div className={cn("mt-0.5 h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0 group-hover/item:scale-110 transition-all", colorBg)}>
+        {Icon ? <Icon className={cn("h-4 w-4", colorText)} /> : <ChevronRight className={cn("h-4 w-4", colorText)} />}
+      </div>
+      <div className="min-w-0">
+        <p className={cn("text-sm font-medium transition-colors truncate", colorHoverText)}>{child.label}</p>
+        {child.description && (
+          <p className="text-xs text-muted-foreground/70 truncate">{child.description}</p>
+        )}
+      </div>
+    </>
+  );
+  const cls = "flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item";
+  return isExt ? (
+    <a href={url} target={child.open_in_new_tab ? "_blank" : undefined} rel={child.open_in_new_tab ? "noopener noreferrer" : undefined} className={cls}>{inner}</a>
+  ) : (
+    <Link to={url} className={cls}>{inner}</Link>
+  );
+};
+
 const CmsDropdown = ({
   node,
   isOpen,
@@ -98,7 +126,8 @@ const CmsDropdown = ({
   onOpen: () => void;
   onClose: () => void;
 }) => {
-  const wide = node.is_mega_trigger && node.children.length > 6;
+  const isMegaColumns = node.children.length > 0 && node.children.every((c) => c.is_column_group);
+  const wide = !isMegaColumns && node.is_mega_trigger && node.children.length > 6;
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onClose}>
       <button
@@ -108,69 +137,56 @@ const CmsDropdown = ({
         )}
       >
         {node.label}
-        <ChevronDown
-          className={cn("h-3 w-3 transition-transform duration-200", isOpen && "rotate-180")}
-        />
+        <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", isOpen && "rotate-180")} />
       </button>
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute left-0 top-full pt-3"
+            className={cn("absolute top-full pt-3", isMegaColumns ? "-left-72" : "left-0")}
             initial={{ opacity: 0, y: 8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            <div
-              className={cn(
-                "rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden p-3",
-                wide ? "w-[560px] grid grid-cols-2 gap-1" : "w-[320px]",
-              )}
-            >
-              {node.children.map((child) => {
-                const Icon = getIcon(child.icon);
-                const url = child.url ?? "#";
-                const isExt = externalHref(url) || child.open_in_new_tab;
-                const inner = (
-                  <>
-                    <div className="mt-0.5 h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-accent/20 group-hover/item:scale-110 transition-all">
-                      {Icon ? (
-                        <Icon className="h-4 w-4 text-accent" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 text-accent" />
+            {isMegaColumns ? (
+              <div className="w-[1080px] rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden">
+                <div className="grid grid-cols-3 gap-0">
+                  {node.children.map((col, idx) => (
+                    <div
+                      key={col.id}
+                      className={cn(
+                        "p-4",
+                        idx === 1 && "bg-muted/20 border-l border-border",
+                        idx === 2 && "bg-gradient-to-br from-accent/5 to-transparent border-l border-border",
                       )}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium group-hover/item:text-accent transition-colors truncate">
-                        {child.label}
+                    >
+                      <p className={cn(
+                        "text-[10px] font-semibold uppercase tracking-widest px-3 mb-2",
+                        idx === 2 ? "text-accent/80" : "text-muted-foreground/60",
+                      )}>
+                        {col.label}
                       </p>
-                      {child.description && (
-                        <p className="text-xs text-muted-foreground/70 truncate">
-                          {child.description}
-                        </p>
-                      )}
+                      <div className="space-y-0.5">
+                        {col.children.map((leaf) => (
+                          <CmsLeaf key={leaf.id} child={leaf} accent={idx === 1 ? "coral" : "accent"} />
+                        ))}
+                      </div>
                     </div>
-                  </>
-                );
-                const cls =
-                  "flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-accent/5 transition-colors group/item";
-                return isExt ? (
-                  <a
-                    key={child.id}
-                    href={url}
-                    target={child.open_in_new_tab ? "_blank" : undefined}
-                    rel={child.open_in_new_tab ? "noopener noreferrer" : undefined}
-                    className={cls}
-                  >
-                    {inner}
-                  </a>
-                ) : (
-                  <Link key={child.id} to={url} className={cls}>
-                    {inner}
-                  </Link>
-                );
-              })}
-            </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div
+                className={cn(
+                  "rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/5 overflow-hidden p-3",
+                  wide ? "w-[560px] grid grid-cols-2 gap-1" : "w-[320px]",
+                )}
+              >
+                {node.children.map((child) => (
+                  <CmsLeaf key={child.id} child={child} />
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -325,13 +341,28 @@ const Navbar = () => {
                       </button>
                       {mobileSubOpen === node.id && (
                         <div className="ml-3 border-l border-border pl-3 space-y-0.5">
-                          {node.children.map((child) => (
-                            <NavLeaf
-                              key={child.id}
-                              node={child}
-                              className="block py-2 px-3 text-sm text-muted-foreground hover:text-accent"
-                            />
-                          ))}
+                          {node.children.every((c) => c.is_column_group)
+                            ? node.children.map((col) => (
+                                <div key={col.id} className="pt-2">
+                                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 px-3 mb-1">
+                                    {col.label}
+                                  </p>
+                                  {col.children.map((leaf) => (
+                                    <NavLeaf
+                                      key={leaf.id}
+                                      node={leaf}
+                                      className="block py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+                                    />
+                                  ))}
+                                </div>
+                              ))
+                            : node.children.map((child) => (
+                                <NavLeaf
+                                  key={child.id}
+                                  node={child}
+                                  className="block py-2 px-3 text-sm text-muted-foreground hover:text-accent"
+                                />
+                              ))}
                         </div>
                       )}
                     </div>

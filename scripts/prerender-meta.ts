@@ -6,6 +6,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { resolve, dirname, join } from "path";
+import { createClient } from "@supabase/supabase-js";
 import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 import { posts } from "../src/data/blogPosts";
 import { docs } from "../src/data/docsArticles";
@@ -22,6 +23,45 @@ const META = pageMetaData as {
   default: { title: string; description: string };
   routes: Record<string, { title: string; description: string }>;
 };
+
+// ---- Pull admin-edited SEO from Supabase (overrides static pageMeta) ----
+type DbSeo = {
+  meta_title: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  og_title: string | null;
+  og_description: string | null;
+  og_image: string | null;
+  robots: string | null;
+  keywords: string | null;
+  schema_jsonld: unknown | null;
+};
+const dbSeoByPath = new Map<string, DbSeo>();
+
+async function loadDbSeo() {
+  const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    console.warn("[prerender-meta] Supabase env not set — skipping CMS SEO override");
+    return;
+  }
+  const client = createClient(url, key);
+  const { data, error } = await client
+    .from("pages")
+    .select("path, page_seo(meta_title, meta_description, canonical_url, og_title, og_description, og_image, robots, keywords, schema_jsonld)");
+  if (error) {
+    console.warn("[prerender-meta] CMS SEO fetch failed:", error.message);
+    return;
+  }
+  for (const row of data ?? []) {
+    const seo = Array.isArray((row as any).page_seo) ? (row as any).page_seo[0] : (row as any).page_seo;
+    if (seo) dbSeoByPath.set((row as any).path, seo as DbSeo);
+  }
+  console.log(`[prerender-meta] loaded CMS SEO for ${dbSeoByPath.size} pages`);
+}
 
 function titleCase(slug: string): string {
   return slug
@@ -102,48 +142,50 @@ function escapeAttr(v: string): string {
 }
 
 function injectMeta(html: string, pathname: string): string {
-  const { title, description } = metaForPath(pathname);
-  const canonical = canonicalForPath(pathname);
+  const fallback = metaForPath(pathname);
+  const db = dbSeoByPath.get(pathname);
+  const title = db?.meta_title || fallback.title;
+  const description = db?.meta_description || fallback.description;
+  const canonical = db?.canonical_url || canonicalForPath(pathname);
+  const ogTitle = db?.og_title || title;
+  const ogDesc = db?.og_description || description;
+  const ogImage = db?.og_image || null;
+  const robots = db?.robots || null;
+  const keywords = db?.keywords || null;
   const t = escapeAttr(title);
   const d = escapeAttr(description);
+  const ot = escapeAttr(ogTitle);
+  const od = escapeAttr(ogDesc);
 
   let out = html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${t}</title>`)
-    .replace(
-      /<meta\s+name="description"[^>]*>/i,
-      `<meta name="description" content="${d}" />`,
-    )
-    .replace(
-      /<meta\s+property="og:title"[^>]*>/i,
-      `<meta property="og:title" content="${t}" />`,
-    )
-    .replace(
-      /<meta\s+property="og:description"[^>]*>/i,
-      `<meta property="og:description" content="${d}" />`,
-    )
-    .replace(
-      /<meta\s+property="og:url"[^>]*>/i,
-      `<meta property="og:url" content="${canonical}" />`,
-    )
-    .replace(
-      /<meta\s+name="twitter:title"[^>]*>/i,
-      `<meta name="twitter:title" content="${t}" />`,
-    )
-    .replace(
-      /<meta\s+name="twitter:description"[^>]*>/i,
-      `<meta name="twitter:description" content="${d}" />`,
-    );
+    .replace(/<meta\s+name="description"[^>]*>/i, `<meta name="description" content="${d}" />`)
+    .replace(/<meta\s+property="og:title"[^>]*>/i, `<meta property="og:title" content="${ot}" />`)
+    .replace(/<meta\s+property="og:description"[^>]*>/i, `<meta property="og:description" content="${od}" />`)
+    .replace(/<meta\s+property="og:url"[^>]*>/i, `<meta property="og:url" content="${canonical}" />`)
+    .replace(/<meta\s+name="twitter:title"[^>]*>/i, `<meta name="twitter:title" content="${ot}" />`)
+    .replace(/<meta\s+name="twitter:description"[^>]*>/i, `<meta name="twitter:description" content="${od}" />`);
 
   if (!/<link\s+rel="canonical"/i.test(out)) {
-    out = out.replace(
-      /(<meta\s+name="description"[^>]*>)/i,
-      `$1\n    <link rel="canonical" href="${canonical}" />`,
-    );
+    out = out.replace(/(<meta\s+name="description"[^>]*>)/i, `$1\n    <link rel="canonical" href="${canonical}" />`);
   } else {
-    out = out.replace(
-      /<link\s+rel="canonical"[^>]*>/i,
-      `<link rel="canonical" href="${canonical}" />`,
-    );
+    out = out.replace(/<link\s+rel="canonical"[^>]*>/i, `<link rel="canonical" href="${canonical}" />`);
+  }
+
+  // Inject extra admin-controlled tags before </head>
+  const extra: string[] = [];
+  if (ogImage) {
+    extra.push(`<meta property="og:image" content="${escapeAttr(ogImage)}" />`);
+    extra.push(`<meta name="twitter:image" content="${escapeAttr(ogImage)}" />`);
+  }
+  if (robots) extra.push(`<meta name="robots" content="${escapeAttr(robots)}" />`);
+  if (keywords) extra.push(`<meta name="keywords" content="${escapeAttr(keywords)}" />`);
+  if (db?.schema_jsonld) {
+    const json = typeof db.schema_jsonld === "string" ? db.schema_jsonld : JSON.stringify(db.schema_jsonld);
+    extra.push(`<script type="application/ld+json">${json}</script>`);
+  }
+  if (extra.length) {
+    out = out.replace(/<\/head>/i, `    ${extra.join("\n    ")}\n  </head>`);
   }
   return out;
 }
@@ -164,10 +206,13 @@ if (!existsSync(TEMPLATE_PATH)) {
   process.exit(1);
 }
 
+await loadDbSeo();
+
 const template = readFileSync(TEMPLATE_PATH, "utf8");
 
 const routes = new Set<string>(["/"]);
 for (const k of Object.keys(META.routes)) routes.add(k);
+for (const k of dbSeoByPath.keys()) routes.add(k);
 posts.forEach((p) => routes.add(`/blog/${p.slug}`));
 indexableBlogCategories.forEach((c) => routes.add(`/blog/category/${c.slug}`));
 docs.forEach((d) => routes.add(`/docs/${d.slug}`));

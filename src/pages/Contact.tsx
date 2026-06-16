@@ -1,11 +1,12 @@
 import Layout from "@/components/layout/Layout";
+import PageHero from "@/components/PageHero";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Phone, Send, MessageSquare } from "lucide-react";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const MAX_NAME_LENGTH = 100;
@@ -95,11 +96,14 @@ const Contact = () => {
       <div className="absolute bottom-40 right-20 w-2 h-2 rounded-full bg-accent/20 animate-float pointer-events-none" />
 
       <div className="container mx-auto max-w-4xl relative z-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-14 text-center">
-          <div className="tag-pill mb-4 mx-auto"><MessageSquare className="h-3 w-3" /> CONTACT</div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Let's talk</h1>
-          <p className="text-lg text-muted-foreground">Have questions? We'd love to hear from you.</p>
-        </motion.div>
+        <div className="mb-14 text-center max-w-3xl mx-auto">
+          <PageHero
+            eyebrow="CONTACT"
+            defaultTitle="Let's talk"
+            defaultSubtitle="Have questions? We'd love to hear from you."
+            className="mb-0 [&>h1]:mx-auto [&>h1]:text-center [&>p]:mx-auto [&>p]:text-center [&>div.tag-pill]:mx-auto"
+          />
+        </div>
 
         <div className="grid md:grid-cols-5 gap-6">
           <motion.form className="md:col-span-3 rounded-2xl border border-border bg-card p-7 space-y-5 shimmer-card gradient-border" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} onSubmit={handleSubmit} noValidate>

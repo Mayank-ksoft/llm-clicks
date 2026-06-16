@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import PageHero from "@/components/PageHero";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
@@ -82,15 +83,14 @@ const Pricing = () => {
         <div className="absolute inset-0 accent-mesh pointer-events-none opacity-40" />
         <div className="absolute inset-0 grain-overlay pointer-events-none" />
         <div className="container mx-auto relative z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
-            <div className="tag-pill mb-4 mx-auto w-fit">LIFETIME DEAL PLANS</div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4 max-w-2xl mx-auto">
-              Simple AI visibility packages for every team
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Transparent, value-driven pricing built for modern AI workflows. Pay once, use forever.
-            </p>
-          </motion.div>
+          <div className="mb-10 text-center max-w-3xl mx-auto">
+            <PageHero
+              eyebrow="LIFETIME DEAL PLANS"
+              defaultTitle="Simple AI visibility packages for every team"
+              defaultSubtitle="Transparent, value-driven pricing built for modern AI workflows. Pay once, use forever."
+              className="mb-0 [&>h1]:mx-auto [&>h1]:text-center [&>p]:mx-auto [&>p]:text-center [&>div.tag-pill]:mx-auto"
+            />
+          </div>
 
           {/* Currency toggle */}
           <div className="flex justify-center mb-10">
