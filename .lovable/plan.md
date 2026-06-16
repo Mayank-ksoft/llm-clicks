@@ -1,68 +1,85 @@
-# CMS completion plan
 
-## What already works (verified by reading code)
+## Task 1 — Restore the navbar/footer look (screenshots 1 & 3)
 
-- `pages`, `page_seo`, `menus`, `menu_items`, `footer_settings`, `user_roles` + `has_role()` schema is in place (migrations were created earlier).
-- `/admin/login` shows **Signup** when no admin row exists, else **Login** (via `admin-bootstrap-status` edge fn).
-- `AdminGuard` checks `user_roles.role='admin'` and redirects otherwise.
-- Admin pages already exist for **Dashboard / Menus / Footer / Pages / Page detail**.
-- Menus admin has **drag-and-drop** (`@dnd-kit`), **parent/child nesting**, **`is_mega_trigger`** + **`is_column_group`** flags, per-location selector (Primary Nav + 5 footer columns).
-- Footer admin edits brand blurb / socials / copyright; the 5 column link lists are managed under Menus.
-- Pages admin lists every seeded page, edit screen lets you pick **Section** (features / resources / free_tools / company / legal / none) and **Parent page**, plus full SEO (meta title/desc, canonical, OG, JSON-LD schema, tagline, robots, keywords).
-- `<CmsSeoOverride />` reads `page_seo` per pathname and overrides head via `react-helmet-async` — frontend reflects admin edits.
-- `Navbar.tsx` still uses hardcoded arrays (not CMS-driven). `Footer.tsx` IS CMS-driven (reads `useCmsMenu` + falls back to hardcoded if empty).
+**Footer (`src/components/layout/Footer.tsx`)**
+- Bug: grid is `lg:grid-cols-6` but content is brand (`lg:col-span-2`) + 5 link columns = 7 cells. The 5th column (Legal) wraps to a new row. Change grid to `lg:grid-cols-7` and keep brand at `lg:col-span-2`, so 2 + 5 = 7 fits cleanly on one row.
+- Keep current CMS data flow (columns come from `footer_col_1..5` menus).
 
-## Gaps to close (this iteration)
+**Navbar (`src/components/layout/Navbar.tsx`)**
+- The original screenshot shows a **3-column mega panel** under Features (Platform / Free Tools / On-Page Optimiser sub-section). The CMS `CmsDropdown` only renders a flat 1-or-2-column grid, so the mega look is lost once CMS items exist.
+- Fix: when a CMS top-level node has children that themselves contain `is_column_group` children (or has nested children), render a 3-column mega layout (column-group headings + their leaves), with the existing hover-card style. Keep the simple dropdown path for nodes with no grandchildren.
+- Update seed so Features has 3 column groups (`Platform`, `Free Tools`, `On-Page Optimiser`) with `is_column_group=true`, each containing the right leaves, matching screenshot 1.
 
-### 1. Credential placeholders for the new Supabase project
-- Update `supabase/config.toml` `project_id` to a `__YOUR_PROJECT_REF__` placeholder with a TODO comment.
-- Update `.env.example` (create if missing) with `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`.
-- Leave `src/integrations/supabase/client.ts` alone — it already reads from `import.meta.env`. Document in `.env.example` exactly where to paste keys.
-- Note: the runtime CSP error (`rlbriopbtyymmwitkunu.supabase.co`) comes from a stale `.env` baked into the deployed bundle and a CSP that doesn't whitelist it. After you paste the new keys and rebuild, the CSP also needs to be widened. I'll update CSP in `index.html` / `vercel.json` (whichever ships it) to allow the new Supabase host once you give me the URL. For now I'll switch CSP to allow `https://*.supabase.co` so any Supabase project works.
+## Task 2 — Footer admin clarity (5 columns)
 
-### 2. Custom admin auth APIs (don't call `supabase.auth.*` from the client)
-Two new edge functions + rewrite of `AdminLogin.tsx`:
-- **`admin-signup`** (`POST {email,password,full_name}`): rejects if any admin exists; calls `admin.auth.admin.createUser` (service role) with `email_confirm: true`; inserts `user_roles(user_id,'admin')`; returns `{ session }` by calling `admin.auth.admin.generateLink('magiclink')` or simply issuing a password-grant via Supabase auth REST. Cleanest path: after createUser, call the GoTrue `/token?grant_type=password` endpoint server-side and return the access/refresh tokens.
-- **`admin-login`** (`POST {email,password}`): verifies the user has `role='admin'` in `user_roles`; if yes, hits GoTrue `/token?grant_type=password` server-side and returns `{ access_token, refresh_token, user }`. If not admin, 403.
-- Client (`AdminLogin.tsx`): no more `supabase.auth.signUp/signInWithPassword`. POSTs to these functions, then calls `supabase.auth.setSession({ access_token, refresh_token })` to hydrate the JS client so RLS-backed queries (`from('user_roles')`, etc.) work in the admin UI.
-- Keep `admin-bootstrap-status` as the gate that decides Signup-vs-Login screen.
-- Delete `admin-bootstrap` (folded into `admin-signup`).
-- Input validation with `zod` on both functions; CORS headers; clear 400/401/403/409 errors.
+The 5 footer columns are already CMS-managed at `/admin/menus` (location selector). `AdminFooter` only edits blurb/copyright/socials. To make this obvious:
+- In `AdminFooter.tsx`, add a small "Footer columns" section with 5 buttons that deep-link to `/admin/menus?location=footer_col_N`, each labeled with the column title and a preview of the current link count.
+- `AdminMenus.tsx`: read `?location=` from the URL on mount and pre-select that location.
 
-### 3. SQL seed file for current page SEO (you paste into SQL editor)
-- New file `supabase/seeds/page_seo.sql` — for every route in `App.tsx`, upserts a `pages` row (path/title/section) and a `page_seo` row populated from the values currently hardcoded in each page component (`shared/pageMeta.json` + per-page Helmet tags). One transaction, idempotent (uses `ON CONFLICT (path) DO UPDATE` on pages and `ON CONFLICT (page_id) DO UPDATE` on `page_seo`).
-- Adds the corresponding unique constraints if missing (small migration: `supabase/migrations/<ts>_seo_seed_constraints.sql` adding `unique(page_id)` on `page_seo`).
-- I'll source titles/descriptions from `shared/pageMeta.json` so the seed matches what's live today.
+## Task 3 — Admin SEO actually shows on the frontend
 
-### 4. Small fixes / polish
-- `AdminLayout` sidebar: add a top "View site" link.
-- Page detail save toast: full reload hint already there; also call `qc.invalidateQueries({ queryKey: ["page-seo", path] })` with the actual path so other tabs update without a refresh.
-- Pages list: group rows by section for readability.
-- Navbar refactor to CMS-driven is **out of scope** for this iteration (would risk regressions on the marketing site). I'll log it as a TODO. Footer is already CMS-driven.
+**Root cause**: `Layout.tsx` calls `syncRouteHeadTags(title, description, canonical)` on every render using the **static** `pageMeta.json`. That runs after Helmet, so `CmsSeoOverride`'s tags are overwritten by the static values. Result: admin edits never appear.
+
+**Fix**:
+- Remove the `syncRouteHeadTags` imperative call from `Layout.tsx` (Helmet already manages title/description/canonical/og:*).
+- Move that fallback responsibility into `CmsSeoOverride`: when CMS data exists for the path, emit those tags via Helmet (current behavior); when it doesn't, the static `<Helmet>` block in `Layout` is the source of truth — no DOM-mutating sync needed.
+- Add `queryClient.invalidateQueries(["page-seo", path])` is already called on save; the user just needs a hard refresh or route change to re-fetch — keep existing 60s `staleTime`.
+
+## Task 4 — Per-page **H1 title** and **subtitle** managed from admin
+
+Currently `page_seo.tagline` exists but isn't used anywhere visible. The user wants the big H1 ("About LLMClicks.ai and Our Mission…") and the subtitle below it to be admin-driven on every page.
+
+**Schema** (new migration `*_page_hero.sql`):
+- `ALTER TABLE public.page_seo ADD COLUMN h1 TEXT, ADD COLUMN subtitle TEXT;` (kept nullable so frontend falls back to hardcoded text).
+
+**Hook** (`src/hooks/usePageHero.ts`):
+- `usePageHero(path)` returns `{ h1, subtitle, eyebrow }` (eyebrow = existing `tagline`).
+- Reuses the same `page_seo` query keyed on path.
+
+**Admin** (`AdminPageDetail.tsx`):
+- Add a new "Hero" card above "SEO" with `H1 title` and `Subtitle` inputs, plus the existing `Tagline` (eyebrow). Save through the same upsert.
+
+**Frontend consumption** — wire only the pages that ship a visible hero today:
+- `src/pages/About.tsx` — replace the hardcoded H1 + subtitle.
+- `src/pages/Pricing.tsx`, `Contact.tsx`, `Comparison.tsx`, `Affiliate.tsx`, `IndustryBenchmarks.tsx`, `KnowledgeHub.tsx`, `WebStories.tsx`, `Industries.tsx`, `Privacy.tsx`, `Terms.tsx`, `Docs.tsx`, `Blog.tsx` — same pattern.
+- `src/pages/FeaturePage.tsx` and `FreeToolPage.tsx` — use CMS hero with fallback to the per-slug content already in those files.
+
+Pattern (small helper component):
+```tsx
+<PageHero
+  eyebrow="ABOUT US"
+  defaultTitle="About LLMClicks.ai and Our Mission to Redefine AI Visibility"
+  defaultSubtitle="Helping businesses understand and thrive in the age of AI-powered search."
+/>
+```
+Internally calls `usePageHero(pathname)` and shows CMS values when present.
+
+**Seed** (`supabase/seeds/page_hero.sql`):
+- Idempotent `UPDATE public.page_seo SET h1 = ..., subtitle = ...` per known path (About, Pricing, Contact, Comparison, Affiliate, Industry Benchmarks, Knowledge Hub, Web Stories, Industries, Privacy, Terms, Docs, Blog, and each feature/free-tool slug).
+- Documented at the top with a one-line `psql -f` instruction.
 
 ## Files touched
 
-- `supabase/config.toml` — placeholder project_id + comment.
-- `.env.example` (new) — keys with comments.
-- `index.html` and/or `vercel.json` — CSP `connect-src` widened to `https://*.supabase.co` and `https://*.functions.supabase.co`.
-- `supabase/functions/admin-signup/index.ts` (new), `admin-login/index.ts` (new).
-- `supabase/functions/admin-bootstrap/` — delete.
-- `src/pages/admin/AdminLogin.tsx` — switch to fetch calls + `setSession`.
-- `supabase/seeds/page_seo.sql` (new).
-- `supabase/migrations/<ts>_page_seo_unique.sql` (new) — small constraint add.
-- `src/pages/admin/AdminPages.tsx` — section grouping.
-- `src/components/admin/AdminLayout.tsx` — "View site" link.
+```text
+supabase/migrations/<ts>_page_hero.sql          (new)
+supabase/seeds/page_hero.sql                    (new)
+supabase/seeds/menu_items.sql                   (rework Features mega groups)
+src/hooks/usePageHero.ts                        (new)
+src/components/PageHero.tsx                     (new)
+src/components/layout/Footer.tsx                (grid fix)
+src/components/layout/Navbar.tsx                (3-col mega for CMS Features)
+src/components/layout/Layout.tsx                (drop syncRouteHeadTags)
+src/components/seo/CmsSeoOverride.tsx           (no change unless needed)
+src/pages/admin/AdminPageDetail.tsx             (Hero card)
+src/pages/admin/AdminFooter.tsx                 (5 quick-link buttons to menus)
+src/pages/admin/AdminMenus.tsx                  (honor ?location= query)
+src/pages/About.tsx + ~12 other hero pages      (PageHero wiring)
+```
 
-## Out of scope (per your message)
+## Out of scope (please confirm if you want any of these)
 
-- Editing page body content (only metadata + SEO).
-- Refactoring `Navbar.tsx` to render from CMS (the data + admin UI already exist; the swap can come next).
-- Public end-user auth.
+- No SSR/prerender changes — admin SEO will appear for JS-executing crawlers (Googlebot) and users; the static `index.html` and `pageMeta.json` still serve as the no-JS fallback.
+- Not editing `shared/pageMeta.json` — the admin DB is now the live source; the JSON stays as the build-time fallback.
+- Not adding image/video upload to the hero — text only for now.
 
-## What I need from you afterwards
-
-- The new Supabase URL + publishable (anon) key → paste into `.env` (or tell me and I'll set them).
-- Then run `supabase/seeds/page_seo.sql` in the SQL editor to backfill SEO.
-- First visit to `/admin/login` will show the Signup form to create the admin.
-
-Reply **"go"** and I'll implement steps 1-4.
+Reply **"go"** to implement, or call out anything you want changed.

@@ -49,6 +49,8 @@ const AdminPageDetail = () => {
     tagline: "",
     robots: "",
     keywords: "",
+    h1: "",
+    subtitle: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -74,6 +76,8 @@ const AdminPageDetail = () => {
       tagline: str("tagline"),
       robots: str("robots"),
       keywords: str("keywords"),
+      h1: str("h1"),
+      subtitle: str("subtitle"),
     });
   }, [data]);
 
@@ -108,21 +112,25 @@ const AdminPageDetail = () => {
         .eq("id", id);
       if (pErr) throw pErr;
 
+      const seoPayload: Record<string, unknown> = {
+        page_id: id,
+        meta_title: form.meta_title || null,
+        meta_description: form.meta_description || null,
+        canonical_url: form.canonical_url || null,
+        og_title: form.og_title || null,
+        og_description: form.og_description || null,
+        og_image: form.og_image || null,
+        schema_jsonld: schemaJsonValue,
+        tagline: form.tagline || null,
+        robots: form.robots || null,
+        keywords: form.keywords || null,
+        h1: form.h1 || null,
+        subtitle: form.subtitle || null,
+      };
       const { error: sErr } = await supabase
         .from("page_seo")
-        .upsert({
-          page_id: id,
-          meta_title: form.meta_title || null,
-          meta_description: form.meta_description || null,
-          canonical_url: form.canonical_url || null,
-          og_title: form.og_title || null,
-          og_description: form.og_description || null,
-          og_image: form.og_image || null,
-          schema_jsonld: schemaJsonValue,
-          tagline: form.tagline || null,
-          robots: form.robots || null,
-          keywords: form.keywords || null,
-        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .upsert(seoPayload as any);
       if (sErr) throw sErr;
 
       qc.invalidateQueries({ queryKey: ["page-seo"] });
@@ -189,11 +197,26 @@ const AdminPageDetail = () => {
         </Card>
 
         <Card className="p-6 space-y-5">
-          <h2 className="font-semibold text-sm">SEO</h2>
+          <h2 className="font-semibold text-sm">Page hero</h2>
+          <p className="text-xs text-muted-foreground -mt-2">
+            Controls the visible eyebrow tag, H1 title, and subtitle at the top of this page.
+          </p>
           <div className="space-y-2">
-            <Label>Tagline</Label>
-            <Input value={form.tagline} onChange={set("tagline")} />
+            <Label>Eyebrow / Tagline</Label>
+            <Input value={form.tagline} onChange={set("tagline")} placeholder="ABOUT US" />
           </div>
+          <div className="space-y-2">
+            <Label>H1 title</Label>
+            <Textarea rows={2} value={form.h1} onChange={set("h1")} placeholder="About LLMClicks.ai and Our Mission to Redefine AI Visibility" />
+          </div>
+          <div className="space-y-2">
+            <Label>Subtitle</Label>
+            <Textarea rows={2} value={form.subtitle} onChange={set("subtitle")} placeholder="Helping businesses understand and thrive in the age of AI-powered search." />
+          </div>
+        </Card>
+
+        <Card className="p-6 space-y-5">
+          <h2 className="font-semibold text-sm">SEO</h2>
           <div className="space-y-2">
             <Label>Meta title</Label>
             <Input value={form.meta_title} onChange={set("meta_title")} maxLength={70} />

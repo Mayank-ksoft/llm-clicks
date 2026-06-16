@@ -5,7 +5,6 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { getPageSchema } from "@/lib/pageSchema";
-import { syncRouteHeadTags } from "@/lib/headTags";
 import CmsSeoOverride from "@/components/seo/CmsSeoOverride";
 
 const Layout = ({ children }: { children: ReactNode }) => {
@@ -28,14 +27,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
       window.history.replaceState(null, "", `${current}/${search}${hash}`);
     }
   }, [pathname]);
-
-  useEffect(() => {
-    syncRouteHeadTags(title, description, canonical);
-    const frame = window.requestAnimationFrame(() => {
-      syncRouteHeadTags(title, description, canonical);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [title, description, canonical]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

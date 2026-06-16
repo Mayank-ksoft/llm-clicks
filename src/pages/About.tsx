@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import PageHero from "@/components/PageHero";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Target, Lightbulb, Users, Heart, Linkedin, Facebook, Twitter, Award, Building2, Clock } from "lucide-react";
@@ -18,13 +19,11 @@ const About = () => {
       <div className="absolute inset-0 accent-mesh pointer-events-none opacity-50" />
       <div className="absolute inset-0 grain-overlay pointer-events-none" />
       <div className="container mx-auto max-w-4xl relative z-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-16">
-          <div className="tag-pill mb-4">ABOUT US</div>
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-5 leading-[1.1] tracking-tight text-balance">About LLMClicks.ai and Our Mission to Redefine AI Visibility</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Helping businesses understand and thrive in the age of AI-powered search.
-          </p>
-        </motion.div>
+        <PageHero
+          eyebrow="ABOUT US"
+          defaultTitle="About LLMClicks.ai and Our Mission to Redefine AI Visibility"
+          defaultSubtitle="Helping businesses understand and thrive in the age of AI-powered search."
+        />
 
         <motion.div className="rounded-2xl border border-border bg-card p-8 mb-10 gradient-border" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <h2 className="font-display text-xl font-bold mb-3 flex items-center gap-2"><Heart className="h-5 w-5 text-coral" /> Our Story</h2>

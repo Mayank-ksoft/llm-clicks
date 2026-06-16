@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,7 +48,15 @@ type Draft = {
 };
 
 const AdminMenus = () => {
-  const [location, setLocation] = useState<MenuLocation>("primary_nav");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialLocation = (searchParams.get("location") as MenuLocation) || "primary_nav";
+  const [location, setLocation] = useState<MenuLocation>(initialLocation);
+
+  useEffect(() => {
+    const q = searchParams.get("location") as MenuLocation | null;
+    if (q && q !== location) setLocation(q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
   const { data, isLoading } = useCmsMenu(location);
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Draft | null>(null);
@@ -143,7 +152,11 @@ const AdminMenus = () => {
           <select
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
             value={location}
-            onChange={(e) => setLocation(e.target.value as MenuLocation)}
+            onChange={(e) => {
+              const next = e.target.value as MenuLocation;
+              setLocation(next);
+              setSearchParams({ location: next });
+            }}
           >
             {LOCATIONS.map((l) => (
               <option key={l.value} value={l.value}>
