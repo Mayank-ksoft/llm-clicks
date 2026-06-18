@@ -39,6 +39,17 @@ const AdminPages = lazy(() => import("./pages/admin/AdminPages"));
 const AdminPageDetail = lazy(() => import("./pages/admin/AdminPageDetail"));
 const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
+const AdminDocs = lazy(() => import("./pages/admin/AdminDocs"));
+const AdminDocsEditor = lazy(() => import("./pages/admin/AdminDocsEditor"));
+const AdminKB = lazy(() => import("./pages/admin/AdminKB"));
+const AdminKBEditor = lazy(() => import("./pages/admin/AdminKBEditor"));
+const AdminWebStories = lazy(() => import("./pages/admin/AdminWebStories"));
+const AdminWebStoriesEditor = lazy(() => import("./pages/admin/AdminWebStoriesEditor"));
+const AdminAuthors = lazy(() => import("./pages/admin/AdminAuthors"));
+const AdminCategories = lazy(() => import("./pages/admin/AdminCategories"));
+const AdminTags = lazy(() => import("./pages/admin/AdminTags"));
+const AdminRedirects = lazy(() => import("./pages/admin/AdminRedirects"));
+const AdminMedia = lazy(() => import("./pages/admin/AdminMedia"));
 import AdminGuard from "./components/admin/AdminGuard";
 
 const queryClient = new QueryClient();
@@ -125,6 +136,20 @@ const App = () => (
             <Route path="/admin/blog" element={<AdminGuard><AdminBlog /></AdminGuard>} />
             <Route path="/admin/blog/new" element={<AdminGuard><AdminBlogEditor /></AdminGuard>} />
             <Route path="/admin/blog/:id" element={<AdminGuard><AdminBlogEditor /></AdminGuard>} />
+            <Route path="/admin/docs" element={<AdminGuard><AdminDocs /></AdminGuard>} />
+            <Route path="/admin/docs/new" element={<AdminGuard><AdminDocsEditor /></AdminGuard>} />
+            <Route path="/admin/docs/:id" element={<AdminGuard><AdminDocsEditor /></AdminGuard>} />
+            <Route path="/admin/knowledge-hub" element={<AdminGuard><AdminKB /></AdminGuard>} />
+            <Route path="/admin/knowledge-hub/new" element={<AdminGuard><AdminKBEditor /></AdminGuard>} />
+            <Route path="/admin/knowledge-hub/:id" element={<AdminGuard><AdminKBEditor /></AdminGuard>} />
+            <Route path="/admin/web-stories" element={<AdminGuard><AdminWebStories /></AdminGuard>} />
+            <Route path="/admin/web-stories/new" element={<AdminGuard><AdminWebStoriesEditor /></AdminGuard>} />
+            <Route path="/admin/web-stories/:id" element={<AdminGuard><AdminWebStoriesEditor /></AdminGuard>} />
+            <Route path="/admin/authors" element={<AdminGuard><AdminAuthors /></AdminGuard>} />
+            <Route path="/admin/categories" element={<AdminGuard><AdminCategories /></AdminGuard>} />
+            <Route path="/admin/tags" element={<AdminGuard><AdminTags /></AdminGuard>} />
+            <Route path="/admin/redirects" element={<AdminGuard><AdminRedirects /></AdminGuard>} />
+            <Route path="/admin/media" element={<AdminGuard><AdminMedia /></AdminGuard>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

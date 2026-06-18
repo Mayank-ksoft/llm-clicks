@@ -28,7 +28,7 @@ const empty: Draft = {
   slug: "",
   title: "",
   excerpt: "",
-  body: "",
+  body_markdown: "",
   hero_image: "",
   status: "draft",
   author_id: null,
@@ -36,8 +36,6 @@ const empty: Draft = {
   meta_title: "",
   meta_description: "",
   canonical_url: "",
-  og_title: "",
-  og_description: "",
   og_image: "",
   robots: "index,follow",
   keywords: "",
@@ -205,8 +203,8 @@ const AdminBlogEditor = () => {
                 <div data-color-mode="light">
                   <Label className="mb-2 block">Body (Markdown)</Label>
                   <MDEditor
-                    value={draft.body ?? ""}
-                    onChange={(v) => update({ body: v ?? "" })}
+                    value={draft.body_markdown ?? ""}
+                    onChange={(v) => update({ body_markdown: v ?? "" })}
                     height={500}
                     preview="live"
                   />
@@ -230,8 +228,6 @@ const AdminBlogEditor = () => {
                     <div><Label>Keywords (comma separated)</Label><Input value={draft.keywords ?? ""} onChange={(e) => update({ keywords: e.target.value })} /></div>
                   </TabsContent>
                   <TabsContent value="social" className="space-y-3 pt-4">
-                    <div><Label>OG Title</Label><Input value={draft.og_title ?? ""} onChange={(e) => update({ og_title: e.target.value })} /></div>
-                    <div><Label>OG Description</Label><Textarea rows={2} value={draft.og_description ?? ""} onChange={(e) => update({ og_description: e.target.value })} /></div>
                     <div><Label>OG Image URL</Label><Input value={draft.og_image ?? ""} onChange={(e) => update({ og_image: e.target.value })} /></div>
                   </TabsContent>
                   <TabsContent value="advanced" className="space-y-3 pt-4">
