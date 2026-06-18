@@ -37,6 +37,8 @@ const AdminMenus = lazy(() => import("./pages/admin/AdminMenus"));
 const AdminFooter = lazy(() => import("./pages/admin/AdminFooter"));
 const AdminPages = lazy(() => import("./pages/admin/AdminPages"));
 const AdminPageDetail = lazy(() => import("./pages/admin/AdminPageDetail"));
+const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
+const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
 import AdminGuard from "./components/admin/AdminGuard";
 
 const queryClient = new QueryClient();
@@ -120,6 +122,9 @@ const App = () => (
             <Route path="/admin/footer" element={<AdminGuard><AdminFooter /></AdminGuard>} />
             <Route path="/admin/pages" element={<AdminGuard><AdminPages /></AdminGuard>} />
             <Route path="/admin/pages/:id" element={<AdminGuard><AdminPageDetail /></AdminGuard>} />
+            <Route path="/admin/blog" element={<AdminGuard><AdminBlog /></AdminGuard>} />
+            <Route path="/admin/blog/new" element={<AdminGuard><AdminBlogEditor /></AdminGuard>} />
+            <Route path="/admin/blog/:id" element={<AdminGuard><AdminBlogEditor /></AdminGuard>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

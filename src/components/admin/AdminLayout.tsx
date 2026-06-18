@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, MenuSquare, PanelBottom, FileText, LogOut, ExternalLink } from "lucide-react";
+import { LayoutDashboard, MenuSquare, PanelBottom, FileText, LogOut, ExternalLink, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
@@ -11,6 +11,7 @@ const items = [
   { to: "/admin/menus", label: "Menus", icon: MenuSquare },
   { to: "/admin/footer", label: "Footer", icon: PanelBottom },
   { to: "/admin/pages", label: "Pages & SEO", icon: FileText },
+  { to: "/admin/blog", label: "Blog Posts", icon: Newspaper },
 ];
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {

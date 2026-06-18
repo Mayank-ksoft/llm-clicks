@@ -1,85 +1,121 @@
+# Full Content Management System
 
-## Task 1 — Restore the navbar/footer look (screenshots 1 & 3)
+Today the CMS only controls SEO meta and hero text on pages whose **bodies live in TypeScript files** (`src/data/blogPosts.ts`, `docsArticles.ts`, `knowledgeHub.ts`, `webStories.ts`, `industries.ts`). To edit a post you must touch code. This plan moves all that content into the database, adds full CRUD admin modules, and rebuilds the public pages to render from the DB.
 
-**Footer (`src/components/layout/Footer.tsx`)**
-- Bug: grid is `lg:grid-cols-6` but content is brand (`lg:col-span-2`) + 5 link columns = 7 cells. The 5th column (Legal) wraps to a new row. Change grid to `lg:grid-cols-7` and keep brand at `lg:col-span-2`, so 2 + 5 = 7 fits cleanly on one row.
-- Keep current CMS data flow (columns come from `footer_col_1..5` menus).
+This is a large, multi-step build. I'll ship it in phases so you can review and use each piece as it lands instead of waiting for everything.
 
-**Navbar (`src/components/layout/Navbar.tsx`)**
-- The original screenshot shows a **3-column mega panel** under Features (Platform / Free Tools / On-Page Optimiser sub-section). The CMS `CmsDropdown` only renders a flat 1-or-2-column grid, so the mega look is lost once CMS items exist.
-- Fix: when a CMS top-level node has children that themselves contain `is_column_group` children (or has nested children), render a 3-column mega layout (column-group headings + their leaves), with the existing hover-card style. Keep the simple dropdown path for nodes with no grandchildren.
-- Update seed so Features has 3 column groups (`Platform`, `Free Tools`, `On-Page Optimiser`) with `is_column_group=true`, each containing the right leaves, matching screenshot 1.
+## Phase 1 — Database + migration (foundation)
 
-## Task 2 — Footer admin clarity (5 columns)
+New tables (all with RLS + `service_role` grants, public read for published rows, admin write via `has_role(auth.uid(),'admin')`):
 
-The 5 footer columns are already CMS-managed at `/admin/menus` (location selector). `AdminFooter` only edits blurb/copyright/socials. To make this obvious:
-- In `AdminFooter.tsx`, add a small "Footer columns" section with 5 buttons that deep-link to `/admin/menus?location=footer_col_N`, each labeled with the column title and a preview of the current link count.
-- `AdminMenus.tsx`: read `?location=` from the URL on mount and pre-select that location.
+- `authors` — name, slug, bio, avatar, social links
+- `categories` — name, slug, type (`blog` | `docs` | `knowledge_hub`), parent_id
+- `tags` — name, slug
+- `blog_posts` — slug, title, excerpt, **body (markdown)**, hero_image, author_id, category_id, status (`draft`|`published`), published_at, reading_time, seo overrides
+- `blog_post_tags` (join)
+- `docs_articles` — slug, title, category_id, body, status, published_at, order
+- `kb_articles` — slug, title, category_id, body, status, published_at
+- `web_stories` — slug, title, poster, pages (JSONB), status, published_at
+- `media_assets` — bucket key, url, alt, width, height, uploaded_by (Supabase Storage bucket `cms-media`, public)
+- `redirects` — from_path, to_path, status_code (301/302), enabled
 
-## Task 3 — Admin SEO actually shows on the frontend
+Migration scripts will seed these tables from the existing `src/data/*.ts` files so nothing disappears on day one.
 
-**Root cause**: `Layout.tsx` calls `syncRouteHeadTags(title, description, canonical)` on every render using the **static** `pageMeta.json`. That runs after Helmet, so `CmsSeoOverride`'s tags are overwritten by the static values. Result: admin edits never appear.
+## Phase 2 — Admin modules (separate sections per type)
 
-**Fix**:
-- Remove the `syncRouteHeadTags` imperative call from `Layout.tsx` (Helmet already manages title/description/canonical/og:*).
-- Move that fallback responsibility into `CmsSeoOverride`: when CMS data exists for the path, emit those tags via Helmet (current behavior); when it doesn't, the static `<Helmet>` block in `Layout` is the source of truth — no DOM-mutating sync needed.
-- Add `queryClient.invalidateQueries(["page-seo", path])` is already called on save; the user just needs a hard refresh or route change to re-fetch — keep existing 60s `staleTime`.
+A new left-nav group "Content" with dedicated pages:
 
-## Task 4 — Per-page **H1 title** and **subtitle** managed from admin
+- `/admin/blog` — list + search + filter (status, category, author) + create/edit/delete
+- `/admin/knowledge-hub`
+- `/admin/docs`
+- `/admin/web-stories`
+- `/admin/industries` (edit-only — fixed set)
+- `/admin/media` — upload, browse, alt text
+- `/admin/authors`
+- `/admin/categories` (per type tabs)
+- `/admin/tags`
+- `/admin/redirects`
 
-Currently `page_seo.tagline` exists but isn't used anywhere visible. The user wants the big H1 ("About LLMClicks.ai and Our Mission…") and the subtitle below it to be admin-driven on every page.
+Each list page shows: title, slug, status badge, author, last modified, actions. Bulk actions: publish, unpublish, delete.
 
-**Schema** (new migration `*_page_hero.sql`):
-- `ALTER TABLE public.page_seo ADD COLUMN h1 TEXT, ADD COLUMN subtitle TEXT;` (kept nullable so frontend falls back to hardcoded text).
+Editor screen per content type includes:
 
-**Hook** (`src/hooks/usePageHero.ts`):
-- `usePageHero(path)` returns `{ h1, subtitle, eyebrow }` (eyebrow = existing `tagline`).
-- Reuses the same `page_seo` query keyed on path.
+- Title, slug (auto + editable), excerpt
+- **Markdown editor** with live preview (`@uiw/react-md-editor`)
+- Hero image picker (from media library or upload)
+- Author, category, tags pickers
+- Status (draft/published) + publish date
+- SEO panel: meta title, description, canonical, OG image, robots (index/noindex), keywords, JSON-LD schema
+- Internal-link helper: search existing pages, insert markdown link
+- FAQ block builder (adds FAQPage JSON-LD)
+- Save as draft / Publish / Preview
 
-**Admin** (`AdminPageDetail.tsx`):
-- Add a new "Hero" card above "SEO" with `H1 title` and `Subtitle` inputs, plus the existing `Tagline` (eyebrow). Save through the same upsert.
+## Phase 3 — Public site rewiring
 
-**Frontend consumption** — wire only the pages that ship a visible hero today:
-- `src/pages/About.tsx` — replace the hardcoded H1 + subtitle.
-- `src/pages/Pricing.tsx`, `Contact.tsx`, `Comparison.tsx`, `Affiliate.tsx`, `IndustryBenchmarks.tsx`, `KnowledgeHub.tsx`, `WebStories.tsx`, `Industries.tsx`, `Privacy.tsx`, `Terms.tsx`, `Docs.tsx`, `Blog.tsx` — same pattern.
-- `src/pages/FeaturePage.tsx` and `FreeToolPage.tsx` — use CMS hero with fallback to the per-slug content already in those files.
+Replace static-data imports with Supabase queries (React Query):
 
-Pattern (small helper component):
-```tsx
-<PageHero
-  eyebrow="ABOUT US"
-  defaultTitle="About LLMClicks.ai and Our Mission to Redefine AI Visibility"
-  defaultSubtitle="Helping businesses understand and thrive in the age of AI-powered search."
-/>
-```
-Internally calls `usePageHero(pathname)` and shows CMS values when present.
+- `Blog.tsx`, `BlogPost.tsx` → `blog_posts` + `categories` + `authors`
+- `Docs.tsx`, `DocsArticle` → `docs_articles`
+- `KnowledgeHub*` → `kb_articles`
+- `WebStories*` → `web_stories`
+- Markdown rendered with `react-markdown` + `remark-gfm` + syntax highlighting
+- Breadcrumbs derived from `categories.parent_id`
+- Author bio block on posts; category and tag archive pages
 
-**Seed** (`supabase/seeds/page_hero.sql`):
-- Idempotent `UPDATE public.page_seo SET h1 = ..., subtitle = ...` per known path (About, Pricing, Contact, Comparison, Affiliate, Industry Benchmarks, Knowledge Hub, Web Stories, Industries, Privacy, Terms, Docs, Blog, and each feature/free-tool slug).
-- Documented at the top with a one-line `psql -f` instruction.
+## Phase 4 — Sitemap, redirects, build-time SEO
 
-## Files touched
+- `scripts/generate-sitemap.ts` → fetch published rows from DB instead of importing TS data
+- `scripts/prerender-meta.ts` already DB-backed; extend to inject Article/FAQPage/Breadcrumb JSON-LD
+- Add `api/_middleware` (Vercel) or a small Express handler in `server/index.ts` that reads `redirects` table and 301s before the SPA loads
+- Auto-rebuild trigger: a "Republish static SEO" button in admin that calls a Vercel deploy hook (you'll paste the hook URL into secrets)
 
-```text
-supabase/migrations/<ts>_page_hero.sql          (new)
-supabase/seeds/page_hero.sql                    (new)
-supabase/seeds/menu_items.sql                   (rework Features mega groups)
-src/hooks/usePageHero.ts                        (new)
-src/components/PageHero.tsx                     (new)
-src/components/layout/Footer.tsx                (grid fix)
-src/components/layout/Navbar.tsx                (3-col mega for CMS Features)
-src/components/layout/Layout.tsx                (drop syncRouteHeadTags)
-src/components/seo/CmsSeoOverride.tsx           (no change unless needed)
-src/pages/admin/AdminPageDetail.tsx             (Hero card)
-src/pages/admin/AdminFooter.tsx                 (5 quick-link buttons to menus)
-src/pages/admin/AdminMenus.tsx                  (honor ?location= query)
-src/pages/About.tsx + ~12 other hero pages      (PageHero wiring)
-```
+## Phase 5 — Nice-to-haves (after the core ships)
 
-## Out of scope (please confirm if you want any of these)
+- Revision history per post (auto-snapshot on save)
+- Scheduled publishing (cron edge function flips `status` at `published_at`)
+- Role: `editor` (can edit, can't delete or manage users)
+- Image optimization on upload (resize + webp)
+- AI assist: "Generate meta description", "Suggest internal links" via Lovable AI Gateway
 
-- No SSR/prerender changes — admin SEO will appear for JS-executing crawlers (Googlebot) and users; the static `index.html` and `pageMeta.json` still serve as the no-JS fallback.
-- Not editing `shared/pageMeta.json` — the admin DB is now the live source; the JSON stays as the build-time fallback.
-- Not adding image/video upload to the hero — text only for now.
+## Coverage of your SEO checklist
 
-Reply **"go"** to implement, or call out anything you want changed.
+| Requirement | Phase |
+|---|---|
+| CRUD blog / KH / docs / web stories | 2 |
+| Upload & manage images | 2 (media library) |
+| Slugs, meta title/desc, canonical, robots, OG, keywords, JSON-LD | 2 (SEO panel) |
+| Internal linking helper | 2 |
+| Authors, categories, tags | 2 |
+| Redirect (301) management | 2 + 4 |
+| Sitemap auto-generation | 4 |
+| Breadcrumbs | 3 |
+| Drafts / status, last modified, author, search, filter | 2 (list pages) |
+| Schema markup (Article, FAQ, Breadcrumb) | 2 + 4 |
+
+## Technical notes
+
+- Storage: a public Supabase bucket `cms-media` for images; private bucket if you later need gated assets.
+- Markdown over a WYSIWYG so SEO content stays portable and diffable.
+- Body is stored as markdown text, not HTML, to avoid XSS in admin paste and to keep rendering consistent.
+- Existing data is migrated, not replaced — your current posts keep their URLs and content.
+- All admin writes go through RLS policies keyed on `has_role(auth.uid(),'admin')`; no service-role keys in the browser.
+
+## Suggested rollout order
+
+1. Phase 1 migration + seed (no UI change yet, safe)
+2. Phase 2 blog module end-to-end (proves the pattern)
+3. Phase 3 blog public rewiring (you can edit a live post)
+4. Repeat 2+3 for docs, KH, web stories
+5. Media library, authors, categories, tags, redirects
+6. Phase 4 sitemap + redirect middleware
+7. Phase 5 niceties
+
+## What I need from you to start
+
+1. **Approve this plan** (or tell me to cut/reorder).
+2. Confirm I can create a public Supabase Storage bucket `cms-media` for images.
+3. Markdown editor OK, or do you want a block/WYSIWYG editor (heavier, slower, more brittle for SEO)?
+4. For redirects: are you on Vercel (so I can use middleware), or should the SPA handle it client-side as a fallback?
+5. Should drafts be viewable via a tokenised preview URL, or admin-only?
+
+Once you reply, I'll start with Phase 1 (migration + seed) in the next turn.
