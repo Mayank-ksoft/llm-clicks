@@ -4,6 +4,19 @@ import { posts as staticPosts, type BlogPost } from "@/data/blogPosts";
 import { docs as staticDocs, type DocArticle } from "@/data/docsArticles";
 import { knowledgeHubCategories as staticKH, type KHCategory, type KHArticle } from "@/data/knowledgeHub";
 import { webStories as staticWS, type WebStory } from "@/data/webStories";
+import { markdownToBlocks } from "@/lib/cms/markdownToBlocks";
+
+// Body resolution priority (used everywhere):
+// 1. body_markdown (converted to blocks)  ← what admin editor writes today
+// 2. body_blocks (legacy structured array) ← what the seed wrote
+// 3. static fallback from src/data/*.ts    ← safety net
+function resolveBody<T>(markdown: string | null | undefined, blocks: unknown, fallback: T[] | undefined): T[] {
+  if (typeof markdown === "string" && markdown.trim()) {
+    return markdownToBlocks(markdown) as unknown as T[];
+  }
+  if (Array.isArray(blocks) && blocks.length > 0) return blocks as T[];
+  return (fallback ?? []) as T[];
+}
 
 // Public CMS loaders. Fetch published rows from Supabase, fall back to the
 // bundled static datasets if the DB is empty or the request fails. Each loader
@@ -47,9 +60,7 @@ async function fetchBlogPosts(): Promise<BlogPost[]> {
       tag: r.tag_legacy ?? fallback?.tag ?? "",
       author: (r.author_id && authorMap[r.author_id]) || fallback?.author || "Shripad Deshmukh",
       image: r.hero_image ?? fallback?.image ?? "",
-      content: (Array.isArray(r.body_blocks) && r.body_blocks.length > 0)
-        ? (r.body_blocks as BlogPost["content"])
-        : (fallback?.content ?? []),
+      content: resolveBody<BlogPost["content"][number]>(r.body_markdown, r.body_blocks, fallback?.content),
     };
   });
 }
@@ -63,7 +74,7 @@ export function useBlogPosts() {
 async function fetchDocs(): Promise<DocArticle[]> {
   const { data, error } = await db
     .from("docs_articles")
-    .select("slug,title,excerpt,body_blocks,hero_image,category_label,published_at,position")
+    .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,category_label,published_at,position")
     .eq("status", "published")
     .order("position", { ascending: true });
   if (error || !data || data.length === 0) return staticDocs;
@@ -78,9 +89,7 @@ async function fetchDocs(): Promise<DocArticle[]> {
       date: fmtDate(r.published_at, fallback?.date ?? ""),
       image: r.hero_image ?? fallback?.image ?? "",
       category: r.category_label ?? fallback?.category ?? "Getting Started",
-      content: (Array.isArray(r.body_blocks) && r.body_blocks.length > 0)
-        ? (r.body_blocks as DocArticle["content"])
-        : (fallback?.content ?? []),
+      content: resolveBody<DocArticle["content"][number]>(r.body_markdown, r.body_blocks, fallback?.content),
     };
   });
 }
@@ -94,7 +103,7 @@ export function useDocs() {
 async function fetchKnowledgeHub(): Promise<KHCategory[]> {
   const { data, error } = await db
     .from("kb_articles")
-    .select("slug,title,excerpt,body_blocks,hero_image,category_slug,published_at,updated_legacy,reading_time,position")
+    .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,category_slug,published_at,updated_legacy,reading_time,position")
     .eq("status", "published")
     .order("position", { ascending: true });
   if (error || !data || data.length === 0) return staticKH;
@@ -117,9 +126,7 @@ async function fetchKnowledgeHub(): Promise<KHCategory[]> {
       readTime: r.reading_time ?? fb?.readTime ?? "10 min read",
       image: r.hero_image ?? fb?.image ?? "",
       imageAlt: fb?.imageAlt ?? r.title,
-      content: (Array.isArray(r.body_blocks) && r.body_blocks.length > 0)
-        ? (r.body_blocks as KHArticle["content"])
-        : (fb?.content ?? []),
+      content: resolveBody<KHArticle["content"][number]>(r.body_markdown, r.body_blocks, fb?.content),
     };
     (grouped[r.category_slug] ||= []).push(article);
   });
