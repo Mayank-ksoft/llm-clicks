@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getPostBySlug, posts } from "@/data/blogPosts";
+import { useBlogPost, useBlogPosts } from "@/lib/cms/publicContent";
 import { useToast } from "@/hooks/use-toast";
 import authorShripad from "@/assets/author-shripad.png";
 import { blogCategoryPath, getBlogCategoryByTag } from "@/lib/blogCategories";
@@ -102,7 +102,8 @@ function renderTextWithLinks(text: string): React.ReactNode {
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const post = slug ? getPostBySlug(slug) : undefined;
+  const post = useBlogPost(slug);
+  const allPosts = useBlogPosts();
   const { toast } = useToast();
   const [activeId, setActiveId] = useState<string>("");
 
@@ -131,7 +132,7 @@ const BlogPost = () => {
 
   if (!post) return <Navigate to="/blog" replace />;
 
-  const related = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const related = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
   const modifiedDate = post.date; // dataset has only one date — surface as "Last updated"
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
   const category = getBlogCategoryByTag(post.tag);

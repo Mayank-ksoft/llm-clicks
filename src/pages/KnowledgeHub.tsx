@@ -7,8 +7,8 @@ import {
   MessageSquare, Database, TrendingUp, Briefcase, MapPin, Compass, Cog,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { knowledgeHubCategories } from "@/data/knowledgeHub";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
+import { useKnowledgeHubCategories } from "@/lib/cms/publicContent";
 
 const categoryIcons: Record<string, typeof BookOpen> = {
   "chatgpt-seo": MessageSquare,
@@ -24,6 +24,7 @@ const categoryIcons: Record<string, typeof BookOpen> = {
 
 const KnowledgeHub = () => {
   const [query, setQuery] = useState("");
+  const knowledgeHubCategories = useKnowledgeHubCategories();
   const hero = usePageHeroContent({
     title: "LLMClicks.ai Knowledge Hub",
     subtitle: "Technical documentation, AI playbooks, and GEO research for SaaS teams.",

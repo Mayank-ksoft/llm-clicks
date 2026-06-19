@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getWebStory } from "@/data/webStories";
+import { useWebStory } from "@/lib/cms/publicContent";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { syncRouteHeadTags } from "@/lib/headTags";
 
@@ -13,7 +13,7 @@ const DEFAULT_SLIDE_MS = 7000;
 
 const WebStoryViewer = () => {
   const { slug } = useParams();
-  const story = slug ? getWebStory(slug) : undefined;
+  const story = useWebStory(slug);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);

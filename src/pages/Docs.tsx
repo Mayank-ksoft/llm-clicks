@@ -12,7 +12,7 @@ import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { docs, getDocBySlug } from "@/data/docsArticles";
+import { useDocs, useDoc } from "@/lib/cms/publicContent";
 import SimplePagination from "@/components/common/SimplePagination";
 import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
@@ -34,6 +34,7 @@ const slugifyHeading = (t: string) =>
 const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const docs = useDocs();
   const hero = usePageHeroContent({
     title: "LLMClicks.ai Docs",
     subtitle: "Setup guides, walkthroughs, and best-practice playbooks for every module of the platform.",
@@ -188,7 +189,8 @@ const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
 };
 
 const DocDetail = ({ slug }: { slug: string }) => {
-  const doc = getDocBySlug(slug);
+  const doc = useDoc(slug);
+  const docs = useDocs();
   const [activeId, setActiveId] = useState<string>("");
 
   const toc = useMemo(() => {

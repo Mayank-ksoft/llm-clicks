@@ -2,7 +2,8 @@ import Layout from "@/components/layout/Layout";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, RefreshCw, ChevronUp } from "lucide-react";
-import { getKHArticle, type KHSection } from "@/data/knowledgeHub";
+import { type KHSection } from "@/data/knowledgeHub";
+import { useKnowledgeHubArticle } from "@/lib/cms/publicContent";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -118,7 +119,7 @@ const renderSection = (s: KHSection, i: number) => {
 
 const KnowledgeHubArticle = () => {
   const { category, slug } = useParams();
-  const data = category && slug ? getKHArticle(category, slug) : null;
+  const data = useKnowledgeHubArticle(category, slug);
 
   // Build TOC from H2s, ensuring each has a stable id
   const { sections, toc } = useMemo(() => {

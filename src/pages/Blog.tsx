@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, BookOpen, Search, Tag } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { posts } from "@/data/blogPosts";
 import SimplePagination from "@/components/common/SimplePagination";
 import { blogCategoryPath, getBlogCategoryBySlug, getBlogCategoryByTag, indexableBlogCategories } from "@/lib/blogCategories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
+import { useBlogPosts } from "@/lib/cms/publicContent";
 
 const PAGE_SIZE = 9;
 
@@ -19,6 +19,7 @@ const cardVariants = {
 const Blog = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const posts = useBlogPosts();
   const hero = usePageHeroContent({
     title: "Generative SEO & AI Insights",
     subtitle: "Actionable strategies to dominate LLM search engines. Protect your SaaS pipeline from the zero-click reality.",
@@ -42,7 +43,7 @@ const Blog = () => {
       if (p.tag) acc[p.tag] = (acc[p.tag] || 0) + 1;
       return acc;
     }, {});
-  }, []);
+  }, [posts]);
 
   const tags = useMemo(
     () =>
@@ -60,7 +61,7 @@ const Blog = () => {
     return list.filter((p) =>
       [p.title, p.excerpt, p.tag].some((f) => f?.toLowerCase().includes(q)),
     );
-  }, [query, activeTag]);
+  }, [query, activeTag, posts]);
 
   useEffect(() => { setPage(1); }, [query, activeTag]);
 
