@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://llmclicks.ai/docs/category/getting-started/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/category/visibility-tracking/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/category/on-page-optimization/</loc>
+    <loc>https://llmclicks.ai/docs/category/account-and-marketplace/</loc>
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
@@ -21,15 +13,19 @@
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
-    <loc>https://llmclicks.ai/docs/category/account-and-marketplace/</loc>
+    <loc>https://llmclicks.ai/docs/category/getting-started/</loc>
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-prompt-tracker/</loc>
+    <loc>https://llmclicks.ai/docs/category/on-page-optimization/</loc>
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-ai-visibility-predictor/</loc>
+    <loc>https://llmclicks.ai/docs/category/visibility-tracking/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-ai-brand-audit/</loc>
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
@@ -41,35 +37,7 @@
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-lead-module/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-the-settings/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-local-query-generator/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-saas-query-generator/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-ai-brand-audit/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-the-help-section/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-optimization-wizard/</loc>
-    <lastmod>2026-01-01</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/docs/how-to-use-on-page-audit/</loc>
+    <loc>https://llmclicks.ai/docs/how-to-use-ai-visibility-predictor/</loc>
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
@@ -81,7 +49,39 @@
     <lastmod>2026-01-01</lastmod>
   </url>
   <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-lead-module/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
     <loc>https://llmclicks.ai/docs/how-to-use-llm-traffic-tracker/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-local-query-generator/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-on-page-audit/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-optimization-wizard/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-prompt-tracker/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-saas-query-generator/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-the-help-section/</loc>
+    <lastmod>2026-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/docs/how-to-use-the-settings/</loc>
     <lastmod>2026-01-01</lastmod>
   </url>
 </urlset>

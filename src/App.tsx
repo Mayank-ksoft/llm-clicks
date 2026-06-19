@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { getLegacyRedirect } from "../shared/legacyRedirects";
 import Index from "./pages/Index";
 import ScrollToTop from "./components/ScrollToTop";
+import RedirectGuard from "./components/seo/RedirectGuard";
 
 // Route-level code splitting — keeps the initial JS bundle small for LCP.
 const About = lazy(() => import("./pages/About"));
@@ -75,6 +76,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <RedirectGuard />
         <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/" element={<Index />} />
