@@ -10,7 +10,7 @@ const items = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/menus", label: "Menus", icon: MenuSquare },
   { to: "/admin/footer", label: "Footer", icon: PanelBottom },
-  { to: "/admin/pages", label: "Pages & SEO", icon: FileText },
+  { to: "/admin/pages", label: "Content & SEO", icon: FileText },
   { to: "/admin/blog", label: "Blog Posts", icon: Newspaper },
   { to: "/admin/knowledge-hub", label: "Knowledge Hub", icon: LibraryBig },
   { to: "/admin/docs", label: "Docs", icon: BookOpen },

@@ -196,10 +196,6 @@ const AdminBlogEditor = () => {
                   <Label>Excerpt</Label>
                   <Textarea rows={3} value={draft.excerpt ?? ""} onChange={(e) => update({ excerpt: e.target.value })} />
                 </div>
-                <div>
-                  <Label>Hero Image URL</Label>
-                  <Input value={draft.hero_image ?? ""} onChange={(e) => update({ hero_image: e.target.value })} placeholder="/legacy-assets/hero.webp" />
-                </div>
                 <div data-color-mode="light">
                   <Label className="mb-2 block">Body (Markdown)</Label>
                   <MDEditor
@@ -213,12 +209,26 @@ const AdminBlogEditor = () => {
             </Card>
 
             <Card>
+              <CardHeader><CardTitle className="text-sm">Featured Image</CardTitle></CardHeader>
+              <CardContent className="space-y-3">
+                <div><Label>Image URL</Label><Input value={draft.hero_image ?? ""} onChange={(e) => update({ hero_image: e.target.value })} placeholder="/legacy-assets/hero.webp" /></div>
+                {draft.hero_image ? (
+                  <img src={draft.hero_image} alt={draft.hero_image_alt ?? ""} className="rounded-md border border-border max-h-48 object-contain bg-muted/30" />
+                ) : null}
+                <div><Label>Alt Text</Label><Input value={draft.hero_image_alt ?? ""} onChange={(e) => update({ hero_image_alt: e.target.value })} placeholder="Describe the image for screen readers and SEO" /></div>
+                <div><Label>Image Title</Label><Input value={draft.hero_image_title ?? ""} onChange={(e) => update({ hero_image_title: e.target.value })} placeholder="Tooltip shown on hover" /></div>
+                <div><Label>Caption / Description</Label><Textarea rows={2} value={draft.hero_image_caption ?? ""} onChange={(e) => update({ hero_image_caption: e.target.value })} placeholder="Optional caption rendered below the image" /></div>
+              </CardContent>
+            </Card>
+
+            <Card>
               <CardHeader><CardTitle className="text-sm">SEO</CardTitle></CardHeader>
               <CardContent>
                 <Tabs defaultValue="basic">
                   <TabsList>
                     <TabsTrigger value="basic">Basic</TabsTrigger>
-                    <TabsTrigger value="social">Social</TabsTrigger>
+                    <TabsTrigger value="og">Open Graph</TabsTrigger>
+                    <TabsTrigger value="twitter">Twitter</TabsTrigger>
                     <TabsTrigger value="advanced">Advanced</TabsTrigger>
                   </TabsList>
                   <TabsContent value="basic" className="space-y-3 pt-4">
@@ -227,8 +237,17 @@ const AdminBlogEditor = () => {
                     <div><Label>Canonical URL</Label><Input value={draft.canonical_url ?? ""} onChange={(e) => update({ canonical_url: e.target.value })} /></div>
                     <div><Label>Keywords (comma separated)</Label><Input value={draft.keywords ?? ""} onChange={(e) => update({ keywords: e.target.value })} /></div>
                   </TabsContent>
-                  <TabsContent value="social" className="space-y-3 pt-4">
-                    <div><Label>OG Image URL</Label><Input value={draft.og_image ?? ""} onChange={(e) => update({ og_image: e.target.value })} /></div>
+                  <TabsContent value="og" className="space-y-3 pt-4">
+                    <p className="text-xs text-muted-foreground">Used by Facebook, LinkedIn, Slack and most link-preview crawlers. Falls back to meta title / description / featured image when blank.</p>
+                    <div><Label>OG Title</Label><Input value={draft.og_title ?? ""} onChange={(e) => update({ og_title: e.target.value })} /></div>
+                    <div><Label>OG Description</Label><Textarea rows={2} value={draft.og_description ?? ""} onChange={(e) => update({ og_description: e.target.value })} /></div>
+                    <div><Label>OG Image URL</Label><Input value={draft.og_image ?? ""} onChange={(e) => update({ og_image: e.target.value })} placeholder="Recommended 1200×630" /></div>
+                  </TabsContent>
+                  <TabsContent value="twitter" className="space-y-3 pt-4">
+                    <p className="text-xs text-muted-foreground">Twitter/X uses these for its summary cards. Leave blank to inherit from Open Graph.</p>
+                    <div><Label>Twitter Title</Label><Input value={draft.twitter_title ?? ""} onChange={(e) => update({ twitter_title: e.target.value })} /></div>
+                    <div><Label>Twitter Description</Label><Textarea rows={2} value={draft.twitter_description ?? ""} onChange={(e) => update({ twitter_description: e.target.value })} /></div>
+                    <div><Label>Twitter Image URL</Label><Input value={draft.twitter_image ?? ""} onChange={(e) => update({ twitter_image: e.target.value })} placeholder="Recommended 1200×675" /></div>
                   </TabsContent>
                   <TabsContent value="advanced" className="space-y-3 pt-4">
                     <div>

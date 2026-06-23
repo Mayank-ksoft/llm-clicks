@@ -9,6 +9,9 @@ export interface BlogPostRow {
   excerpt: string | null;
   body_markdown: string | null;
   hero_image: string | null;
+  hero_image_alt: string | null;
+  hero_image_title: string | null;
+  hero_image_caption: string | null;
   author_id: string | null;
   category_id: string | null;
   status: BlogStatus | "archived";
@@ -18,6 +21,11 @@ export interface BlogPostRow {
   meta_description: string | null;
   canonical_url: string | null;
   og_image: string | null;
+  og_title: string | null;
+  og_description: string | null;
+  twitter_title: string | null;
+  twitter_description: string | null;
+  twitter_image: string | null;
   robots: string | null;
   keywords: string | null;
   schema_jsonld: unknown | null;

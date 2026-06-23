@@ -167,7 +167,7 @@ const AdminPages = () => {
   return (
     <AdminLayout>
       <div className="p-8 max-w-6xl">
-        <h1 className="font-display text-2xl font-bold mb-2">Pages &amp; SEO</h1>
+        <h1 className="font-display text-2xl font-bold mb-2">Content &amp; SEO</h1>
         <p className="text-sm text-muted-foreground mb-6">
           Content is grouped by type for easier navigation. Click a page to edit its
           parent section and SEO. Page body content is managed in code.

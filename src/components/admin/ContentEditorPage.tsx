@@ -14,6 +14,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Save, Trash2, ExternalLink } from "lucide-react";
 import { slugify, type ContentRow, type ContentStatus } from "@/lib/cms/contentApi";
+import { categoriesApi } from "@/lib/cms/blogApi";
 
 interface Api {
   list: () => Promise<ContentRow[]>;
@@ -31,11 +32,15 @@ interface Props {
   label: string;
   extraDefaults?: Partial<ContentRow>;
   extraFields?: (draft: Partial<ContentRow>, update: (p: Partial<ContentRow>) => void) => React.ReactNode;
+  /** When set, shows a Category picker populated from `categories` table for this type. */
+  categoryType?: "blog" | "docs" | "knowledge_hub";
+  /** Which legacy column to keep in sync with the picked category ('category_slug' for KB, 'category_label' for docs). */
+  categoryMirrorField?: "category_slug" | "category_label";
 }
 
 type Draft = Partial<ContentRow>;
 
-const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPathPrefix, label, extraDefaults, extraFields }: Props) => {
+const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPathPrefix, label, extraDefaults, extraFields, categoryType, categoryMirrorField }: Props) => {
   const { id } = useParams();
   const isNew = !id || id === "new";
   const navigate = useNavigate();
@@ -49,6 +54,11 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
     queryKey: [itemQueryKey, id],
     queryFn: () => (isNew ? Promise.resolve(null) : api.get(id!)),
     enabled: !isNew,
+  });
+  const { data: categories = [] } = useQuery({
+    queryKey: ["cats", categoryType],
+    queryFn: () => categoriesApi.listByType(categoryType!),
+    enabled: !!categoryType,
   });
   useEffect(() => { if (row) setDraft(row); }, [row]);
 
@@ -114,11 +124,23 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
                 <div><Label>Title</Label><Input value={draft.title ?? ""} onChange={(e) => handleTitle(e.target.value)} /></div>
                 <div><Label>Slug</Label><Input value={draft.slug ?? ""} onChange={(e) => update({ slug: slugify(e.target.value) })} /></div>
                 <div><Label>Excerpt</Label><Textarea rows={3} value={draft.excerpt ?? ""} onChange={(e) => update({ excerpt: e.target.value })} /></div>
-                <div><Label>Hero Image URL</Label><Input value={draft.hero_image ?? ""} onChange={(e) => update({ hero_image: e.target.value })} /></div>
                 <div data-color-mode="light">
                   <Label className="mb-2 block">Body (Markdown)</Label>
                   <MDEditor value={draft.body_markdown ?? ""} onChange={(v) => update({ body_markdown: v ?? "" })} height={500} preview="live" />
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle className="text-sm">Featured Image</CardTitle></CardHeader>
+              <CardContent className="space-y-3">
+                <div><Label>Image URL</Label><Input value={draft.hero_image ?? ""} onChange={(e) => update({ hero_image: e.target.value })} placeholder="https://… or /legacy-assets/…" /></div>
+                {draft.hero_image ? (
+                  <img src={draft.hero_image} alt={draft.hero_image_alt ?? ""} className="rounded-md border border-border max-h-48 object-contain bg-muted/30" />
+                ) : null}
+                <div><Label>Alt Text</Label><Input value={draft.hero_image_alt ?? ""} onChange={(e) => update({ hero_image_alt: e.target.value })} placeholder="Describe the image for screen readers and SEO" /></div>
+                <div><Label>Image Title</Label><Input value={draft.hero_image_title ?? ""} onChange={(e) => update({ hero_image_title: e.target.value })} placeholder="Tooltip shown on hover" /></div>
+                <div><Label>Caption / Description</Label><Textarea rows={2} value={draft.hero_image_caption ?? ""} onChange={(e) => update({ hero_image_caption: e.target.value })} placeholder="Optional caption rendered below the image" /></div>
               </CardContent>
             </Card>
 
@@ -128,7 +150,8 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
                 <Tabs defaultValue="basic">
                   <TabsList>
                     <TabsTrigger value="basic">Basic</TabsTrigger>
-                    <TabsTrigger value="social">Social</TabsTrigger>
+                    <TabsTrigger value="og">Open Graph</TabsTrigger>
+                    <TabsTrigger value="twitter">Twitter</TabsTrigger>
                     <TabsTrigger value="advanced">Advanced</TabsTrigger>
                   </TabsList>
                   <TabsContent value="basic" className="space-y-3 pt-4">
@@ -137,8 +160,17 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
                     <div><Label>Canonical URL</Label><Input value={draft.canonical_url ?? ""} onChange={(e) => update({ canonical_url: e.target.value })} /></div>
                     <div><Label>Keywords</Label><Input value={draft.keywords ?? ""} onChange={(e) => update({ keywords: e.target.value })} /></div>
                   </TabsContent>
-                  <TabsContent value="social" className="space-y-3 pt-4">
-                    <div><Label>OG Image URL</Label><Input value={draft.og_image ?? ""} onChange={(e) => update({ og_image: e.target.value })} /></div>
+                  <TabsContent value="og" className="space-y-3 pt-4">
+                    <p className="text-xs text-muted-foreground">Used by Facebook, LinkedIn, Slack and most link-preview crawlers. Falls back to meta title / description / featured image when blank.</p>
+                    <div><Label>OG Title</Label><Input value={draft.og_title ?? ""} onChange={(e) => update({ og_title: e.target.value })} /></div>
+                    <div><Label>OG Description</Label><Textarea rows={2} value={draft.og_description ?? ""} onChange={(e) => update({ og_description: e.target.value })} /></div>
+                    <div><Label>OG Image URL</Label><Input value={draft.og_image ?? ""} onChange={(e) => update({ og_image: e.target.value })} placeholder="Recommended 1200×630" /></div>
+                  </TabsContent>
+                  <TabsContent value="twitter" className="space-y-3 pt-4">
+                    <p className="text-xs text-muted-foreground">Twitter/X uses these for its summary cards. Leave blank to inherit from Open Graph.</p>
+                    <div><Label>Twitter Title</Label><Input value={draft.twitter_title ?? ""} onChange={(e) => update({ twitter_title: e.target.value })} /></div>
+                    <div><Label>Twitter Description</Label><Textarea rows={2} value={draft.twitter_description ?? ""} onChange={(e) => update({ twitter_description: e.target.value })} /></div>
+                    <div><Label>Twitter Image URL</Label><Input value={draft.twitter_image ?? ""} onChange={(e) => update({ twitter_image: e.target.value })} placeholder="Recommended 1200×675" /></div>
                   </TabsContent>
                   <TabsContent value="advanced" className="space-y-3 pt-4">
                     <div>
@@ -192,6 +224,36 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
                 </div>
               </CardContent>
             </Card>
+            {categoryType && (
+              <Card>
+                <CardHeader><CardTitle className="text-sm">Category</CardTitle></CardHeader>
+                <CardContent>
+                  <Select
+                    value={draft.category_id ?? "none"}
+                    onValueChange={(v) => {
+                      if (v === "none") {
+                        update({ category_id: null, ...(categoryMirrorField ? { [categoryMirrorField]: "" } as any : {}) });
+                        return;
+                      }
+                      const c = categories.find((c: any) => c.id === v);
+                      update({
+                        category_id: v,
+                        ...(categoryMirrorField && c
+                          ? { [categoryMirrorField]: categoryMirrorField === "category_slug" ? c.slug : c.name } as any
+                          : {}),
+                      });
+                    }}
+                  >
+                    <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">— None —</SelectItem>
+                      {(categories as any[]).map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <p className="mt-2 text-xs text-muted-foreground">Manage the list under <Link to="/admin/categories" className="underline">Categories</Link>.</p>
+                </CardContent>
+              </Card>
+            )}
             {extraFields && (
               <Card>
                 <CardHeader><CardTitle className="text-sm">Extra</CardTitle></CardHeader>

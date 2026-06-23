@@ -1,5 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import ContentEditorPage from "@/components/admin/ContentEditorPage";
 import { kbApi } from "@/lib/cms/contentApi";
 const AdminKBEditor = () => (
@@ -10,13 +8,9 @@ const AdminKBEditor = () => (
     itemQueryKey="admin-kb"
     publicPathPrefix="/knowledge-hub"
     label="Article"
+    categoryType="knowledge_hub"
+    categoryMirrorField="category_slug"
     extraDefaults={{ category_slug: "" }}
-    extraFields={(d, u) => (
-      <div>
-        <Label>Category Slug</Label>
-        <Input value={d.category_slug ?? ""} onChange={(e) => u({ category_slug: e.target.value })} placeholder="e.g. seo-basics" />
-      </div>
-    )}
   />
 );
 export default AdminKBEditor;
