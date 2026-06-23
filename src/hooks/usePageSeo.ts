@@ -8,6 +8,9 @@ export type PageSeo = {
   og_title: string | null;
   og_description: string | null;
   og_image: string | null;
+  twitter_title: string | null;
+  twitter_description: string | null;
+  twitter_image: string | null;
   schema_jsonld: unknown | null;
   tagline: string | null;
   robots: string | null;
@@ -29,7 +32,7 @@ export function usePageSeo(path: string) {
         .select("*")
         .eq("page_id", page.id)
         .maybeSingle();
-      return (seo as PageSeo) ?? null;
+      return (seo as unknown as PageSeo) ?? null;
     },
     staleTime: 60_000,
   });

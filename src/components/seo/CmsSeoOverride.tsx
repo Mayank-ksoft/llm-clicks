@@ -43,10 +43,17 @@ const CmsSeoOverride = () => {
       {data.og_title && <meta property="og:title" content={data.og_title} />}
       {data.og_description && <meta property="og:description" content={data.og_description} />}
       {data.canonical_url && <meta property="og:url" content={data.canonical_url} />}
-      {data.og_title && <meta name="twitter:title" content={data.og_title} />}
-      {data.og_description && <meta name="twitter:description" content={data.og_description} />}
       {data.og_image && <meta property="og:image" content={data.og_image} />}
-      {data.og_image && <meta name="twitter:image" content={data.og_image} />}
+      <meta name="twitter:card" content="summary_large_image" />
+      {(data.twitter_title || data.og_title) && (
+        <meta name="twitter:title" content={(data.twitter_title || data.og_title)!} />
+      )}
+      {(data.twitter_description || data.og_description) && (
+        <meta name="twitter:description" content={(data.twitter_description || data.og_description)!} />
+      )}
+      {(data.twitter_image || data.og_image) && (
+        <meta name="twitter:image" content={(data.twitter_image || data.og_image)!} />
+      )}
       {data.robots && <meta name="robots" content={data.robots} />}
       {data.keywords && <meta name="keywords" content={data.keywords} />}
       {schemaText && <script type="application/ld+json">{schemaText}</script>}

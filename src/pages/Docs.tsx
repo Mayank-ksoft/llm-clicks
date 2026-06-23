@@ -13,6 +13,8 @@ import {
   BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useDocs, useDoc } from "@/lib/cms/publicContent";
+import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import ArticleSeo from "@/components/seo/ArticleSeo";
 import SimplePagination from "@/components/common/SimplePagination";
 import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
@@ -227,6 +229,7 @@ const DocDetail = ({ slug }: { slug: string }) => {
     return () => observer.disconnect();
   }, [toc]);
 
+  const { data: cmsSeo } = useCmsArticleSeo("docs_articles", doc?.slug);
   if (!doc) return <Navigate to="/docs" replace />;
 
   const handlePrint = () => {
@@ -310,10 +313,22 @@ const DocDetail = ({ slug }: { slug: string }) => {
               </motion.div>
 
               {doc.image && (
-                <div className="rounded-2xl overflow-hidden border border-border mb-10 aspect-[16/10] bg-secondary/40">
-                  <img src={doc.image} alt={doc.title} loading="lazy" className="w-full h-full object-cover" />
-                </div>
+                <>
+                  <div className="rounded-2xl overflow-hidden border border-border mb-3 aspect-[16/10] bg-secondary/40">
+                    <img
+                      src={doc.image}
+                      alt={cmsSeo?.hero_image_alt || doc.title}
+                      title={cmsSeo?.hero_image_title || undefined}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {cmsSeo?.hero_image_caption && (
+                    <p className="text-sm text-muted-foreground text-center mb-10">{cmsSeo.hero_image_caption}</p>
+                  )}
+                </>
               )}
+              <ArticleSeo data={cmsSeo} />
 
               <div className="space-y-6 text-foreground/90 leading-relaxed">
                 {doc.content.map((b, i) => {

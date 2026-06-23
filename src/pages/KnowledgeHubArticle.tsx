@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, RefreshCw, ChevronUp } from "lucide-react";
 import { type KHSection } from "@/data/knowledgeHub";
 import { useKnowledgeHubArticle } from "@/lib/cms/publicContent";
+import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import ArticleSeo from "@/components/seo/ArticleSeo";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -120,6 +122,7 @@ const renderSection = (s: KHSection, i: number) => {
 const KnowledgeHubArticle = () => {
   const { category, slug } = useParams();
   const data = useKnowledgeHubArticle(category, slug);
+  const { data: cmsSeo } = useCmsArticleSeo("kb_articles", slug);
 
   // Build TOC from H2s, ensuring each has a stable id
   const { sections, toc } = useMemo(() => {
@@ -203,7 +206,16 @@ const KnowledgeHubArticle = () => {
                   )}
                 </div>
 
-                <img src={article.image} alt={article.imageAlt} className="rounded-2xl w-full mb-10 border border-border" />
+                <img
+                  src={article.image}
+                  alt={cmsSeo?.hero_image_alt || article.imageAlt}
+                  title={cmsSeo?.hero_image_title || undefined}
+                  className="rounded-2xl w-full mb-3 border border-border"
+                />
+                {cmsSeo?.hero_image_caption && (
+                  <p className="text-sm text-muted-foreground text-center mb-10">{cmsSeo.hero_image_caption}</p>
+                )}
+                <ArticleSeo data={cmsSeo} />
 
                 {/* Mobile TOC (collapsible, inline) */}
                 {toc.length > 0 && (
