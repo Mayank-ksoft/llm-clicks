@@ -105,5 +105,16 @@ export function getBlogCategoryByTag(tag: string | undefined): BlogCategory | un
 
 export function blogCategoryPath(tagOrSlug: string): string {
   const category = getBlogCategoryByTag(tagOrSlug) ?? getBlogCategoryBySlug(tagOrSlug);
-  return category ? `/blog/category/${category.slug}` : "/blog";
+  if (category) return `/blog/category/${category.slug}`;
+  // Admin-created categories (not in the hardcoded list) — fall back to a
+  // slugified form of the tag so links still resolve once the public
+  // categories hook adds them at runtime.
+  const slug = tagOrSlug
+    ?.toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug ? `/blog/category/${slug}` : "/blog";
 }

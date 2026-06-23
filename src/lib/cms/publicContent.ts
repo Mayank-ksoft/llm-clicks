@@ -34,12 +34,20 @@ const fmtDate = (iso: string | null | undefined, fallback = "") => {
 
 // ---------------- Blog ----------------
 async function fetchBlogPosts(): Promise<BlogPost[]> {
-  const { data, error } = await db
-    .from("blog_posts")
-    .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,reading_time,tag_legacy,published_at,author_id")
-    .eq("status", "published")
-    .order("published_at", { ascending: false });
+  const [{ data, error }, catsRes] = await Promise.all([
+    db
+      .from("blog_posts")
+      .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,reading_time,tag_legacy,published_at,author_id,category_id")
+      .eq("status", "published")
+      .order("published_at", { ascending: false }),
+    db.from("categories").select("id,slug,name").eq("type", "blog"),
+  ]);
   if (error || !data || data.length === 0) return staticPosts;
+
+  // Resolve each post's category from the live `categories` row so renaming a
+  // category in admin (slug or name) flows through to the frontend immediately.
+  const catById = new Map<string, { slug: string; name: string }>();
+  ((catsRes?.data ?? []) as any[]).forEach((c) => catById.set(c.id, { slug: c.slug, name: c.name }));
 
   const authorIds = Array.from(new Set(data.map((r: any) => r.author_id).filter(Boolean)));
   let authorMap: Record<string, string> = {};
@@ -51,13 +59,15 @@ async function fetchBlogPosts(): Promise<BlogPost[]> {
   const staticBySlug = new Map(staticPosts.map((p) => [p.slug, p]));
   return data.map((r: any): BlogPost => {
     const fallback = staticBySlug.get(r.slug);
+    const cat = r.category_id ? catById.get(r.category_id) : undefined;
+    const tag = cat?.name?.toUpperCase() ?? r.tag_legacy ?? fallback?.tag ?? "";
     return {
       slug: r.slug,
       title: r.title,
       excerpt: r.excerpt ?? fallback?.excerpt ?? "",
       date: fmtDate(r.published_at, fallback?.date ?? ""),
       readTime: r.reading_time ?? fallback?.readTime ?? "5 min read",
-      tag: r.tag_legacy ?? fallback?.tag ?? "",
+      tag,
       author: (r.author_id && authorMap[r.author_id]) || fallback?.author || "Shripad Deshmukh",
       image: r.hero_image ?? fallback?.image ?? "",
       content: resolveBody<BlogPost["content"][number]>(r.body_markdown, r.body_blocks, fallback?.content),
@@ -72,23 +82,31 @@ export function useBlogPosts() {
 
 // ---------------- Docs ----------------
 async function fetchDocs(): Promise<DocArticle[]> {
-  const { data, error } = await db
-    .from("docs_articles")
-    .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,category_label,published_at,position")
-    .eq("status", "published")
-    .order("position", { ascending: true });
+  const [{ data, error }, catsRes] = await Promise.all([
+    db
+      .from("docs_articles")
+      .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,category_label,category_id,published_at,position")
+      .eq("status", "published")
+      .order("position", { ascending: true }),
+    db.from("categories").select("id,slug,name").eq("type", "docs"),
+  ]);
   if (error || !data || data.length === 0) return staticDocs;
+
+  const catById = new Map<string, { slug: string; name: string }>();
+  ((catsRes?.data ?? []) as any[]).forEach((c) => catById.set(c.id, { slug: c.slug, name: c.name }));
 
   const staticBySlug = new Map(staticDocs.map((d) => [d.slug, d]));
   return data.map((r: any): DocArticle => {
     const fallback = staticBySlug.get(r.slug);
+    const cat = r.category_id ? catById.get(r.category_id) : undefined;
     return {
       slug: r.slug,
       title: r.title,
       excerpt: r.excerpt ?? fallback?.excerpt ?? "",
       date: fmtDate(r.published_at, fallback?.date ?? ""),
       image: r.hero_image ?? fallback?.image ?? "",
-      category: r.category_label ?? fallback?.category ?? "Getting Started",
+      // Live category name wins over the stale `category_label` mirror.
+      category: cat?.name ?? r.category_label ?? fallback?.category ?? "Getting Started",
       content: resolveBody<DocArticle["content"][number]>(r.body_markdown, r.body_blocks, fallback?.content),
     };
   });
@@ -101,22 +119,48 @@ export function useDocs() {
 
 // ---------------- Knowledge Hub ----------------
 async function fetchKnowledgeHub(): Promise<KHCategory[]> {
-  const { data, error } = await db
-    .from("kb_articles")
-    .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,category_slug,published_at,updated_legacy,reading_time,position")
-    .eq("status", "published")
-    .order("position", { ascending: true });
-  if (error || !data || data.length === 0) return staticKH;
+  const [{ data, error }, catsRes] = await Promise.all([
+    db
+      .from("kb_articles")
+      .select("slug,title,excerpt,body_blocks,body_markdown,hero_image,category_slug,category_id,published_at,updated_legacy,reading_time,position")
+      .eq("status", "published")
+      .order("position", { ascending: true }),
+    db
+      .from("categories")
+      .select("id,slug,name,description,position")
+      .eq("type", "knowledge_hub")
+      .order("position", { ascending: true }),
+  ]);
+
+  const dbCats = (catsRes?.data ?? []) as any[];
+  const catById = new Map<string, { slug: string; name: string; description: string | null }>();
+  dbCats.forEach((c) => catById.set(c.id, { slug: c.slug, name: c.name, description: c.description }));
+
+  if (error || !data || data.length === 0) {
+    // No DB articles — still surface admin-created categories on top of static ones.
+    const extra = dbCats.filter((c) => !staticKH.some((sc) => sc.slug === c.slug));
+    return [
+      ...staticKH,
+      ...extra.map((c): KHCategory => ({
+        slug: c.slug,
+        name: c.name,
+        description: c.description ?? "",
+        articles: [],
+      })),
+    ];
+  }
 
   // Build a slug->article fallback from static for image alts / missing fields.
   const staticBySlug = new Map<string, KHArticle>();
   staticKH.forEach((c) => c.articles.forEach((a) => staticBySlug.set(`${c.slug}/${a.slug}`, a)));
 
-  // Start from static categories (preserves names, descriptions, order) but
-  // replace each category's articles with DB rows for that category_slug.
   const grouped: Record<string, KHArticle[]> = {};
   data.forEach((r: any) => {
-    const fb = staticBySlug.get(`${r.category_slug}/${r.slug}`);
+    // Resolve to the LIVE category slug so admin renames flow through; fall
+    // back to the mirrored category_slug for rows that predate category_id.
+    const liveCat = r.category_id ? catById.get(r.category_id) : undefined;
+    const bucketSlug: string = liveCat?.slug ?? r.category_slug ?? "uncategorized";
+    const fb = staticBySlug.get(`${bucketSlug}/${r.slug}`) ?? staticBySlug.get(`${r.category_slug}/${r.slug}`);
     const article: KHArticle = {
       slug: r.slug,
       title: r.title,
@@ -128,13 +172,27 @@ async function fetchKnowledgeHub(): Promise<KHCategory[]> {
       imageAlt: fb?.imageAlt ?? r.title,
       content: resolveBody<KHArticle["content"][number]>(r.body_markdown, r.body_blocks, fb?.content),
     };
-    (grouped[r.category_slug] ||= []).push(article);
+    (grouped[bucketSlug] ||= []).push(article);
   });
 
-  return staticKH.map((c) => ({
+  // Static categories keep their order/descriptions, with DB articles swapped in.
+  const merged: KHCategory[] = staticKH.map((c) => ({
     ...c,
     articles: grouped[c.slug] ?? c.articles,
   }));
+
+  // Append admin-created categories that aren't in the static list.
+  dbCats.forEach((c) => {
+    if (merged.some((m) => m.slug === c.slug)) return;
+    merged.push({
+      slug: c.slug,
+      name: c.name,
+      description: c.description ?? "",
+      articles: grouped[c.slug] ?? [],
+    });
+  });
+
+  return merged;
 }
 
 export function useKnowledgeHubCategories() {

@@ -18,6 +18,7 @@ import ArticleSeo from "@/components/seo/ArticleSeo";
 import SimplePagination from "@/components/common/SimplePagination";
 import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
+import { usePublicCategories } from "@/hooks/usePublicCategories";
 
 const DOCS_PAGE_SIZE = 10;
 
@@ -52,8 +53,18 @@ const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
     acc[d.category] = (acc[d.category] || 0) + 1;
     return acc;
   }, {});
-  const categories = Object.entries(categoryMeta)
-    .map(([title, meta]) => ({ title, ...meta, count: counts[title] || 0 }))
+  // Merge admin-managed categories (DB) with the bundled defaults so anything
+  // added in /admin/categories shows up on the public Docs index.
+  const { data: dbCategories = [] } = usePublicCategories("docs");
+  const byName = new Map<string, { title: string; desc: string; icon: typeof Compass }>();
+  Object.entries(categoryMeta).forEach(([title, meta]) =>
+    byName.set(title, { title, desc: meta.desc, icon: meta.icon }),
+  );
+  dbCategories.forEach((c) => {
+    if (!byName.has(c.name)) byName.set(c.name, { title: c.name, desc: c.description ?? "", icon: Settings });
+  });
+  const categories = Array.from(byName.values())
+    .map((c) => ({ ...c, count: counts[c.title] || 0 }))
     .filter((c) => c.count > 0);
 
   const filtered = useMemo(() => {

@@ -32,7 +32,7 @@ const FIELDS =
  * Returns null if the row doesn't exist (then callers fall back to bundled data).
  */
 export function useCmsArticleSeo(
-  table: "blog_posts" | "kb_articles" | "docs_articles",
+  table: "blog_posts" | "kb_articles" | "docs_articles" | "web_stories",
   slug: string | undefined,
 ) {
   return useQuery<CmsArticleSeo | null>({
