@@ -82,7 +82,7 @@ app.post("/api/send-contact-email", async (req, res) => {
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background-color: #f4f6f9;">
       <div style="background: linear-gradient(135deg, ${brandNavy} 0%, #242b3d 100%); padding: 32px 40px; border-radius: 12px 12px 0 0;">
         <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: ${brandTeal}; letter-spacing: -0.5px;">
-          LLM Clicks
+          LLMClicks AI
         </h1>
         <p style="margin: 6px 0 0; font-size: 13px; color: #8b95a5;">New Contact Form Submission</p>
       </div>
