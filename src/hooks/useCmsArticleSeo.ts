@@ -38,7 +38,9 @@ export function useCmsArticleSeo(
   return useQuery<CmsArticleSeo | null>({
     queryKey: ["cms-article-seo", table, slug ?? ""],
     enabled: !!slug,
-    staleTime: 60_000,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       const { data, error } = await db
         .from(table)

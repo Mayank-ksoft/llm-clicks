@@ -7,6 +7,7 @@ import { useKnowledgeHubArticle } from "@/lib/cms/publicContent";
 import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
 import ArticleSeo from "@/components/seo/ArticleSeo";
 import { Button } from "@/components/ui/button";
+import { blobImageSrc } from "@/lib/blobUrls";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -207,7 +208,7 @@ const KnowledgeHubArticle = () => {
                 </div>
 
                 <img
-                  src={article.image}
+                  src={blobImageSrc(cmsSeo?.hero_image) || article.image}
                   alt={cmsSeo?.hero_image_alt || article.imageAlt}
                   title={cmsSeo?.hero_image_title || undefined}
                   className="rounded-2xl w-full mb-3 border border-border"

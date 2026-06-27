@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useDocs, useDoc } from "@/lib/cms/publicContent";
 import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import { blobImageSrc } from "@/lib/blobUrls";
 import ArticleSeo from "@/components/seo/ArticleSeo";
 import SimplePagination from "@/components/common/SimplePagination";
 import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
@@ -323,11 +324,11 @@ const DocDetail = ({ slug }: { slug: string }) => {
                 </div>
               </motion.div>
 
-              {doc.image && (
+              {(blobImageSrc(cmsSeo?.hero_image) || doc.image) && (
                 <>
                   <div className="rounded-2xl overflow-hidden border border-border mb-3 aspect-[16/10] bg-secondary/40">
                     <img
-                      src={doc.image}
+                      src={blobImageSrc(cmsSeo?.hero_image) || doc.image}
                       alt={cmsSeo?.hero_image_alt || doc.title}
                       title={cmsSeo?.hero_image_title || undefined}
                       loading="lazy"

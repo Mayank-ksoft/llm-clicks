@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import ImageUploadField, { deleteBlobUrl } from "@/components/admin/ImageUploadField";
 
 const SECTIONS = ["features", "resources", "free_tools", "company", "legal", "none"] as const;
 
@@ -235,8 +236,17 @@ const AdminPageDetail = () => {
               <Input value={form.og_title} onChange={set("og_title")} />
             </div>
             <div className="space-y-2">
-              <Label>OG image URL</Label>
-              <Input value={form.og_image} onChange={set("og_image")} />
+              <ImageUploadField
+                label="OG image"
+                value={form.og_image}
+                onChange={(url) => {
+                  const prev = form.og_image;
+                  setForm((f) => ({ ...f, og_image: url }));
+                  if (prev && prev !== url) void deleteBlobUrl(prev);
+                }}
+                recommended="1200×630"
+                manageDeletion={false}
+              />
             </div>
           </div>
           <div className="space-y-2">
