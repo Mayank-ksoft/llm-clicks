@@ -8,6 +8,8 @@ import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 import { getBlogCategoryBySlug } from "../src/lib/blogCategories";
 import { getLegacyRedirect } from "../shared/legacyRedirects";
 import { bootstrapStatus, adminLogin, adminSignup } from "../shared/adminAuth.js";
+import { put as blobPut, del as blobDel } from "@vercel/blob";
+import { createClient } from "@supabase/supabase-js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -49,6 +51,85 @@ app.post("/api/admin/login", async (req, res) => {
 app.post("/api/admin/signup", async (req, res) => {
   const { status, body } = await adminSignup(req.body || {});
   res.status(status).json(body);
+});
+
+// ---------- Blob upload/delete (local dev parity with /api on Vercel) ----------
+async function verifyAdminBearer(req: express.Request): Promise<{ ok: true } | { ok: false; status: number; error: string }> {
+  const auth = req.headers.authorization || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (!token) return { ok: false, status: 401, error: "Missing bearer token" };
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !service) return { ok: false, status: 500, error: "Supabase env not configured on dev server (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)" };
+  const admin = createClient(url, service);
+  const { data: userRes, error: userErr } = await admin.auth.getUser(token);
+  if (userErr || !userRes?.user) return { ok: false, status: 401, error: "Invalid token" };
+  const { data, error } = await admin.from("user_roles").select("role").eq("user_id", userRes.user.id).eq("role", "admin").maybeSingle();
+  if (error) return { ok: false, status: 500, error: error.message };
+  if (!data) return { ok: false, status: 403, error: "Not an admin" };
+  return { ok: true };
+}
+
+function parseMultipartFile(buf: Buffer, contentType: string): { filename: string; contentType: string; buffer: Buffer } | null {
+  const m = /boundary=(?:"?)([^";]+)/i.exec(contentType);
+  if (!m) return null;
+  const boundary = Buffer.from(`--${m[1]}`);
+  let start = buf.indexOf(boundary);
+  while (start >= 0) {
+    const next = buf.indexOf(boundary, start + boundary.length);
+    if (next < 0) break;
+    const part = buf.slice(start + boundary.length, next);
+    const headerEnd = part.indexOf("\r\n\r\n");
+    if (headerEnd < 0) { start = next; continue; }
+    const header = part.slice(2, headerEnd).toString("utf8");
+    const data = part.slice(headerEnd + 4, part.length - 2);
+    const disp = /name="([^"]+)"(?:; filename="([^"]*)")?/i.exec(header);
+    const ctMatch = /content-type:\s*([^\r\n]+)/i.exec(header);
+    if (disp && disp[1] === "file" && disp[2]) {
+      return { filename: disp[2], contentType: ctMatch ? ctMatch[1].trim() : "application/octet-stream", buffer: data };
+    }
+    start = next;
+  }
+  return null;
+}
+
+const safeName = (n: string) => n.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 120) || "image";
+
+app.post("/api/blob-upload", express.raw({ type: () => true, limit: "20mb" }), async (req, res) => {
+  const auth = await verifyAdminBearer(req);
+  if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return res.status(500).json({ error: "BLOB_READ_WRITE_TOKEN not configured on the dev server (.env)." });
+  try {
+    const file = parseMultipartFile(req.body as Buffer, req.headers["content-type"] || "");
+    if (!file) return res.status(400).json({ error: "No file in request" });
+    if (!file.contentType.startsWith("image/")) return res.status(400).json({ error: "Only image uploads are allowed" });
+    if (file.buffer.length > 15 * 1024 * 1024) return res.status(413).json({ error: "File too large (max 15 MB)" });
+    const key = `cms/${Date.now()}-${safeName(file.filename)}`;
+    const result = await blobPut(key, file.buffer, {
+      access: "public",
+      contentType: file.contentType,
+      addRandomSuffix: true,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
+    return res.status(200).json({ url: result.url });
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message || "Upload failed" });
+  }
+});
+
+app.post("/api/blob-delete", async (req, res) => {
+  const auth = await verifyAdminBearer(req);
+  if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return res.status(500).json({ error: "BLOB_READ_WRITE_TOKEN not configured on the dev server (.env)." });
+  try {
+    const { url } = (req.body || {}) as { url?: string };
+    if (!url) return res.status(400).json({ error: "url required" });
+    if (!url.includes(".public.blob.vercel-storage.com")) return res.status(200).json({ ok: true, skipped: "not a Vercel Blob URL" });
+    await blobDel(url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+    return res.status(200).json({ ok: true });
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message || "Delete failed" });
+  }
 });
 
 app.post("/api/send-contact-email", async (req, res) => {

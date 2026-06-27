@@ -13,6 +13,7 @@ import { ArrowLeft, Save, Trash2, Plus, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { slugify } from "@/lib/cms/contentApi";
 import ImageUploadField, { deleteBlobUrl } from "@/components/admin/ImageUploadField";
+import MDEditor from "@uiw/react-md-editor";
 
 const db = supabase as unknown as { from: (t: string) => any };
 
@@ -180,9 +181,14 @@ const AdminAuthorEditor = () => {
                 <div className="col-span-2"><Label>Role Title</Label><Input value={draft.role_title} onChange={(e) => update({ role_title: e.target.value })} placeholder="Founder & CEO, LLMClicks.ai" /></div>
                 <div className="col-span-2"><Label>Tagline (hero subtitle)</Label><Textarea rows={2} value={draft.tagline} onChange={(e) => update({ tagline: e.target.value })} /></div>
                 <div className="col-span-2"><Label>Short Bio (legacy / fallback)</Label><Textarea rows={2} value={draft.bio} onChange={(e) => update({ bio: e.target.value })} /></div>
-                <div className="col-span-2">
-                  <Label>Long Bio (markdown, use blank lines between paragraphs; **bold** supported)</Label>
-                  <Textarea rows={10} value={draft.long_bio_md} onChange={(e) => update({ long_bio_md: e.target.value })} />
+                <div className="col-span-2" data-color-mode="light">
+                  <Label className="mb-2 block">Long Bio (Markdown — bold, links, lists, headings supported)</Label>
+                  <MDEditor
+                    value={draft.long_bio_md}
+                    onChange={(v) => update({ long_bio_md: v ?? "" })}
+                    height={420}
+                    preview="live"
+                  />
                 </div>
               </CardContent>
             </Card>
