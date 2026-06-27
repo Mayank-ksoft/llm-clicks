@@ -12,7 +12,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getPostBySlug, posts } from "@/data/blogPosts";
+import { useBlogPost, useBlogPosts } from "@/lib/cms/publicContent";
+import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import ArticleSeo from "@/components/seo/ArticleSeo";
+import { blobImageSrc } from "@/lib/blobUrls";
 import { useToast } from "@/hooks/use-toast";
 import authorShripad from "@/assets/author-shripad.png";
 import { blogCategoryPath, getBlogCategoryByTag } from "@/lib/blogCategories";
@@ -102,7 +105,8 @@ function renderTextWithLinks(text: string): React.ReactNode {
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const post = slug ? getPostBySlug(slug) : undefined;
+  const post = useBlogPost(slug);
+  const allPosts = useBlogPosts();
   const { toast } = useToast();
   const [activeId, setActiveId] = useState<string>("");
 
@@ -129,9 +133,10 @@ const BlogPost = () => {
     return () => observer.disconnect();
   }, [toc]);
 
+  const { data: cmsSeo } = useCmsArticleSeo("blog_posts", post?.slug);
   if (!post) return <Navigate to="/blog" replace />;
 
-  const related = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const related = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
   const modifiedDate = post.date; // dataset has only one date — surface as "Last updated"
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
   const category = getBlogCategoryByTag(post.tag);
@@ -195,8 +200,19 @@ const BlogPost = () => {
                 transition={{ delay: 0.1 }}
                 className="rounded-2xl overflow-hidden border border-border mb-8 aspect-[16/10] bg-secondary/40"
               >
-                <img src={post.image} alt={post.title} width={1024} height={640} className="w-full h-full object-contain" />
+                <img
+                  src={blobImageSrc(cmsSeo?.hero_image) || post.image}
+                  alt={cmsSeo?.hero_image_alt || post.title}
+                  title={cmsSeo?.hero_image_title || undefined}
+                  width={1024}
+                  height={640}
+                  className="w-full h-full object-contain"
+                />
               </motion.div>
+              {cmsSeo?.hero_image_caption && (
+                <p className="text-sm text-muted-foreground text-center -mt-4 mb-8">{cmsSeo.hero_image_caption}</p>
+              )}
+              <ArticleSeo data={cmsSeo} />
 
               {/* Summarize with AI bar */}
               <div className="rounded-2xl border border-border bg-card/60 p-4 mb-10 flex flex-wrap items-center gap-3">

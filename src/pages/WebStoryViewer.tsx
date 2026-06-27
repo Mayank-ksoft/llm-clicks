@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getWebStory } from "@/data/webStories";
+import { useWebStory } from "@/lib/cms/publicContent";
+import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import ArticleSeo from "@/components/seo/ArticleSeo";
 import { getCanonicalUrl, getPageMeta } from "@/lib/pageMeta";
 import { syncRouteHeadTags } from "@/lib/headTags";
 
@@ -13,7 +15,8 @@ const DEFAULT_SLIDE_MS = 7000;
 
 const WebStoryViewer = () => {
   const { slug } = useParams();
-  const story = slug ? getWebStory(slug) : undefined;
+  const story = useWebStory(slug);
+  const { data: cmsSeo } = useCmsArticleSeo("web_stories", slug);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
@@ -80,20 +83,17 @@ const WebStoryViewer = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4">
-      {(() => {
-        return (
-          <Helmet>
-            <title>{meta.title}</title>
-            <meta name="description" content={meta.description} />
-            <link rel="canonical" href={canonical} />
-            <meta property="og:type" content="article" />
-            <meta property="og:title" content={meta.title} />
-            <meta property="og:description" content={meta.description} />
-            <meta property="og:image" content={story.poster} />
-            <meta property="og:url" content={canonical} />
-          </Helmet>
-        );
-      })()}
+      <Helmet>
+        <title>{cmsSeo?.meta_title || meta.title}</title>
+        <meta name="description" content={cmsSeo?.meta_description || meta.description} />
+        <link rel="canonical" href={cmsSeo?.canonical_url || canonical} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={cmsSeo?.og_title || cmsSeo?.meta_title || meta.title} />
+        <meta property="og:description" content={cmsSeo?.og_description || cmsSeo?.meta_description || meta.description} />
+        <meta property="og:image" content={cmsSeo?.og_image || cmsSeo?.hero_image || story.poster} />
+        <meta property="og:url" content={cmsSeo?.canonical_url || canonical} />
+      </Helmet>
+      <ArticleSeo data={cmsSeo} />
       {/* Close */}
       <Link
         to="/web-stories"

@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, BookOpen, Search, Tag } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { posts } from "@/data/blogPosts";
 import SimplePagination from "@/components/common/SimplePagination";
-import { blogCategoryPath, getBlogCategoryBySlug, getBlogCategoryByTag, indexableBlogCategories } from "@/lib/blogCategories";
+import { blogCategoryPath, getBlogCategoryBySlug, getBlogCategoryByTag, indexableBlogCategories, type BlogCategory } from "@/lib/blogCategories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
+import { useBlogPosts } from "@/lib/cms/publicContent";
+import { usePublicCategories } from "@/hooks/usePublicCategories";
 
 const PAGE_SIZE = 9;
 
@@ -19,6 +20,7 @@ const cardVariants = {
 const Blog = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const posts = useBlogPosts();
   const hero = usePageHeroContent({
     title: "Generative SEO & AI Insights",
     subtitle: "Actionable strategies to dominate LLM search engines. Protect your SaaS pipeline from the zero-click reality.",
@@ -27,8 +29,36 @@ const Blog = () => {
   const { categorySlug } = useParams<{ categorySlug?: string }>();
   const [searchParams] = useSearchParams();
   const legacyTag = searchParams.get("tag") || "";
-  const legacyCategory = getBlogCategoryByTag(legacyTag);
-  const activeCategory = categorySlug ? getBlogCategoryBySlug(categorySlug) : undefined;
+
+  // Admin-managed blog categories — merged with the hardcoded list so categories
+  // created or renamed in the CMS surface on the public listing without a code change.
+  const { data: adminCats = [] } = usePublicCategories("blog");
+  const adminCategories: BlogCategory[] = useMemo(
+    () =>
+      adminCats.map((c) => ({
+        tag: c.name.toUpperCase(),
+        slug: c.slug,
+        label: c.name,
+        description: c.description ?? "",
+        indexable: true,
+      })),
+    [adminCats],
+  );
+  const mergedCategories: BlogCategory[] = useMemo(() => {
+    const map = new Map<string, BlogCategory>();
+    indexableBlogCategories.forEach((c) => map.set(c.slug, c));
+    // Admin entries win (newer source of truth for label/description/slug).
+    adminCategories.forEach((c) => map.set(c.slug, c));
+    return Array.from(map.values());
+  }, [adminCategories]);
+
+  const findBySlug = (s: string | undefined) =>
+    s ? mergedCategories.find((c) => c.slug === s) ?? getBlogCategoryBySlug(s) : undefined;
+  const findByTag = (t: string | undefined) =>
+    t ? mergedCategories.find((c) => c.tag === t.toUpperCase()) ?? getBlogCategoryByTag(t) : undefined;
+
+  const legacyCategory = findByTag(legacyTag);
+  const activeCategory = findBySlug(categorySlug);
   const activeTag = activeCategory?.tag || "";
   const redirectTo = legacyCategory
     ? blogCategoryPath(legacyCategory.slug)
@@ -42,14 +72,14 @@ const Blog = () => {
       if (p.tag) acc[p.tag] = (acc[p.tag] || 0) + 1;
       return acc;
     }, {});
-  }, []);
+  }, [posts]);
 
   const tags = useMemo(
     () =>
-      indexableBlogCategories
+      mergedCategories
         .map((category) => ({ ...category, count: tagCounts[category.tag] || 0 }))
         .filter((category) => category.count > 0),
-    [tagCounts],
+    [tagCounts, mergedCategories],
   );
 
   const filteredPosts = useMemo(() => {
@@ -60,7 +90,7 @@ const Blog = () => {
     return list.filter((p) =>
       [p.title, p.excerpt, p.tag].some((f) => f?.toLowerCase().includes(q)),
     );
-  }, [query, activeTag]);
+  }, [query, activeTag, posts]);
 
   useEffect(() => { setPage(1); }, [query, activeTag]);
 

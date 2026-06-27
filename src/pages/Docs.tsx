@@ -12,10 +12,14 @@ import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { docs, getDocBySlug } from "@/data/docsArticles";
+import { useDocs, useDoc } from "@/lib/cms/publicContent";
+import { useCmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import { blobImageSrc } from "@/lib/blobUrls";
+import ArticleSeo from "@/components/seo/ArticleSeo";
 import SimplePagination from "@/components/common/SimplePagination";
 import { DOCS_CATEGORIES, docsCategoryPath, getDocsCategoryBySlug } from "@/lib/docsCategories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
+import { usePublicCategories } from "@/hooks/usePublicCategories";
 
 const DOCS_PAGE_SIZE = 10;
 
@@ -34,6 +38,7 @@ const slugifyHeading = (t: string) =>
 const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const docs = useDocs();
   const hero = usePageHeroContent({
     title: "LLMClicks.ai Docs",
     subtitle: "Setup guides, walkthroughs, and best-practice playbooks for every module of the platform.",
@@ -49,8 +54,18 @@ const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
     acc[d.category] = (acc[d.category] || 0) + 1;
     return acc;
   }, {});
-  const categories = Object.entries(categoryMeta)
-    .map(([title, meta]) => ({ title, ...meta, count: counts[title] || 0 }))
+  // Merge admin-managed categories (DB) with the bundled defaults so anything
+  // added in /admin/categories shows up on the public Docs index.
+  const { data: dbCategories = [] } = usePublicCategories("docs");
+  const byName = new Map<string, { title: string; desc: string; icon: typeof Compass }>();
+  Object.entries(categoryMeta).forEach(([title, meta]) =>
+    byName.set(title, { title, desc: meta.desc, icon: meta.icon }),
+  );
+  dbCategories.forEach((c) => {
+    if (!byName.has(c.name)) byName.set(c.name, { title: c.name, desc: c.description ?? "", icon: Settings });
+  });
+  const categories = Array.from(byName.values())
+    .map((c) => ({ ...c, count: counts[c.title] || 0 }))
     .filter((c) => c.count > 0);
 
   const filtered = useMemo(() => {
@@ -188,7 +203,8 @@ const DocIndex = ({ categorySlug }: { categorySlug?: string }) => {
 };
 
 const DocDetail = ({ slug }: { slug: string }) => {
-  const doc = getDocBySlug(slug);
+  const doc = useDoc(slug);
+  const docs = useDocs();
   const [activeId, setActiveId] = useState<string>("");
 
   const toc = useMemo(() => {
@@ -225,6 +241,7 @@ const DocDetail = ({ slug }: { slug: string }) => {
     return () => observer.disconnect();
   }, [toc]);
 
+  const { data: cmsSeo } = useCmsArticleSeo("docs_articles", doc?.slug);
   if (!doc) return <Navigate to="/docs" replace />;
 
   const handlePrint = () => {
@@ -307,11 +324,23 @@ const DocDetail = ({ slug }: { slug: string }) => {
                 </div>
               </motion.div>
 
-              {doc.image && (
-                <div className="rounded-2xl overflow-hidden border border-border mb-10 aspect-[16/10] bg-secondary/40">
-                  <img src={doc.image} alt={doc.title} loading="lazy" className="w-full h-full object-cover" />
-                </div>
+              {(blobImageSrc(cmsSeo?.hero_image) || doc.image) && (
+                <>
+                  <div className="rounded-2xl overflow-hidden border border-border mb-3 aspect-[16/10] bg-secondary/40">
+                    <img
+                      src={blobImageSrc(cmsSeo?.hero_image) || doc.image}
+                      alt={cmsSeo?.hero_image_alt || doc.title}
+                      title={cmsSeo?.hero_image_title || undefined}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {cmsSeo?.hero_image_caption && (
+                    <p className="text-sm text-muted-foreground text-center mb-10">{cmsSeo.hero_image_caption}</p>
+                  )}
+                </>
               )}
+              <ArticleSeo data={cmsSeo} />
 
               <div className="space-y-6 text-foreground/90 leading-relaxed">
                 {doc.content.map((b, i) => {

@@ -3,14 +3,14 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, BookOpen, Clock } from "lucide-react";
-import { getKHCategory } from "@/data/knowledgeHub";
 import SimplePagination from "@/components/common/SimplePagination";
+import { useKnowledgeHubCategory } from "@/lib/cms/publicContent";
 
 const PAGE_SIZE = 8;
 
 const KnowledgeHubCategory = () => {
   const { category } = useParams();
-  const cat = category ? getKHCategory(category) : undefined;
+  const cat = useKnowledgeHubCategory(category);
   const [page, setPage] = useState(1);
   if (!cat) return <Navigate to="/knowledge-hub" replace />;
 

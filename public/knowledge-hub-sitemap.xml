@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://llmclicks.ai/knowledge-hub/chatgpt-seo/</loc>
-    <lastmod>2026-04-24</lastmod>
-  </url>
-  <url>
-    <loc>https://llmclicks.ai/knowledge-hub/chatgpt-seo/blocking-gptbot-seo/</loc>
-    <lastmod>2026-04-24</lastmod>
-  </url>
-  <url>
     <loc>https://llmclicks.ai/knowledge-hub/agentic-search-aeo/</loc>
     <lastmod>2026-05-22</lastmod>
   </url>
@@ -25,27 +17,35 @@
     <lastmod>2026-05-14</lastmod>
   </url>
   <url>
+    <loc>https://llmclicks.ai/knowledge-hub/chatgpt-seo/</loc>
+    <lastmod>2026-04-24</lastmod>
+  </url>
+  <url>
+    <loc>https://llmclicks.ai/knowledge-hub/chatgpt-seo/blocking-gptbot-seo/</loc>
+    <lastmod>2026-04-24</lastmod>
+  </url>
+  <url>
     <loc>https://llmclicks.ai/knowledge-hub/data-and-research/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-19</lastmod>
   </url>
   <url>
     <loc>https://llmclicks.ai/knowledge-hub/emerging-trends/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-19</lastmod>
   </url>
   <url>
     <loc>https://llmclicks.ai/knowledge-hub/geo-for-agencies/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-19</lastmod>
   </url>
   <url>
     <loc>https://llmclicks.ai/knowledge-hub/local-ai-seo/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-19</lastmod>
   </url>
   <url>
     <loc>https://llmclicks.ai/knowledge-hub/perplexity-seo/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-19</lastmod>
   </url>
   <url>
     <loc>https://llmclicks.ai/knowledge-hub/technical-geo/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-19</lastmod>
   </url>
 </urlset>

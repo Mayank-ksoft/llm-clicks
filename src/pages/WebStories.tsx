@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { webStories } from "@/data/webStories";
 import { usePageHeroContent } from "@/hooks/usePageHeroContent";
+import { useWebStories } from "@/lib/cms/publicContent";
 
 const WebStories = () => {
+  const webStories = useWebStories();
   const hero = usePageHeroContent({
     title: "Generative SEO & AI Visibility Stories",
     subtitle: "Swipe through our bite-sized strategic teardowns. Learn how to optimize your SaaS for ChatGPT, Gemini, and Perplexity in 15 seconds or less.",
