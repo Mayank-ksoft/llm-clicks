@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import type { CmsArticleSeo } from "@/hooks/useCmsArticleSeo";
+import { absoluteBlobImageSrc } from "@/lib/blobUrls";
 
 /**
  * Renders per-article SEO + Open Graph + Twitter card tags from the CMS.
@@ -9,7 +10,7 @@ const ArticleSeo = ({ data }: { data: CmsArticleSeo | null | undefined }) => {
   if (!data) return null;
   const ogTitle = data.og_title || data.meta_title || data.title || undefined;
   const ogDesc = data.og_description || data.meta_description || data.excerpt || undefined;
-  const ogImage = data.og_image || data.hero_image || undefined;
+  const ogImage = absoluteBlobImageSrc(data.og_image || data.hero_image) || undefined;
   const twTitle = data.twitter_title || ogTitle;
   const twDesc = data.twitter_description || ogDesc;
   const twImage = data.twitter_image || ogImage;

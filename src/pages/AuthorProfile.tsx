@@ -4,6 +4,7 @@ import { Linkedin, Twitter, ArrowUpRight, ArrowRight, MapPin, Clock, Star, Brief
 import Layout from "@/components/layout/Layout";
 import { useAuthor } from "@/hooks/useAuthor";
 import { posts } from "@/data/blogPosts";
+import { absoluteBlobImageSrc, blobImageSrc } from "@/lib/blobUrls";
 
 const AuthorProfile = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -34,7 +35,7 @@ const AuthorProfile = () => {
       jobTitle: author.role_title ?? undefined,
       description: author.tagline ?? author.bio ?? undefined,
       url: `https://llmclicks.ai/author/${author.slug}/`,
-      image: author.avatar_url ?? undefined,
+      image: absoluteBlobImageSrc(author.avatar_url) || undefined,
       worksFor: { "@type": "Organization", name: "LLMClicks.ai", url: "https://llmclicks.ai" },
       sameAs: [author.linkedin, author.twitter, author.website].filter(Boolean),
       knowsAbout: tags,
@@ -55,7 +56,7 @@ const AuthorProfile = () => {
       <Helmet>
         <title>{author.meta_title ?? `${author.name} | LLMClicks.ai`}</title>
         <meta name="description" content={author.meta_description ?? author.bio ?? ""} />
-        {author.og_image && <meta property="og:image" content={author.og_image} />}
+        {author.og_image && <meta property="og:image" content={absoluteBlobImageSrc(author.og_image)} />}
         <link rel="canonical" href={`/author/${author.slug}`} />
         <script type="application/ld+json">{JSON.stringify(profileSchema)}</script>
       </Helmet>
@@ -76,7 +77,7 @@ const AuthorProfile = () => {
             <div className="absolute -inset-1.5 rounded-full border border-dashed border-accent/40 animate-[spin_12s_linear_infinite]" />
             {author.avatar_url ? (
               <img
-                src={author.avatar_url}
+                src={blobImageSrc(author.avatar_url)}
                 alt={author.name}
                 width={120}
                 height={120}

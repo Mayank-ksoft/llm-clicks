@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Upload, X, Loader2 } from "lucide-react";
+import { blobImageSrc, isVercelBlobUrl } from "@/lib/blobUrls";
 
 interface Props {
   label: string;
@@ -18,10 +19,6 @@ interface Props {
   manageDeletion?: boolean;
 }
 
-const BLOB_HOST = ".public.blob.vercel-storage.com";
-
-const isBlobUrl = (u: string | null | undefined) => !!u && u.includes(BLOB_HOST);
-
 async function authHeader(): Promise<Record<string, string>> {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
@@ -29,7 +26,7 @@ async function authHeader(): Promise<Record<string, string>> {
 }
 
 export async function deleteBlobUrl(url: string | null | undefined): Promise<void> {
-  if (!isBlobUrl(url)) return;
+  if (!isVercelBlobUrl(url)) return;
   try {
     await fetch("/api/blob-delete", {
       method: "POST",
@@ -90,7 +87,7 @@ const ImageUploadField = ({ label, value, onChange, recommended, manageDeletion 
       <Label>{label}</Label>
       {value ? (
         <div className="rounded-md border border-border bg-muted/30 p-3 space-y-3">
-          <img src={value} alt="" className="max-h-48 rounded object-contain mx-auto" />
+          <img src={blobImageSrc(value)} alt="" className="max-h-48 rounded object-contain mx-auto" />
           <div className="flex gap-2">
             <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
               {uploading ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Upload className="h-4 w-4 mr-1" />}

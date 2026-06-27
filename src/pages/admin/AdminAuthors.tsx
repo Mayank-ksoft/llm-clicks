@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Pencil, ExternalLink } from "lucide-react";
+import { blobImageSrc } from "@/lib/blobUrls";
 
 const db = supabase as unknown as { from: (t: string) => any };
 
@@ -50,7 +51,7 @@ const AdminAuthors = () => {
               {data.map((a: any) => (
                 <TableRow key={a.id}>
                   <TableCell className="flex items-center gap-3">
-                    {a.avatar_url ? <img src={a.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" /> : <div className="h-8 w-8 rounded-full bg-muted" />}
+                    {a.avatar_url ? <img src={blobImageSrc(a.avatar_url)} alt="" className="h-8 w-8 rounded-full object-cover" /> : <div className="h-8 w-8 rounded-full bg-muted" />}
                     <span className="font-medium">{a.name}</span>
                     {a.published === false && <Badge variant="secondary">Hidden</Badge>}
                   </TableCell>

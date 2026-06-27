@@ -5,6 +5,7 @@ import { docs as staticDocs, type DocArticle } from "@/data/docsArticles";
 import { knowledgeHubCategories as staticKH, type KHCategory, type KHArticle } from "@/data/knowledgeHub";
 import { webStories as staticWS, type WebStory } from "@/data/webStories";
 import { markdownToBlocks } from "@/lib/cms/markdownToBlocks";
+import { blobImageSrc } from "@/lib/blobUrls";
 
 // Body resolution priority (used everywhere):
 // 1. body_markdown (converted to blocks)  ← what admin editor writes today
@@ -69,7 +70,7 @@ async function fetchBlogPosts(): Promise<BlogPost[]> {
       readTime: r.reading_time ?? fallback?.readTime ?? "5 min read",
       tag,
       author: (r.author_id && authorMap[r.author_id]) || fallback?.author || "Shripad Deshmukh",
-      image: r.hero_image ?? fallback?.image ?? "",
+      image: blobImageSrc(r.hero_image) || fallback?.image || "",
       content: resolveBody<BlogPost["content"][number]>(r.body_markdown, r.body_blocks, fallback?.content),
     };
   });
@@ -104,7 +105,7 @@ async function fetchDocs(): Promise<DocArticle[]> {
       title: r.title,
       excerpt: r.excerpt ?? fallback?.excerpt ?? "",
       date: fmtDate(r.published_at, fallback?.date ?? ""),
-      image: r.hero_image ?? fallback?.image ?? "",
+      image: blobImageSrc(r.hero_image) || fallback?.image || "",
       // Live category name wins over the stale `category_label` mirror.
       category: cat?.name ?? r.category_label ?? fallback?.category ?? "Getting Started",
       content: resolveBody<DocArticle["content"][number]>(r.body_markdown, r.body_blocks, fallback?.content),
@@ -168,7 +169,7 @@ async function fetchKnowledgeHub(): Promise<KHCategory[]> {
       date: fmtDate(r.published_at, fb?.date ?? ""),
       updated: r.updated_legacy ?? fb?.updated,
       readTime: r.reading_time ?? fb?.readTime ?? "10 min read",
-      image: r.hero_image ?? fb?.image ?? "",
+      image: blobImageSrc(r.hero_image) || fb?.image || "",
       imageAlt: fb?.imageAlt ?? r.title,
       content: resolveBody<KHArticle["content"][number]>(r.body_markdown, r.body_blocks, fb?.content),
     };
@@ -228,7 +229,7 @@ async function fetchWebStories(): Promise<WebStory[]> {
     return {
       slug: r.slug,
       title: r.title,
-      poster: r.poster ?? fb?.poster ?? "",
+      poster: blobImageSrc(r.poster) || fb?.poster || "",
       posterAlt: fb?.posterAlt ?? r.title,
       excerpt: r.excerpt ?? fb?.excerpt ?? "",
       slides: (Array.isArray(r.pages) && r.pages.length > 0)

@@ -12,6 +12,18 @@ function safeName(name: string): string {
   return name.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 120) || "image";
 }
 
+function hasBlobCredentials(): boolean {
+  return Boolean(process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN);
+}
+
+function blobCredentialOptions() {
+  const storeId = process.env.BLOB_STORE_ID?.trim();
+  // Do not pass BLOB_READ_WRITE_TOKEN explicitly here. On Vercel, @vercel/blob
+  // can authenticate with the linked Blob store through OIDC + BLOB_STORE_ID;
+  // passing a stale token explicitly overrides that and causes "Access denied".
+  return storeId ? { storeId } : {};
+}
+
 async function readMultipartFile(
   req: VercelRequest,
 ): Promise<{ filename: string; contentType: string; buffer: Buffer } | null> {
@@ -58,8 +70,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const auth = await verifyAdmin(req);
   if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return res.status(500).json({ error: "BLOB_READ_WRITE_TOKEN not configured on the server." });
+  if (!hasBlobCredentials()) {
+    return res.status(500).json({ error: "Blob storage is not configured. Set BLOB_STORE_ID on Vercel or BLOB_READ_WRITE_TOKEN for local fallback." });
   }
 
   try {
@@ -73,10 +85,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     const key = `cms/${Date.now()}-${safeName(file.filename)}`;
     const result = await put(key, file.buffer, {
-      access: "public",
+      access: "private",
       contentType: file.contentType,
       addRandomSuffix: true,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      ...blobCredentialOptions(),
     });
     return res.status(200).json({ url: result.url });
   } catch (e: any) {

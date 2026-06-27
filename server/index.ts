@@ -4,11 +4,12 @@ import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import { Readable } from "stream";
 import pageMetaData from "../shared/pageMeta.json" with { type: "json" };
 import { getBlogCategoryBySlug } from "../src/lib/blogCategories";
 import { getLegacyRedirect } from "../shared/legacyRedirects";
 import { bootstrapStatus, adminLogin, adminSignup } from "../shared/adminAuth.js";
-import { put as blobPut, del as blobDel } from "@vercel/blob";
+import { put as blobPut, del as blobDel, get as blobGet } from "@vercel/blob";
 import { createClient } from "@supabase/supabase-js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -95,10 +96,22 @@ function parseMultipartFile(buf: Buffer, contentType: string): { filename: strin
 
 const safeName = (n: string) => n.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 120) || "image";
 
+function hasBlobCredentials(): boolean {
+  return Boolean(process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN);
+}
+
+function blobCredentialOptions() {
+  const storeId = process.env.BLOB_STORE_ID?.trim();
+  // In Vercel, @vercel/blob should use linked-store OIDC + BLOB_STORE_ID.
+  // Passing BLOB_READ_WRITE_TOKEN explicitly overrides OIDC and can preserve an
+  // old invalid token. Local dev still falls back to BLOB_READ_WRITE_TOKEN.
+  return storeId ? { storeId } : {};
+}
+
 app.post("/api/blob-upload", express.raw({ type: () => true, limit: "20mb" }), async (req, res) => {
   const auth = await verifyAdminBearer(req);
   if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return res.status(500).json({ error: "BLOB_READ_WRITE_TOKEN not configured on the dev server (.env)." });
+  if (!hasBlobCredentials()) return res.status(500).json({ error: "Blob storage is not configured. Set BLOB_STORE_ID or BLOB_READ_WRITE_TOKEN in .env." });
   try {
     const file = parseMultipartFile(req.body as Buffer, req.headers["content-type"] || "");
     if (!file) return res.status(400).json({ error: "No file in request" });
@@ -106,10 +119,10 @@ app.post("/api/blob-upload", express.raw({ type: () => true, limit: "20mb" }), a
     if (file.buffer.length > 15 * 1024 * 1024) return res.status(413).json({ error: "File too large (max 15 MB)" });
     const key = `cms/${Date.now()}-${safeName(file.filename)}`;
     const result = await blobPut(key, file.buffer, {
-      access: "public",
+      access: "private",
       contentType: file.contentType,
       addRandomSuffix: true,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      ...blobCredentialOptions(),
     });
     return res.status(200).json({ url: result.url });
   } catch (e: any) {
@@ -120,15 +133,47 @@ app.post("/api/blob-upload", express.raw({ type: () => true, limit: "20mb" }), a
 app.post("/api/blob-delete", async (req, res) => {
   const auth = await verifyAdminBearer(req);
   if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return res.status(500).json({ error: "BLOB_READ_WRITE_TOKEN not configured on the dev server (.env)." });
+  if (!hasBlobCredentials()) return res.status(500).json({ error: "Blob storage is not configured. Set BLOB_STORE_ID or BLOB_READ_WRITE_TOKEN in .env." });
   try {
     const { url } = (req.body || {}) as { url?: string };
     if (!url) return res.status(400).json({ error: "url required" });
-    if (!url.includes(".public.blob.vercel-storage.com")) return res.status(200).json({ ok: true, skipped: "not a Vercel Blob URL" });
-    await blobDel(url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+    if (!url.includes(".public.blob.vercel-storage.com") && !url.includes(".private.blob.vercel-storage.com")) return res.status(200).json({ ok: true, skipped: "not a Vercel Blob URL" });
+    await blobDel(url, blobCredentialOptions());
     return res.status(200).json({ ok: true });
   } catch (e: any) {
     return res.status(500).json({ error: e.message || "Delete failed" });
+  }
+});
+
+app.get("/api/blob-file", async (req, res) => {
+  const rawUrl = typeof req.query.url === "string" ? req.query.url : "";
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return res.status(400).json({ error: "Valid Vercel Blob url required" });
+  }
+  if (parsed.protocol !== "https:" || !/\.(public|private)\.blob\.vercel-storage\.com$/i.test(parsed.hostname)) {
+    return res.status(400).json({ error: "Valid Vercel Blob url required" });
+  }
+
+  try {
+    const access = parsed.hostname.includes(".private.") ? "private" : "public";
+    const result = await blobGet(parsed.toString(), {
+      access,
+      ...blobCredentialOptions(),
+      ifNoneMatch: typeof req.headers["if-none-match"] === "string" ? req.headers["if-none-match"] : undefined,
+    });
+    if (!result) return res.status(404).json({ error: "Blob not found" });
+    if (result.statusCode === 304) return res.status(304).end();
+    if (!result.blob.contentType?.startsWith("image/")) return res.status(415).json({ error: "Only image blobs can be served here" });
+    res.setHeader("Content-Type", result.blob.contentType);
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("ETag", result.blob.etag);
+    res.setHeader("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400");
+    return Readable.fromWeb(result.stream as any).pipe(res);
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message || "Blob fetch failed" });
   }
 });
 
