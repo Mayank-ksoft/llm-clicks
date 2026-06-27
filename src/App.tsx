@@ -29,7 +29,8 @@ const KnowledgeHubCategory = lazy(() => import("./pages/KnowledgeHubCategory"));
 const KnowledgeHubArticle = lazy(() => import("./pages/KnowledgeHubArticle"));
 const WebStories = lazy(() => import("./pages/WebStories"));
 const WebStoryViewer = lazy(() => import("./pages/WebStoryViewer"));
-const AuthorShripad = lazy(() => import("./pages/AuthorShripad"));
+const AuthorProfile = lazy(() => import("./pages/AuthorProfile"));
+const AdminAuthorEditor = lazy(() => import("./pages/admin/AdminAuthorEditor"));
 const Industries = lazy(() => import("./pages/Industries"));
 const IndustryPage = lazy(() => import("./pages/IndustryPage"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -126,8 +127,8 @@ const App = () => (
             <Route path="/features/:slug" element={<FeaturePage />} />
             <Route path="/tools/:slug" element={<FreeToolPage />} />
 
-            <Route path="/author/shripad-deshmukh" element={<AuthorShripad />} />
             <Route path="/author/llmclicks" element={<Navigate to="/author/shripad-deshmukh" replace />} />
+            <Route path="/author/:slug" element={<AuthorProfile />} />
 
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminGuard><AdminDashboard /></AdminGuard>} />
@@ -148,6 +149,8 @@ const App = () => (
             <Route path="/admin/web-stories/new" element={<AdminGuard><AdminWebStoriesEditor /></AdminGuard>} />
             <Route path="/admin/web-stories/:id" element={<AdminGuard><AdminWebStoriesEditor /></AdminGuard>} />
             <Route path="/admin/authors" element={<AdminGuard><AdminAuthors /></AdminGuard>} />
+            <Route path="/admin/authors/new" element={<AdminGuard><AdminAuthorEditor /></AdminGuard>} />
+            <Route path="/admin/authors/:id" element={<AdminGuard><AdminAuthorEditor /></AdminGuard>} />
             <Route path="/admin/categories" element={<AdminGuard><AdminCategories /></AdminGuard>} />
             <Route path="/admin/tags" element={<AdminGuard><AdminTags /></AdminGuard>} />
             <Route path="/admin/redirects" element={<AdminGuard><AdminRedirects /></AdminGuard>} />

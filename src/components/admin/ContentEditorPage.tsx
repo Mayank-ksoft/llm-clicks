@@ -15,6 +15,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Save, Trash2, ExternalLink } from "lucide-react";
 import { slugify, type ContentRow, type ContentStatus } from "@/lib/cms/contentApi";
 import { categoriesApi } from "@/lib/cms/blogApi";
+import ImageUploadField, { deleteBlobUrl } from "@/components/admin/ImageUploadField";
 
 interface Api {
   list: () => Promise<ContentRow[]>;
@@ -134,10 +135,13 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
             <Card>
               <CardHeader><CardTitle className="text-sm">Featured Image</CardTitle></CardHeader>
               <CardContent className="space-y-3">
-                <div><Label>Image URL</Label><Input value={draft.hero_image ?? ""} onChange={(e) => update({ hero_image: e.target.value })} placeholder="https://… or /legacy-assets/…" /></div>
-                {draft.hero_image ? (
-                  <img src={draft.hero_image} alt={draft.hero_image_alt ?? ""} className="rounded-md border border-border max-h-48 object-contain bg-muted/30" />
-                ) : null}
+                <ImageUploadField
+                  label="Image"
+                  value={draft.hero_image}
+                  onChange={(url) => { const prev = draft.hero_image; update({ hero_image: url }); if (prev && prev !== url) void deleteBlobUrl(prev); }}
+                  recommended="1600×900 recommended"
+                  manageDeletion={false}
+                />
                 <div><Label>Alt Text</Label><Input value={draft.hero_image_alt ?? ""} onChange={(e) => update({ hero_image_alt: e.target.value })} placeholder="Describe the image for screen readers and SEO" /></div>
                 <div><Label>Image Title</Label><Input value={draft.hero_image_title ?? ""} onChange={(e) => update({ hero_image_title: e.target.value })} placeholder="Tooltip shown on hover" /></div>
                 <div><Label>Caption / Description</Label><Textarea rows={2} value={draft.hero_image_caption ?? ""} onChange={(e) => update({ hero_image_caption: e.target.value })} placeholder="Optional caption rendered below the image" /></div>
@@ -164,7 +168,7 @@ const ContentEditorPage = ({ api, basePath, listQueryKey, itemQueryKey, publicPa
                     <p className="text-xs text-muted-foreground">Used by Facebook, LinkedIn, Slack and most link-preview crawlers. Falls back to meta title / description / featured image when blank.</p>
                     <div><Label>OG Title</Label><Input value={draft.og_title ?? ""} onChange={(e) => update({ og_title: e.target.value })} /></div>
                     <div><Label>OG Description</Label><Textarea rows={2} value={draft.og_description ?? ""} onChange={(e) => update({ og_description: e.target.value })} /></div>
-                    <div><Label>OG Image URL</Label><Input value={draft.og_image ?? ""} onChange={(e) => update({ og_image: e.target.value })} placeholder="Recommended 1200×630" /></div>
+                    <ImageUploadField label="OG Image" value={draft.og_image} onChange={(url) => { const prev = draft.og_image; update({ og_image: url }); if (prev && prev !== url) void deleteBlobUrl(prev); }} recommended="1200×630" manageDeletion={false} />
                   </TabsContent>
                   <TabsContent value="twitter" className="space-y-3 pt-4">
                     <p className="text-xs text-muted-foreground">Twitter/X uses these for its summary cards. Leave blank to inherit from Open Graph.</p>

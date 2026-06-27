@@ -1,121 +1,78 @@
-# Full Content Management System
+## Task 1 — Editable Author page
 
-Today the CMS only controls SEO meta and hero text on pages whose **bodies live in TypeScript files** (`src/data/blogPosts.ts`, `docsArticles.ts`, `knowledgeHub.ts`, `webStories.ts`, `industries.ts`). To edit a post you must touch code. This plan moves all that content into the database, adds full CRUD admin modules, and rebuilds the public pages to render from the DB.
+**Goal:** turn the hardcoded `/author/shripad-deshmukh/` page into a DB-driven page editable from the admin, seeded with the existing content.
 
-This is a large, multi-step build. I'll ship it in phases so you can review and use each piece as it lands instead of waiting for everything.
+### DB (new migration `supabase/migrations/..._authors_rich_profile.sql`)
+Extend `public.authors` with the fields the current page renders:
+- `role_title TEXT` (e.g. "Founder & CEO, LLMClicks.ai")
+- `tagline TEXT` (short hero tagline under name)
+- `long_bio_md TEXT` (multi-paragraph about section, markdown)
+- `location TEXT`, `experience TEXT`, `specialization TEXT`
+- `expertise_tags TEXT[]`
+- `stats JSONB` (`[{num,label}]`)
+- `founded_companies JSONB` (`[{name,role,href}]`)
+- `cta_calendly_url TEXT`
+- `meta_title TEXT`, `meta_description TEXT`, `og_image TEXT`
+- `published BOOLEAN DEFAULT true`
 
-## Phase 1 — Database + migration (foundation)
+Seed row for `slug='shripad-deshmukh'` with exactly the content currently in `AuthorShripad.tsx` (stats, expertise tags, founded companies, 3-paragraph bio, sidebar fields).
 
-New tables (all with RLS + `service_role` grants, public read for published rows, admin write via `has_role(auth.uid(),'admin')`):
+Add public `SELECT` policy on authors (it likely already has one — verified during migration).
 
-- `authors` — name, slug, bio, avatar, social links
-- `categories` — name, slug, type (`blog` | `docs` | `knowledge_hub`), parent_id
-- `tags` — name, slug
-- `blog_posts` — slug, title, excerpt, **body (markdown)**, hero_image, author_id, category_id, status (`draft`|`published`), published_at, reading_time, seo overrides
-- `blog_post_tags` (join)
-- `docs_articles` — slug, title, category_id, body, status, published_at, order
-- `kb_articles` — slug, title, category_id, body, status, published_at
-- `web_stories` — slug, title, poster, pages (JSONB), status, published_at
-- `media_assets` — bucket key, url, alt, width, height, uploaded_by (Supabase Storage bucket `cms-media`, public)
-- `redirects` — from_path, to_path, status_code (301/302), enabled
+### Frontend
+- Replace `src/pages/AuthorShripad.tsx` with a generic `src/pages/AuthorProfile.tsx` route `/author/:slug` that fetches the row from Supabase and renders the same layout — published-articles section keeps filtering `posts` by `author.name`.
+- Keep `/author/shripad-deshmukh` working (route param) and redirect old hardcoded route.
+- Add `useAuthor(slug)` hook.
 
-Migration scripts will seed these tables from the existing `src/data/*.ts` files so nothing disappears on day one.
+### Admin (`src/pages/admin/AdminAuthors.tsx`)
+Replace inline form with a full editor (new `AdminAuthorEditor.tsx` at `/admin/authors/:id`) supporting every new field:
+- Name, slug, role title, tagline, location, experience, specialization
+- Avatar upload (uses the new Vercel Blob uploader from Task 2)
+- Long bio (markdown editor, same `@uiw/react-md-editor` already in project)
+- Expertise tags (chip input)
+- Stats (repeatable num/label rows)
+- Founded companies (repeatable name/role/href rows)
+- Socials: twitter, linkedin, website, calendly
+- SEO: meta title/description/og image
+- Save → upsert; edits immediately reflect on `/author/:slug`.
 
-## Phase 2 — Admin modules (separate sections per type)
+## Task 2 — Vercel Blob image upload for Featured Image and OG Image
 
-A new left-nav group "Content" with dedicated pages:
+**Goal:** upload/replace/delete images directly from the blog editor (and KB/Docs/Web Stories editors that share the pattern) using Vercel Blob; URL is stored in existing `hero_image` / `og_image` / author `avatar_url` columns.
 
-- `/admin/blog` — list + search + filter (status, category, author) + create/edit/delete
-- `/admin/knowledge-hub`
-- `/admin/docs`
-- `/admin/web-stories`
-- `/admin/industries` (edit-only — fixed set)
-- `/admin/media` — upload, browse, alt text
-- `/admin/authors`
-- `/admin/categories` (per type tabs)
-- `/admin/tags`
-- `/admin/redirects`
+### Backend (Vercel serverless)
+- `npm i @vercel/blob`
+- `api/blob-upload.ts` — `POST` multipart/form-data → `put(filename, file, { access: 'public', addRandomSuffix: true })`; returns `{ url }`. Admin-auth-guarded via existing `shared/adminAuth`.
+- `api/blob-delete.ts` — `POST { url }` → `del(url)`. Admin-guarded.
+- New secret required: `BLOB_READ_WRITE_TOKEN` (added via secrets tool; user pastes from Vercel dashboard → Storage → Blob).
 
-Each list page shows: title, slug, status badge, author, last modified, actions. Bulk actions: publish, unpublish, delete.
+### Frontend
+- New reusable `src/components/admin/ImageUploadField.tsx`:
+  - Props: `value`, `onChange(url)`, `label`, optional `recommended` text.
+  - Renders: label, current preview (if value), "Upload image" button + drag-drop, "Replace" / "Remove" buttons, manual URL input fallback.
+  - On upload: POST to `/api/blob-upload`. On save of new url, if previous value was a Blob URL (`*.public.blob.vercel-storage.com`), call `/api/blob-delete` with the old URL. On Remove: delete + clear field.
+- Wire into:
+  - `AdminBlogEditor.tsx` Featured Image section (replacing the URL-only input — URL input kept as fallback).
+  - Same editor's SEO → Open Graph → OG Image field.
+  - `AdminDocsEditor.tsx`, `AdminKBEditor.tsx`, `AdminWebStoriesEditor.tsx` (same Featured + OG fields, identical pattern).
+  - Author avatar in new author editor.
+- Alt / Title / Caption fields stay as-is; the uploader only manages the URL.
+- Frontend rendering already reads `hero_image` / `og_image`, so no frontend article-page changes needed — uploaded URL displays automatically.
 
-Editor screen per content type includes:
+### Image lifecycle rules
+- Replace flow: new upload → save → on success, delete previous Blob URL (only if it was a Blob URL — legacy `/legacy-assets/*` paths are skipped).
+- Explicit remove: delete from Blob + clear DB field on save.
+- Deleting a post: best-effort delete of its `hero_image` + `og_image` Blob URLs (added to existing delete handlers).
 
-- Title, slug (auto + editable), excerpt
-- **Markdown editor** with live preview (`@uiw/react-md-editor`)
-- Hero image picker (from media library or upload)
-- Author, category, tags pickers
-- Status (draft/published) + publish date
-- SEO panel: meta title, description, canonical, OG image, robots (index/noindex), keywords, JSON-LD schema
-- Internal-link helper: search existing pages, insert markdown link
-- FAQ block builder (adds FAQPage JSON-LD)
-- Save as draft / Publish / Preview
+## Files touched
+- New: `supabase/migrations/<ts>_authors_rich_profile.sql`, `src/pages/AuthorProfile.tsx`, `src/pages/admin/AdminAuthorEditor.tsx`, `src/components/admin/ImageUploadField.tsx`, `api/blob-upload.ts`, `api/blob-delete.ts`, `src/hooks/useAuthor.ts`.
+- Edited: `src/App.tsx` (route), `src/pages/admin/AdminAuthors.tsx` (list-only + link to editor), `AdminBlogEditor.tsx`, `AdminDocsEditor.tsx`, `AdminKBEditor.tsx`, `AdminWebStoriesEditor.tsx`, `src/lib/cms/blogApi.ts` (extend author type).
+- Removed: `src/pages/AuthorShripad.tsx` (replaced by generic route).
+- Secret: `BLOB_READ_WRITE_TOKEN` (asked once).
 
-## Phase 3 — Public site rewiring
+## Out of scope (confirm if you want any of these)
+- Migrating already-uploaded Supabase Storage media in `AdminMedia` to Vercel Blob.
+- Author-level analytics or multi-author drafting workflow.
+- Image resizing/optimization pipeline (Blob serves originals).
 
-Replace static-data imports with Supabase queries (React Query):
-
-- `Blog.tsx`, `BlogPost.tsx` → `blog_posts` + `categories` + `authors`
-- `Docs.tsx`, `DocsArticle` → `docs_articles`
-- `KnowledgeHub*` → `kb_articles`
-- `WebStories*` → `web_stories`
-- Markdown rendered with `react-markdown` + `remark-gfm` + syntax highlighting
-- Breadcrumbs derived from `categories.parent_id`
-- Author bio block on posts; category and tag archive pages
-
-## Phase 4 — Sitemap, redirects, build-time SEO
-
-- `scripts/generate-sitemap.ts` → fetch published rows from DB instead of importing TS data
-- `scripts/prerender-meta.ts` already DB-backed; extend to inject Article/FAQPage/Breadcrumb JSON-LD
-- Add `api/_middleware` (Vercel) or a small Express handler in `server/index.ts` that reads `redirects` table and 301s before the SPA loads
-- Auto-rebuild trigger: a "Republish static SEO" button in admin that calls a Vercel deploy hook (you'll paste the hook URL into secrets)
-
-## Phase 5 — Nice-to-haves (after the core ships)
-
-- Revision history per post (auto-snapshot on save)
-- Scheduled publishing (cron edge function flips `status` at `published_at`)
-- Role: `editor` (can edit, can't delete or manage users)
-- Image optimization on upload (resize + webp)
-- AI assist: "Generate meta description", "Suggest internal links" via Lovable AI Gateway
-
-## Coverage of your SEO checklist
-
-| Requirement | Phase |
-|---|---|
-| CRUD blog / KH / docs / web stories | 2 |
-| Upload & manage images | 2 (media library) |
-| Slugs, meta title/desc, canonical, robots, OG, keywords, JSON-LD | 2 (SEO panel) |
-| Internal linking helper | 2 |
-| Authors, categories, tags | 2 |
-| Redirect (301) management | 2 + 4 |
-| Sitemap auto-generation | 4 |
-| Breadcrumbs | 3 |
-| Drafts / status, last modified, author, search, filter | 2 (list pages) |
-| Schema markup (Article, FAQ, Breadcrumb) | 2 + 4 |
-
-## Technical notes
-
-- Storage: a public Supabase bucket `cms-media` for images; private bucket if you later need gated assets.
-- Markdown over a WYSIWYG so SEO content stays portable and diffable.
-- Body is stored as markdown text, not HTML, to avoid XSS in admin paste and to keep rendering consistent.
-- Existing data is migrated, not replaced — your current posts keep their URLs and content.
-- All admin writes go through RLS policies keyed on `has_role(auth.uid(),'admin')`; no service-role keys in the browser.
-
-## Suggested rollout order
-
-1. Phase 1 migration + seed (no UI change yet, safe)
-2. Phase 2 blog module end-to-end (proves the pattern)
-3. Phase 3 blog public rewiring (you can edit a live post)
-4. Repeat 2+3 for docs, KH, web stories
-5. Media library, authors, categories, tags, redirects
-6. Phase 4 sitemap + redirect middleware
-7. Phase 5 niceties
-
-## What I need from you to start
-
-1. **Approve this plan** (or tell me to cut/reorder).
-2. Confirm I can create a public Supabase Storage bucket `cms-media` for images.
-3. Markdown editor OK, or do you want a block/WYSIWYG editor (heavier, slower, more brittle for SEO)?
-4. For redirects: are you on Vercel (so I can use middleware), or should the SPA handle it client-side as a fallback?
-5. Should drafts be viewable via a tokenised preview URL, or admin-only?
-
-Once you reply, I'll start with Phase 1 (migration + seed) in the next turn.
+Reply "go" and I'll implement, or tell me what to adjust (e.g. keep Supabase Storage instead of Vercel Blob, skip docs/KB editors, etc.).
